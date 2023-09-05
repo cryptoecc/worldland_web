@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import CountUp from 'react-countup';
 import { web3 } from '../web3/useWeb3';
+import axios from 'axios';
 
 import {
   StatisticsContainer,
@@ -13,24 +14,40 @@ import {
 function MainStatistics() {
   const [time, setTime] = useState<number>(0);
   const [totalBlocks, setTotalBlocks] = useState<number>(0);
-  const [activeNodes, setActiveNodes] = useState<number>(0);
+  const [totalWalletCount, setTotalWalletCount] = useState<number>(0);
   const statisticsRef = useRef<HTMLDivElement>(null);
-  const prevActiveNodes = useRef<number>(0); // to keep track of previous activeNodes value
 
   const formatValue = (value: number) => {
     return `${value.toFixed(1)}s`;
   };
 
+  const listAccount = async () => {
+    const response = await axios.post(
+      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=500`,
+    );
+
+    const response2 = response.data.result.length;
+    setTotalWalletCount(response2);
+  };
+
   const fetchBlockData = useCallback(async () => {
     try {
       // Total Blocks
+      // const [latestBlockNumber, listBlock] = await Promise.all([
+      //   await web3.eth.getBlockNumber(),
+      //   await axios.post(`https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=500`),
+
+      //   // await web3.eth.getBlock(latestBlockNumber),
+      // ]);
       const latestBlockNumber = await web3.eth.getBlockNumber();
+      // const response = listBlock.data.result.length;
+      // setTotalWalletCount(response);
       setTotalBlocks(Number(latestBlockNumber));
 
       // Average Block Time
       const latestBlock = await web3.eth.getBlock(latestBlockNumber);
-      const startBlock = await web3.eth.getBlock(Number(latestBlockNumber) - 1000);
-      const averageTime = (Number(latestBlock.timestamp) - Number(startBlock.timestamp)) / 1000;
+      const startBlock = await web3.eth.getBlock(Number(latestBlockNumber) - 100000);
+      const averageTime = (Number(latestBlock.timestamp) - Number(startBlock.timestamp)) / 100000;
 
       // Update "time" state only if it's different from the current value
       if (time !== averageTime) {
@@ -46,42 +63,10 @@ function MainStatistics() {
 
     // Initial fetch
     fetchBlockData();
+    listAccount();
 
     return () => clearInterval(interval);
   }, [fetchBlockData]);
-
-  useEffect(() => {
-    // Fetch Active Accounts every 5 seconds
-    const interval = setInterval(() => {
-      web3.eth.net.getPeerCount().then((peerCount) => {
-        // Update "activeNodes" state only if it's different from the current value
-        if (activeNodes !== Number(peerCount)) {
-          setActiveNodes(Number(peerCount));
-        }
-      });
-    }, 30000);
-
-    // Initial fetch
-    web3.eth.net.getPeerCount().then((peerCount) => {
-      // Update "activeNodes" state only if it's different from the current value
-      if (activeNodes !== Number(peerCount)) {
-        setActiveNodes(Number(peerCount));
-      }
-    });
-
-    return () => clearInterval(interval);
-  }, [activeNodes]); // Add "activeNodes" as a dependency to this useEffect
-
-  useEffect(() => {
-    // Check if the "activeNodes" value has changed
-    if (prevActiveNodes.current !== activeNodes) {
-      // Update the previous "activeNodes" value
-      prevActiveNodes.current = activeNodes;
-    } else {
-      // Fetch "average block time" data only when "activeNodes" has not changed
-      fetchBlockData();
-    }
-  }, [activeNodes, fetchBlockData]);
 
   return (
     <StatisticsContainer ref={statisticsRef}>
@@ -100,9 +85,9 @@ function MainStatistics() {
         </StatisticContainer>
         <StatisticContainer>
           <StatisticsDetail>
-            <CountUp end={activeNodes} duration={0.5} />
+            <CountUp end={totalWalletCount} duration={0.5} />
           </StatisticsDetail>
-          <DetailDescription>Total Accounts</DetailDescription>
+          <DetailDescription>Total Wallet Count</DetailDescription>
         </StatisticContainer>
       </StatisticsDetails>
     </StatisticsContainer>

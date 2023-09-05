@@ -3,9 +3,10 @@ import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
 import styled from 'styled-components';
 import { theme } from 'style/theme';
 import Web3 from 'web3';
-import { useAccount } from 'wagmi';
+import { useConnect, useAccount } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { connect } from '@wagmi/core';
+import { worldland } from 'utils/wagmi';
 
 interface Web3ConnectButtonProps {
   onAccountConnected: (account: string) => void;
@@ -70,7 +71,6 @@ const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({ onAccountConnecte
   const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
   const [showButton, setShowButton] = useState('true');
   const { address, isConnected } = useAccount();
-
   const { open, close } = useWeb3Modal();
   const userAgent = window.navigator.userAgent;
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
@@ -78,35 +78,46 @@ const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({ onAccountConnecte
   const handleOpenMetamaskLink = () => {
     // window.open(`https://metamask.app.link/dapp/${window.location.host}`);
     if (isMobile) {
-      window.open(`https://metamask.app.link/dapp/${window.location.host}`);
+      if (window.ethereum) {
+        handleEthereum();
+      } else {
+        window.open(`https://metamask.app.link/dapp/${window.location.host}`);
+        // window.open(`https://metamask.app.link/dapp/192.168.100.31.sslip.io:4001`);
+        window.addEventListener('ethereum#initialized', handleEthereum, {
+          once: true,
+        });
+
+        // If the event is not dispatched by the end of the timeout,
+        // the user probably doesn't have MetaMask installed.
+        setTimeout(handleEthereum, 3000); // 3 seconds
+      }
     }
   };
 
-  // const handleConnect = async () => {
-  //   if (!isOpen) {
-  //     await open();
-  //     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  //     console.log(accounts);
-
-  //     await getAccounts();
-  //     localStorage.setItem('connectedAccount', connectedAccount || '');
-  //   } else {
-  //     // 이미 연결된 계정 정보가 있을 경우 로그아웃 처리
-  //     // localStorage.removeItem('connectedAccount');
-  //     // setConnectedAccount(null); // 상태 초기화
-  //     // onAccountConnected(''); // 타입 단언을 사용하여 빈 문자열로 변환
-  //   }
-  // };
+  async function handleEthereum() {
+    const { ethereum } = window;
+    if (ethereum && ethereum.isMetaMask) {
+      console.log('Ethereum successfully detected!');
+      if (!isConnected && isMobile) {
+        setTimeout(() => {
+          open();
+        }, 3000);
+      }
+    } else {
+      // alert("Please install Metamask!")
+    }
+  }
 
   useEffect(() => {
     // 계정 정보가 변경될 때마다 로컬 스토리지에 저장
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', function (accounts: string[]) {
-        localStorage.setItem('connectedAccount', accounts[0]);
-        setConnectedAccount(accounts[0]);
-      });
-    }
-  }, [connectedAccount]);
+    handleEthereum();
+    // if (window.ethereum) {
+    //   window.ethereum.on('accountsChanged', function (accounts: string[]) {
+    //     localStorage.setItem('connectedAccount', accounts[0]);
+    //     setConnectedAccount(accounts[0]);
+    //   });
+    // }
+  }, []);
 
   useEffect(() => {
     // 컴포넌트가 마운트될 때 로컬 스토리지에서 계정 정보 불러오기
@@ -129,12 +140,12 @@ const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({ onAccountConnecte
 
   return (
     <div>
-      {isMobile && !isConnected ? (
+      {isMobile && !address ? (
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <MobileButton onClick={handleOpenMetamaskLink}>Metamask</MobileButton>
           {/* <MobileButton onClick={() => open()}>Connect</MobileButton> */}
         </div>
-      ) : isConnected ? (
+      ) : address ? (
         <TruncatedTextButton onClick={() => open()}>
           <span>{address}</span>
         </TruncatedTextButton>

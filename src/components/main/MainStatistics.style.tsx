@@ -14,8 +14,10 @@ const StatisticsContainer = styled.div`
   margin: 0 auto;
   align-items: center;
   padding: 80px 0;
-  border-top: 5px solid ${theme.colors.white};
-  border-bottom: 5px solid ${theme.colors.white};
+  margin-top: 150px;
+  margin-bottom: 50px;
+  /* border-top: 5px solid ${theme.colors.white};
+  border-bottom: 5px solid ${theme.colors.white}; */
 
   ${maxQuery.tablet} {
     padding: 20px;

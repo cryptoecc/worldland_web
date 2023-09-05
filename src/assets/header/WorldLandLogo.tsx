@@ -11,7 +11,7 @@ export const WorldLandLogo = ({ style }: AssetsProps) => {
             }
   
             .cls-2 {
-              fill: #59625d;
+              fill: white;
             }
           `}
         </style>

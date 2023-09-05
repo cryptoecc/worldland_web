@@ -11,7 +11,7 @@ const Coinomics = () => {
       <img src={WlcSupplyScheduleImage} alt="WlcSupplyScheduleImage" />
       <ol>
         <li>
-          <strong>Token Issuance</strong>: The mainnet coin WLC is issued to establish, nurture, and maintain the
+          <strong>Coin Issuance</strong>: The mainnet coin WLC is issued to establish, nurture, and maintain the
           development ecosystem of dApps on the WorldLand platform. The issuance of WLC tokens is primarily the
           responsibility of the developer launching and operating the mainnet.
         </li>

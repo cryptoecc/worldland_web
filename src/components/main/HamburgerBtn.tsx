@@ -196,9 +196,25 @@ const HamburgerBtn = () => {
                 >
                   DAO
                 </a>
-                <div className="user">Help Center</div>
-                <div className="user">Twitter</div>
-                <div className="user">Discord</div>
+                <a
+                  href="https://medium.com/@worldland-official"
+                  className="user"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Medium
+                </a>
+                <a
+                  href="https://twitter.com/Worldland_space"
+                  className="user"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Twitter
+                </a>
+                <a href="https://discord.gg/yJERYVnE6a" className="user" target="_blank" rel="noopener noreferrer">
+                  Discord
+                </a>
               </div>
             </Dropdown>
           )}
