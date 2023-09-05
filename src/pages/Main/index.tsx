@@ -4,16 +4,15 @@ import MainData from 'components/main/MainData';
 import AppFooter from 'components/layout/AppFooter';
 import AppHeader from 'components/layout/AppHeader';
 import MainPartner from 'components/main/MainPartner';
+import { Outlet } from 'react-router-dom';
 
 const Main = () => {
   return (
     <>
-      <AppHeader />
       <MainDashboard />
       <MainStatistics />
       <MainData />
       <MainPartner />
-      <AppFooter />
     </>
   );
 };

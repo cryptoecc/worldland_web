@@ -13,27 +13,32 @@ import DesignPrinciples from 'components/learn/Post/DesignPrinciples';
 import Coinomics from 'components/learn/Post/Coinomics';
 import HowWorks from 'components/learn/Post/HowWorks';
 import Governance from 'components/learn/Post/Governance';
+import Index from 'pages/Index';
 
 const Router = () => {
   const router = createBrowserRouter([
-    { path: `${PATH.MAIN}`, element: <Main /> },
     {
-      path: `${PATH.LEARN}`,
-      element: <Learn />,
-      children: [
-        { index: true, element: <Charter /> },
-        { path: `${PATH.LEARN_OVERVIEW}`, element: <Overview /> },
-        { path: `${PATH.LEARN_ECCPOW}`, element: <EccPow /> },
-        { path: `${PATH.LEARN_ASIC_RESISTENCE}`, element: <ASICResistance /> },
-        { path: `${PATH.LEARN_PQ_SECURITY}`, element: <PQsecurity /> },
-        { path: `${PATH.LEARN_GREEN_VCA}`, element: <GreenVCA /> },
-        { path: `${PATH.LEARN_DESIGN_PRINCIPLE}`, element: <DesignPrinciples /> },
-        { path: `${PATH.LEARN_HOW_WORKS}`, element: <HowWorks /> },
-        { path: `${PATH.LEARN_COINOMICS}`, element: <Coinomics /> },
-        { path: `${PATH.LEARN_GOVERNANCE}`, element: <Governance /> },
-      ],
+      path: `${PATH.MAIN}`, element: <Index />, children: [
+        { index: true, element: <Main /> },
+        {
+          path: `${PATH.LEARN}`,
+          element: <Learn />,
+          children: [
+            { index: true, element: <Charter /> },
+            { path: `${PATH.LEARN_OVERVIEW}`, element: <Overview /> },
+            { path: `${PATH.LEARN_ECCPOW}`, element: <EccPow /> },
+            { path: `${PATH.LEARN_ASIC_RESISTENCE}`, element: <ASICResistance /> },
+            { path: `${PATH.LEARN_PQ_SECURITY}`, element: <PQsecurity /> },
+            { path: `${PATH.LEARN_GREEN_VCA}`, element: <GreenVCA /> },
+            { path: `${PATH.LEARN_DESIGN_PRINCIPLE}`, element: <DesignPrinciples /> },
+            { path: `${PATH.LEARN_HOW_WORKS}`, element: <HowWorks /> },
+            { path: `${PATH.LEARN_COINOMICS}`, element: <Coinomics /> },
+            { path: `${PATH.LEARN_GOVERNANCE}`, element: <Governance /> },
+          ],
+        },
+        { path: `${PATH.SWAP}`, element: <Swap /> }
+      ]
     },
-    { path: `${PATH.SWAP}`, element: <Swap /> }
   ]);
 
   return <RouterProvider router={router} />;

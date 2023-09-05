@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+
 import {
   MenuList,
   Li,
@@ -149,9 +150,9 @@ const HamburgerBtn = () => {
                 <a href="http://scan.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
                   Scan
                 </a>
-                <div className="user" onClick={() => handleLinkClick('서비스 준비중입니다.')}>
+                <a href="/swap" className="user">
                   Swap
-                </div>
+                </a>
               </div>
             </Dropdown>
           )}
