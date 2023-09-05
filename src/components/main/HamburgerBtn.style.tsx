@@ -27,7 +27,7 @@ const HamburgerBtnWrapper = styled.nav`
 const MenuList = styled.ul<MenuListProps>`
   display: none;
   font-family: 'Inter';
-
+  
   ${maxQuery.tablet} {
     display: ${(props) => (props.isopen === 'true' ? 'block' : 'none')};
     font-size: 1.1rem;
@@ -41,7 +41,7 @@ const MenuList = styled.ul<MenuListProps>`
     width: 100vw;
     height: 100vh;
     background-color: black;
-    z-index: 2;
+    z-index: 6;
     list-style: none;
     /* 나머지 스타일링 */
   }

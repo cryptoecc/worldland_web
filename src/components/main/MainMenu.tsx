@@ -96,7 +96,7 @@ const MainMenu = () => {
                   <SpaceLink href="http://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
-                  <SpaceLink onClick={() => handleLinkClick('서비스 준비중입니다. ')}>
+                  <SpaceLink href="/swap">
                     <Strong>Swap</Strong>
                   </SpaceLink>
                 </div>

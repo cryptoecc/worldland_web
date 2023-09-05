@@ -28,7 +28,7 @@ const HeaderWrapper = styled.header`
     position: fixed;
     width: 100%;
     justify-content: space-between;
-    z-index: 2;
+    z-index: 6;
 
     svg {
       cursor: pointer;

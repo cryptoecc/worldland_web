@@ -14,8 +14,27 @@ export const worldland = {
     default: { http: ['https://seoul.worldland.foundation/'] },
   },
   blockExplorers: {
-    etherscan: { name: 'WLscan', url: 'https://scan.worldland.foundation' },
-    default: { name: 'WLscan', url: 'https://scan.worldland.foundation' },
+    etherscan: { name: 'WLscan', url: 'http://scan.worldland.foundation' },
+    default: { name: 'WLscan', url: 'http://scan.worldland.foundation' },
+  },
+} as const satisfies Chain;
+
+export const worldland_testnet = {
+  id: 10395,
+  name: 'Worldland Testnet',
+  network: 'worldland_testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'WLC',
+    symbol: 'WLC',
+  },
+  rpcUrls: {
+    public: { http: ['https://gwangju.worldland.foundation/'] },
+    default: { http: ['https://gwangju.worldland.foundation/'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'WLscan', url: 'http://testscan.worldland.foundation' },
+    default: { name: 'WLscan', url: 'http://testscan.worldland.foundation' },
   },
 } as const satisfies Chain;
 

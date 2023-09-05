@@ -1,5 +1,6 @@
 import { MouseEventHandler } from 'react';
 
+
 interface AssetsProps {
   style?: React.CSSProperties;
 }
