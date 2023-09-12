@@ -7,7 +7,16 @@ import { Field } from '../../utils/enum';
 import Web3Button from 'components/web3/Web3Button';
 import { AiDexButton } from 'components/web3/AI-DEX_Button';
 
-const SwapInputTab = ({ input, output, open, inputHandler }: SwapInputTabProps) => {
+const SwapInputTab = ({
+  input,
+  output,
+  open,
+  inputHandler,
+  selectedToken,
+  selected2Token,
+  openModalForFirstInput,
+  openModalForSecondInput,
+}: SwapInputTabProps) => {
   return (
     <Container>
       <ul>
@@ -31,9 +40,20 @@ const SwapInputTab = ({ input, output, open, inputHandler }: SwapInputTabProps) 
             <label htmlFor="input">You pay</label>
             <input id="input" type="text" placeholder="0" onChange={(e) => inputHandler(Field.INPUT, e.target.value)} />
           </div>
-          <div onClick={() => open(true)} className="selected-coin">
-            <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-            <p>{crypto_list[0]['symbol']}</p>
+          <div onClick={openModalForFirstInput} className="selected-coin">
+            <>
+              {selectedToken ? (
+                <>
+                  <img src={selectedToken.icon} alt={selectedToken.icon} />
+                  <p>{selectedToken.symbol}</p>
+                </>
+              ) : (
+                <>
+                  <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                  <p>{crypto_list[0]['symbol']}</p>
+                </>
+              )}
+            </>
             <BiChevronDown color="#ffffff" size={25} />
           </div>
           <BsFillArrowDownSquareFill className="swap-arrow" color="#131A2A" size={45} />
@@ -48,10 +68,20 @@ const SwapInputTab = ({ input, output, open, inputHandler }: SwapInputTabProps) 
               onChange={(e) => inputHandler(Field.OUTPUT, e.target.value)}
             />
           </div>
-          <div onClick={() => open(true)} className="selected-coin-2nd blue-bgd">
-            {/* <img src={crypto_list[2]["icon"]} alt={crypto_list[2]["title"]} /> */}
-            {/* <p>{crypto_list[2]["symbol"]}</p> */}
-            <p>Select token</p>
+          <div onClick={openModalForSecondInput} className="selected-coin-2nd blue-bgd">
+            <>
+              {selected2Token ? (
+                <>
+                  <img src={selected2Token.icon} alt={selected2Token.icon} />
+                  <p>{selected2Token.symbol}</p>
+                </>
+              ) : (
+                <>
+                  <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                  <p>{crypto_list[0]['symbol']}</p>
+                </>
+              )}
+            </>
             <BiChevronDown color="#ffffff" size={25} />
           </div>
         </div>
@@ -198,7 +228,7 @@ const Container = styled.div`
         }
       }
       .blue-bgd {
-        padding: 0 10px;
+        /* padding: 0 10px; */
         background-color: #4c82fb;
       }
     }

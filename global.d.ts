@@ -9,10 +9,15 @@ export declare global {
     output: string;
     open: Function;
     inputHandler: (field: Field, typedValue: string) => void;
+    selectedToken: any;
+    selected2Token: any;
+    openModalForFirstInput: any;
+    openModalForSecondInput: any;
   }
 
   interface TokenModalProps {
     close: Function;
+    handleTokenClick: React.Dispatch<React.SetStateAction<any>>;
   }
 
   interface BackdropProps {
