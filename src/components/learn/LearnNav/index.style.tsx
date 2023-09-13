@@ -1,12 +1,15 @@
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { maxQuery } from 'utils/breakpoints';
+import { theme } from 'style/theme';
 
-interface ContainerProps {
+interface Props {
   $size: number;
+  $active: boolean;
+  $menuType: 'menu' | 'subMenu';
 }
 
-const Nav = styled.nav<ContainerProps>`
+const Nav = styled.nav<Pick<Props, '$size'>>`
   width: 100%;
   max-width: ${({ $size }) => `${$size}px`};
   font-size: var(--text-size-primary);
@@ -68,33 +71,23 @@ const Nav = styled.nav<ContainerProps>`
   }
 `;
 
-const Menu = styled(Link)<{ active: string }>`
-  ${(props) => {
-    const { active, theme } = props;
-    const color = active === 'true' ? theme.colors.white : theme.colors.white900;
-    const textUnderline = active === 'true' ? 'underline' : '';
+const getStyle = ({ $menuType, $active }: Omit<Props, '$size'>) => {
+  if ($menuType === 'menu') {
+    const color = $active ? theme.colors.white : theme.colors.white900;
+    return { color };
+  }
 
-    return `
-      color: ${color};
-      text-decoration-line: ${textUnderline};
-      font-weight: 500;
-    `;
-  }}
+  if ($menuType === 'subMenu') {
+    const color = $active ? theme.colors.white : theme.colors.white800;
+    return { color };
+  }
+};
+
+const Menu = styled(Link)<Omit<Props, '$size'>>`
+  ${({ $menuType, $active }) => getStyle({ $menuType, $active })};
+  text-decoration-line: ${({ $active }) => ($active ? 'underline' : '')};
+  font-weight: ${({ $menuType }) => ($menuType === 'menu' ? 500 : 400)};
+  padding-left: ${({ $menuType }) => $menuType === 'subMenu' && '16px'};
 `;
 
-const SubMenu = styled(Link)<{ active: string }>`
-  ${(props) => {
-    const { active, theme } = props;
-    const color = active === 'true' ? theme.colors.white : theme.colors.white800;
-    const textUnderline = active === 'true' ? 'underline' : '';
-
-    return `
-      color: ${color};
-      text-decoration-line: ${textUnderline};
-      padding-left: 16px;
-      font-weight: 400;
-    `;
-  }}
-`;
-
-export { Nav, Menu, SubMenu };
+export { Nav, Menu };

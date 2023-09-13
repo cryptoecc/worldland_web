@@ -13,8 +13,8 @@ import {
 import { CloseIcon, MenuIcon } from 'assets';
 import { theme } from 'style/theme';
 import { Link } from 'react-router-dom';
-import styled from '@emotion/styled';
 import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
+import { styled } from 'styled-components';
 
 const HamburgerBtn = () => {
   const [isHamburgerOpen, setHamburgerOpen] = useState(false);

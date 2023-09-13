@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from '@emotion/styled';
 import { theme } from 'style/theme';
 import { SpaceLink, Strong } from 'components/main/MainMenu.style';
+import { styled } from 'styled-components';
 
 const NetworkButton = styled.button`
   padding: 5px 0px;

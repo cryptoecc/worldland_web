@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import { AiOutlineDown, AiOutlineUp } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { theme } from 'style/theme';
+import { styled } from 'styled-components';
 import { maxQuery } from 'utils/breakpoints';
 
 const Menu = styled.div`

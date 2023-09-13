@@ -1,7 +1,7 @@
-import styled from '@emotion/styled';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiMenu } from 'react-icons/bi';
 import { theme } from 'style/theme';
+import { styled } from 'styled-components';
 import { maxQuery } from 'utils/breakpoints';
 
 interface MenuListProps {
@@ -27,7 +27,7 @@ const HamburgerBtnWrapper = styled.nav`
 const MenuList = styled.ul<MenuListProps>`
   display: none;
   font-family: 'Inter';
-  
+
   ${maxQuery.tablet} {
     display: ${(props) => (props.isopen === 'true' ? 'block' : 'none')};
     font-size: 1.1rem;
