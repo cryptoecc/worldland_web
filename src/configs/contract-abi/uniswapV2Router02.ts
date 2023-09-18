@@ -162,19 +162,24 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: '_factory',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
         name: 'amountOut',
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveIn',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenIn',
+        type: 'address',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveOut',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenOut',
+        type: 'address',
       },
     ],
     name: 'getAmountIn',
@@ -185,25 +190,30 @@ export const abi = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
+      {
+        internalType: 'address',
+        name: '_factory',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'amountIn',
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveIn',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenIn',
+        type: 'address',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveOut',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenOut',
+        type: 'address',
       },
     ],
     name: 'getAmountOut',
@@ -214,11 +224,16 @@ export const abi = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
+      {
+        internalType: 'address',
+        name: '_factory',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'amountOut',
@@ -244,6 +259,11 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: '_factory',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
         name: 'amountIn',
         type: 'uint256',
@@ -268,19 +288,24 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: '_factory',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
         name: 'amountA',
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveA',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenA',
+        type: 'address',
       },
       {
-        internalType: 'uint256',
-        name: 'reserveB',
-        type: 'uint256',
+        internalType: 'address',
+        name: 'tokenB',
+        type: 'address',
       },
     ],
     name: 'quote',
@@ -291,7 +316,7 @@ export const abi = [
         type: 'uint256',
       },
     ],
-    stateMutability: 'pure',
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -645,6 +670,74 @@ export const abi = [
         type: 'uint256',
       },
     ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token0',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'token1',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p0',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p1',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p2',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p3',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p4',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p5',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p6',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p7',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p8',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'p9',
+        type: 'uint256',
+      },
+    ],
+    name: 'setMarketPricesAtPool',
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
