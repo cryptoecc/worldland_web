@@ -5,49 +5,58 @@ const Coinomics = () => {
     <>
       <h1>WorldLand Coinomics</h1>
       <p>
-        Coinomics of WorldLand involves the issuance and utilization of the mainnet coin WLC to support the development
-        ecosystem of dApps and the operation of the mainnet. Here are the key aspects of WorldLand's coinomics:
+        WorldLand's coinomics involves issuing and utilizing the mainnet coin WLC to support the development ecosystem
+        of DApps and the operation of the mainnet. Here are some highlights of WorldLand's coinomics:
       </p>
       <img src={WlcSupplyScheduleImage} alt="WlcSupplyScheduleImage" />
       <ol>
         <li>
-          <strong>Coin Issuance</strong>: The mainnet coin WLC is issued to establish, nurture, and maintain the
-          development ecosystem of dApps on the WorldLand platform. The issuance of WLC tokens is primarily the
-          responsibility of the developer launching and operating the mainnet.
+          <strong>Coin Issuance</strong>: WLC, the mainnet coin, is issued to build, foster, and maintain the
+          development ecosystem of DApps on the Worldland platform. The issuance of WLC is primarily the responsibility
+          of developers who launch and operate the mainnet. There are 40,996,800 coins issued in the genesis block,
+          which will be used for d ecosystem. For the next five years, the network supply of WLC coins will be
+          40,996,800 coins, matching the number issued in the genesis block.
         </li>
         <li>
-          <strong>Network Usage Fees</strong>: WLC tokens are used by node operators to voluntarily contribute to the
-          ecosystem, pay for network usage fees, and maintain wallets. Additionally, WLC tokens are used by smart
-          contract users for transactions within the network.
+          <strong>Network Usage Fees</strong>: WLC is used by node operators to voluntarily contribute to the ecosystem,
+          pay network usage fees, and maintain wallets. Smart contract users also WLC for transactions within the
+          network.
         </li>
         <li>
-          <strong>Exclusive Issuance Rights</strong>: The issuers of WLC tokens lose their exclusive issuance rights to
-          coins other than those issued on the Genesis block immediately after the mainnet launch. This ensures that the
-          initial issuance remains stable and prevents arbitrary creation of additional tokens.
+          <strong>Exclusive Issuance Rights</strong>: WLC issuers lose their exclusive minting rights to any other coins
+          except those issued in the genesis block immediately after the mainnet launch. This ensures that the initial
+          issuance remains stable and prevents the random creation of additional coins.
         </li>
         <li>
-          <strong>Permanence of Coin Usage</strong>: WLC coins are intended to be permanently used among network users
-          as long as the WorldLand network exists, serving as a medium of exchange and value within the ecosystem.
+          <strong>Permanence of Coin Usage</strong>: WLC is permanently used among network users as long as the
+          WorldLand Network exists, serving as a medium of exchange and value within the ecosystem.
         </li>
         <li>
-          <strong>Token Supply:</strong> To maximize the initial network effect, WLC coins are supplied to the network
-          through four half-lives over eight years after the Genesis block. Following the initial halving, the token
-          supply experiences stable and predictable growth through a 4% inflation rate.
+          <strong>Coin Supply:</strong> To maximize initial network effectiveness, WLC coins will be supplied to the
+          network in four halving cycles over the course of eight years following the genesis block. After the initial
+          halving, the coin supply experiences stable and predictable growth through an inflation rate of 4%.
         </li>
         <li>
-          <strong>Foundation Decentralization</strong>: The WorldLand Foundation plays a role in the initial stages but
-          aims to gradually decentralize its stake. The foundation's stake in the Genesis block is continuously reduced
-          from 55% to 29% in the second year and further reduced to 17% in the fifth year. This decentralization fosters
-          a more distributed and community-driven ecosystem.
+          <strong>Coin burning</strong>: coins issued in the genesis block can be burned by Dao's decision.
+        </li>
+        <li>
+          <strong>Foundation Decentralization</strong>: The WorldLand Foundation will play a role in the early stages,
+          but aims to gradually diversify its stake. The Foundation's Long-Term Endowment (LTE) stake in the Genesis
+          Block is 20%. 80% of the shares issued in the Genesis Block are ECO Funds. The ECO Fund will be used to expand
+          the WorldLand ecosystem. The main projects for ecosystem expansion include Wallets, NFT/Game, Voting/Bridge,
+          My AI Network, Mainnet, Research, Education, and Investment. The ECO fund will be used in the following
+          proportions: 30%, 30%, 20%, 10%, and 10% per year for 5 years. After five years, the foundation's LTE will be
+          10%, and this decentralization will create a more decentralized and community-driven ecosystem.
         </li>
       </ol>
       <br />
       <p>
-        By implementing these coinomics principles, WorldLand aims to incentivize participation, ensure a stable token
-        supply, and foster a decentralized and sustainable development ecosystem for dApps on its platform.
+        By implementing these coinomics principles, Worldland aims to encourage participation, ensure a stable coin
+        supply, and create a decentralized and sustainable development ecosystem for dApps on the platform.
       </p>
     </>
   );
 };
 
 export default Coinomics;
+
