@@ -1,5 +1,76 @@
 export const abi = [
   {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newRouterSetter',
+        type: 'address',
+      },
+    ],
+    name: 'changeRouterSetter',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'tokenA',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'tokenB',
+        type: 'address',
+      },
+    ],
+    name: 'createPair',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'pair',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_feeTo',
+        type: 'address',
+      },
+    ],
+    name: 'setFeeTo',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'newRouter',
+        type: 'address',
+      },
+    ],
+    name: 'setRouter',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
@@ -43,6 +114,21 @@ export const abi = [
     type: 'event',
   },
   {
+    constant: false,
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_feeToSetter',
+        type: 'address',
+      },
+    ],
+    name: 'setFeeToSetter',
+    outputs: [],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     constant: true,
     inputs: [
       {
@@ -76,47 +162,6 @@ export const abi = [
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'newRouterSetter',
-        type: 'address',
-      },
-    ],
-    name: 'changeRouterSetter',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'tokenA',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'tokenB',
-        type: 'address',
-      },
-    ],
-    name: 'createPair',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'pair',
-        type: 'address',
-      },
-    ],
-    payable: false,
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -188,51 +233,6 @@ export const abi = [
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_feeTo',
-        type: 'address',
-      },
-    ],
-    name: 'setFeeTo',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_feeToSetter',
-        type: 'address',
-      },
-    ],
-    name: 'setFeeToSetter',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'newRouter',
-        type: 'address',
-      },
-    ],
-    name: 'setRouter',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];
