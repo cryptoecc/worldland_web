@@ -1,14 +1,12 @@
 import { FC, useState, useEffect } from 'react';
 import Web3 from 'web3';
-import { useAccount } from 'wagmi';
 import BigNumber from 'bignumber.js';
 import { contractABI, contractAddress } from '../../utils/ChainLink_goerli';
 import { MAP_STR_ABI } from '../../configs/abis';
 import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
-
+import { Spin, Space } from 'antd';
 import styled from 'styled-components';
-import { hover } from '@testing-library/user-event/dist/hover';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -68,7 +66,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         //latestRound 호출
 
         const roundIDList: string[] = [];
-
+        console.log('여기');
         const result: any = await contract.methods.latestRound().call();
         console.log('1 :', result);
         const roundID = new BigNumber(result);
@@ -134,9 +132,12 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   //(2) 예측모델로 가격 정보 보내고, 예측값 가져오기
   const fetchData = async () => {
+    // txloading spinner
+    setTxloading(true);
+
     //Django 서버의 PredictView URL
     console.log(priceList);
-    let url = 'http://52.79.47.70:8000/predict/?';
+    let url = 'http://13.125.45.171:8000/predict/?';
     //let url = "http://localhost:8000/predict/?";
 
     //priceList의 10개의 값을 쿼리 파라미터로 추가
@@ -157,9 +158,9 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         console.log('123');
         const tempPredList = data.prediction;
         console.log(tempPredList);
-        // setPredList(tempPredList);
+
         await sendTransaction(tempPredList);
-        // console.log('최종', predList);
+
         setLoading(true);
       }
     } catch (error) {
@@ -176,6 +177,13 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       );
 
       const accounts = await web3.eth.getAccounts();
+      console.log('계정 :', accounts);
+
+      const privateKey = process.env.REACT_APP_PRIVATE_KEY;
+
+      const account = process.env.REACT_APP_ACCOUNT;
+
+      console.log(account);
 
       const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
@@ -192,8 +200,13 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
 
       console.log(tempPredList);
-      try {
-        const result = await (contract.methods.setMarketPricesAtPool as any)(
+
+      console.log(contract);
+
+      const txObject = {
+        from: account,
+        to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        data: (contract.methods.setMarketPricesAtPool as any)(
           token0,
           token1,
           BN,
@@ -206,10 +219,20 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           BN8,
           BN9,
           BN10,
-        ).send({
-          from: accounts[0],
-        });
-        console.log(result);
+        ).encodeABI(),
+        gasPrice: '10000000000',
+        gas: 3000000,
+      };
+
+      try {
+        if (privateKey) {
+          const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
+
+          const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+          console.log('Transaction Hash', receipt.transactionHash);
+        } else {
+          console.error('개인 키가 정의되어 있지 않습니다');
+        }
 
         let amountIn = web3.utils.toWei(1, 'ether');
 
@@ -220,7 +243,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
         console.log(getAmountOut);
 
-        setTxloading(true);
         const response = await (getAmountOut.methods.getAmountOut as any)(
           WLD_ADDRESSES[CONTRACT_ADDRESSES.FACTORY],
           amountIn,
@@ -229,9 +251,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         ).call();
 
         console.log('amountsOut :', response);
-        // const asdf = new BigNumber(response);
-        // const qqww = asdf.dividedBy(response).toString();
-        // console.log('qqww :', qqww);
         const fromwei = web3.utils.fromWei(response, 'ether');
 
         const amount = Number(fromwei).toFixed(7);
@@ -240,6 +259,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         // setPredList(fromwei);
         setPredPrice(tempPredList[0]);
         setAmountOut(amount);
+        setTxloading(false);
       } catch (e) {
         console.error(e);
       }
@@ -263,13 +283,22 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     }
   }, []);
 
+  // const antIcon = <LoadingOutlined style={{ fontSize: 25 }} spin />;
+
   return (
     <div>
       <StyledButton onClick={handleOneClick}>
-        <div>
-          Predict
-          {predPrice === '' ? '' : <p>{predPrice}</p>}
-        </div>
+        {txloading == true ? (
+          <Space size="large">
+            <Spin />
+          </Space>
+        ) : (
+          <div>
+            Predict
+            {predPrice === '' ? '' : <p>{predPrice}</p>}
+          </div>
+        )}
+
         {amountOut !== '' ? (
           <div>
             AmountOut
