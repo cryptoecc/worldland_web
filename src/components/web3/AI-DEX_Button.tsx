@@ -137,7 +137,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
     //Django 서버의 PredictView URL
     console.log(priceList);
+
     let url = 'http://13.125.45.171:8000/predict/?';
+    // let url = 'http://api.worldland.foundation/predict/?';
+    // let url = 'http://52.79.47.70:8000/predict/?';
     //let url = "http://localhost:8000/predict/?";
 
     //priceList의 10개의 값을 쿼리 파라미터로 추가
