@@ -139,7 +139,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     console.log(priceList);
 
     // let url = 'http://13.125.45.171:8000/predict/?';
-    let url = 'https://api.worldland.foundation/predict/?';
+    let url = 'https://api.worldland.foundation/?';
     // let url = 'http://52.79.47.70:8000/predict/?';
     //let url = "http://localhost:8000/predict/?";
 
