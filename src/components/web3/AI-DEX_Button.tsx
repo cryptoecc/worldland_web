@@ -188,7 +188,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       console.log(account);
 
-      const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
+      // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
+      const token0 = '0xef6dC4DB02837b0409C453cEF8CD4c3a7e92653A'; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await web3.eth.getBlockNumber();
 
@@ -203,11 +204,13 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       let BN9 = web3.utils.toWei(Number([tempPredList[8]]), 'ether');
       let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
       let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
-
+      console.log('--리믹스 테스트 console:', account);
+      console.log('token0, token1 address : ', token0, token1);
       console.log(BlockNumber);
-
-      console.log('@이거랑 비교', tempPredList);
+      console.log(PredictedPrice, '@여기까지 remix에 넣어서 테스트');
+      console.log('@BN값들 나열', BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10);
       console.log('@앞으로 10개 블록의 예측값', PredictedPrice);
+      console.log('@이거랑 비교', tempPredList);
 
       const txObject = {
         from: account,
