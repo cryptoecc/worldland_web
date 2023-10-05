@@ -99,6 +99,9 @@ const MainMenu = () => {
                   <SpaceLink href="/swap">
                     <Strong>Swap</Strong>
                   </SpaceLink>
+                  <SpaceLink href="/pool">
+                    <Strong>Pool</Strong>
+                  </SpaceLink>
                 </div>
               </div>
             </User>

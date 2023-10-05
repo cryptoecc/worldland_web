@@ -14,6 +14,7 @@ import Coinomics from 'components/learn/Post/Coinomics';
 import HowWorks from 'components/learn/Post/HowWorks';
 import Governance from 'components/learn/Post/Governance';
 import Index from 'pages/Index';
+import Pool from 'pages/Pool';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -36,7 +37,8 @@ const Router = () => {
             { path: `${PATH.LEARN_GOVERNANCE}`, element: <Governance /> },
           ],
         },
-        { path: `${PATH.SWAP}`, element: <Swap /> }
+        { path: `${PATH.SWAP}`, element: <Swap /> },
+        { path: `${PATH.POOL}`, element: <Pool /> }
       ]
     },
   ]);

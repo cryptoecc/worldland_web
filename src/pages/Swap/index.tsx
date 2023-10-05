@@ -17,6 +17,8 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { to_wei } from 'utils/util';
 import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
+import VideoContainer from 'components/VideoContainer';
+import Video from 'components/Video';
 
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -199,24 +201,3 @@ const Container = styled.section`
   position: relative;
 `;
 
-const Video = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-const VideoContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  /* 숨길 컨트롤 요소들을 선택하여 스타일을 적용합니다. */
-  video::-webkit-media-controls-panel,
-  video::-webkit-media-controls-overlay-play-button,
-  video::-webkit-media-controls-start-playback-button {
-    display: none !important;
-    opacity: 0;
-  }
-`;

@@ -12,4 +12,5 @@ export const PATH = {
   LEARN_GOVERNANCE: '/learn/governance',
   LEARN_FAQ: '/learn/faq',
   SWAP: '/swap',
+  POOL: '/pool',
 };
