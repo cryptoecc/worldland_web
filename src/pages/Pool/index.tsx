@@ -83,6 +83,9 @@ const Container = styled.div`
         padding: 12px;
         cursor: pointer;
         }
+        button:hover {
+            opacity: 0.9;
+        }
     }
     .active-positions {
         display: flex;
@@ -128,6 +131,8 @@ const Container = styled.div`
             max-width: 440px;
             width: 100%;
             font-weight: 550;
+            max-height: 100px;
+            height: 100%;
         }
         .walkthrough:hover {
             opacity: 0.6;
