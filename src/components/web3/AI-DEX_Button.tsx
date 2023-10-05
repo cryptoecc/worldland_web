@@ -206,10 +206,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       console.log(BlockNumber);
 
-      console.log(tempPredList);
-
-      console.log(contract);
-
+      console.log('@이거랑 비교', tempPredList);
       console.log('@앞으로 10개 블록의 예측값', PredictedPrice);
 
       const txObject = {
