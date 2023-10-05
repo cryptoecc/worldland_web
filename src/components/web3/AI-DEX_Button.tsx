@@ -201,28 +201,18 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       let BN8 = web3.utils.toWei(Number([tempPredList[7]]), 'ether');
       let BN9 = web3.utils.toWei(Number([tempPredList[8]]), 'ether');
       let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
+      let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
 
       console.log(tempPredList);
 
       console.log(contract);
 
+      console.log('@앞으로 10개 블록의 예측값');
+
       const txObject = {
         from: account,
         to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
-        data: (contract.methods.setMarketPricesAtPool as any)(
-          token0,
-          token1,
-          BN,
-          BN2,
-          BN3,
-          BN4,
-          BN5,
-          BN6,
-          BN7,
-          BN8,
-          BN9,
-          BN10,
-        ).encodeABI(),
+        data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, PredictedPrice).encodeABI(),
         gasPrice: '10000000000',
         gas: 3000000,
       };
