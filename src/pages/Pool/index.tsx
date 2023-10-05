@@ -3,6 +3,7 @@ import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
 import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 const Pool = () => {
     return (
@@ -27,6 +28,16 @@ const Pool = () => {
                         <h3>Your active liquidity positions will appear here.</h3>
                     </div>
                 </div>
+                <div className="learn">
+                    <div className="walkthrough">
+                        <p>Learn about providing liquidity <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
+                        <p>Check out our v3 LP walkthrough and migration guides.</p>
+                    </div>
+                    <div className="walkthrough">
+                        <p>Learn about providing liquidity <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
+                        <p>Check out our v3 LP walkthrough and migration guides.</p>
+                    </div>
+                </div>
             </section>
         </Container>
     )
@@ -48,7 +59,7 @@ const Container = styled.div`
     justify-content: center;
     flex-direction: column;
     z-index: 4;
-    max-width: 800px;
+    max-width: 900px;
     width: 100%;
     gap: 30px;
 
@@ -96,5 +107,30 @@ const Container = styled.div`
             }
         }
     } 
+    .learn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        .walkthrough {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+            border: 1px solid #5b5b5b;
+            border-radius: 20px;
+            color: #ffffff;
+            max-width: 440px;
+            width: 100%;
+            font-weight: 550;
+        }
+        .walkthrough:hover {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+    }
   }
 `
