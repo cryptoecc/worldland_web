@@ -190,6 +190,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
+      const BlockNumber = await web3.eth.getBlockNumber();
 
       let BN = web3.utils.toWei(Number([tempPredList[0]]), 'ether');
       let BN2 = web3.utils.toWei(Number([tempPredList[1]]), 'ether');
@@ -212,7 +213,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       const txObject = {
         from: account,
         to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
-        data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, PredictedPrice).encodeABI(),
+        data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
         gasPrice: '10000000000',
         gas: 3000000,
       };
