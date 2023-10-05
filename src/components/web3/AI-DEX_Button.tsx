@@ -204,6 +204,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
       let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
 
+      console.log(BlockNumber);
+
       console.log(tempPredList);
 
       console.log(contract);
