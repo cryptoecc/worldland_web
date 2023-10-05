@@ -34,8 +34,8 @@ const Pool = () => {
                         <p>Check out our v3 LP walkthrough and migration guides.</p>
                     </div>
                     <div className="walkthrough">
-                        <p>Learn about providing liquidity <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
-                        <p>Check out our v3 LP walkthrough and migration guides.</p>
+                        <p>Top pools <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
+                        <p>Explore Kimchiswap analytics.</p>
                     </div>
                 </div>
             </section>
@@ -53,6 +53,7 @@ const Container = styled.div`
   height: 100vh;
   position: relative;
   font-family: 'Nunito Sans', sans-serif;
+  padding: 20px;
   .content-wrap {
     display: flex;
     align-items: center;
@@ -62,6 +63,7 @@ const Container = styled.div`
     max-width: 900px;
     width: 100%;
     gap: 30px;
+
 
     .header {
         display: flex;
@@ -130,6 +132,11 @@ const Container = styled.div`
         .walkthrough:hover {
             opacity: 0.6;
             cursor: pointer;
+        }
+
+        @media screen and (max-width: 728px) {
+            flex-direction: column;
+            gap: 20px;
         }
     }
   }
