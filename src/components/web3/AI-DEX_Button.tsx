@@ -231,7 +231,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         }
 
         let amountIn = web3.utils.toWei(1, 'ether');
-
+        console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
         const getAmountOut = new web3.eth.Contract(
           MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
           WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
