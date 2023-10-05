@@ -16,6 +16,80 @@ export const abi = [
     type: 'constructor',
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'tokenA',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'tokenB',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amountA',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amountB',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'pair',
+        type: 'address',
+      },
+    ],
+    name: 'AddLiquidity',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'tokenA',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'tokenB',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amountA',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amountB',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'pair',
+        type: 'address',
+      },
+    ],
+    name: 'RemoveLiquidity',
+    type: 'event',
+  },
+  {
     inputs: [],
     name: 'WETH',
     outputs: [
@@ -687,53 +761,13 @@ export const abi = [
       },
       {
         internalType: 'uint256',
-        name: 'p0',
+        name: 'blockNumber',
         type: 'uint256',
       },
       {
-        internalType: 'uint256',
-        name: 'p1',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p2',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p3',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p4',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p5',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p6',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p7',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p8',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'p9',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'prices',
+        type: 'uint256[]',
       },
     ],
     name: 'setMarketPricesAtPool',
