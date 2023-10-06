@@ -22,3 +22,10 @@ export function putCommaAtPrice(data: number | string, precision: number | strin
   }
   return 0;
 }
+
+export async function getBlockNumber() {
+  const latest = (await web3.eth.getBlock('latest')).number;
+  const current = latest + 1;
+  const next = current + 1;
+  return { latest: latest, current: current, next: next };
+}

@@ -9,6 +9,16 @@ import { BiChevronDown } from "react-icons/bi";
 import { crypto_list } from 'data';
 import { useNavigate, useLocation } from "react-router-dom";
 import TokenModal from "components/TokenModal";
+import {
+    useAccount,
+    useNetwork,
+    useSwitchNetwork,
+    useBalance,
+    useContractWrite,
+    useWaitForTransaction,
+    useContractRead,
+} from 'wagmi';
+
 const AddLiquidity = () => {
     const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
@@ -28,6 +38,11 @@ const AddLiquidity = () => {
         setSelectedTokenInputField(index);
         setModal(prev => !prev);
     }
+
+    const { chain } = useNetwork();
+
+
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location])
@@ -234,6 +249,7 @@ const Container = styled.div`
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            gap: 10px;
             .pair {
                 display: flex;
                 align-items: center;
