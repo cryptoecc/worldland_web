@@ -33,6 +33,10 @@ export declare global {
 
   interface selectedCrypto {}
 
+  interface ImapIndexToFunction {
+    [key: number]: (obj: TokenProps) => void;
+  }
+
   type ADDRESS_TYPE = {
     [key: string]: `0x${string}` | any;
   };

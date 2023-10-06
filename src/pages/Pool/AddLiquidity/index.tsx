@@ -8,10 +8,30 @@ import { IoMdSettings } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
 import { crypto_list } from 'data';
 import { useNavigate } from "react-router-dom";
+import TokenModal from "components/TokenModal";
 const AddLiquidity = () => {
-    const [selectedToken, setSelectedToken] = useState<TokenProps | null>(null);
-    const [selected2Token, setSelected2Token] = useState<TokenProps | null>(null);
+    const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
+    const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
+    const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
+    const [modal, setModal] = useState(false);
+    const mapIndexToFunction: ImapIndexToFunction = {
+        0: (obj: TokenProps) => setSelectedToken0(obj),
+        1: (obj: TokenProps) => setSelectedToken1(obj),
+    }
     const navigate = useNavigate();
+
+
+
+    const handleTokenClick = (param: TokenProps) => {
+        mapIndexToFunction[selectedTokenInputField](param)
+        setModal(false);
+    };
+
+    function handleModalOpen(index: number) {
+        setSelectedTokenInputField(index);
+        setModal(prev => !prev);
+    }
+
     return (
         <Container>
             <Backdrop intensity={5} />
@@ -34,12 +54,12 @@ const AddLiquidity = () => {
                 <section className="inner-section">
                     <h2>Select pair</h2>
                     <section className="pairs">
-                        <div className="pair">
+                        <div onClick={() => handleModalOpen(0)} className="pair">
                             <span>
-                                {selectedToken ? (
+                                {selectedToken0 ? (
                                     <>
-                                        <img src={selectedToken.icon} alt={selectedToken.icon} />
-                                        <p>{selectedToken.symbol}</p>
+                                        <img src={selectedToken0.icon} alt={selectedToken0.icon} />
+                                        <p>{selectedToken0.symbol}</p>
                                     </>
                                 ) : (
                                     <>
@@ -50,12 +70,12 @@ const AddLiquidity = () => {
                             </span>
                             <BiChevronDown color="#ffffff" size={25} />
                         </div>
-                        <div className="pair">
+                        <div onClick={() => handleModalOpen(1)} className="pair">
                             <span>
-                                {selected2Token ? (
+                                {selectedToken1 ? (
                                     <>
-                                        <img src={selected2Token.icon} alt={selected2Token.icon} />
-                                        <p>{selected2Token.symbol}</p>
+                                        <img src={selectedToken1.icon} alt={selectedToken1.icon} />
+                                        <p>{selectedToken1.symbol}</p>
                                     </>
                                 ) : (
                                     <>
@@ -114,6 +134,12 @@ const AddLiquidity = () => {
                     </section>
                 </section>
             </section>
+            {modal && (
+                <>
+                    <Backdrop intensity={10} close={setModal} />
+                    <TokenModal close={setModal} handleTokenClick={handleTokenClick} />
+                </>
+            )}
         </Container>
     )
 }
