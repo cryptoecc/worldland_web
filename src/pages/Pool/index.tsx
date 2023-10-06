@@ -30,11 +30,11 @@ const Pool = () => {
                 </div>
                 <div className="learn">
                     <div className="walkthrough">
-                        <p>Learn about providing liquidity <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
+                        <p>Learn about providing liquidity <AiOutlineArrowRight color="#b4b4b4" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
                         <p>Check out our v3 LP walkthrough and migration guides.</p>
                     </div>
                     <div className="walkthrough">
-                        <p>Top pools <AiOutlineArrowRight color="#ffffff" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
+                        <p>Top pools <AiOutlineArrowRight color="#b4b4b4" size={15} style={{ transform: "rotate(-45deg)" }} /></p>
                         <p>Explore Kimchiswap analytics.</p>
                     </div>
                 </div>
@@ -127,7 +127,7 @@ const Container = styled.div`
             padding: 20px;
             border: 1px solid #5b5b5b;
             border-radius: 20px;
-            color: #ffffff;
+            color: #b4b4b4;
             max-width: 440px;
             width: 100%;
             font-weight: 550;
