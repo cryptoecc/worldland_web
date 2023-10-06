@@ -77,6 +77,19 @@ const AddLiquidity = () => {
                         <h2>0.00020500</h2>
                         <p>ETH per DAI</p>
                     </div>
+                    <section className="deposit-field">
+                        <h2>Deposit amounts</h2>
+                        <div className="input-wrap">
+                            <div className="inner-items">
+                                <input type="text" />
+                                <span>ETH</span>
+                            </div>
+                            <div className="inner-items">
+                                <p className="amount-in-usd">$10.07B</p>
+                                <p className="balance">Balance: 0 <span>Max</span></p>
+                            </div>
+                        </div>
+                    </section>
                 </section>
             </section>
         </Container>
@@ -243,7 +256,47 @@ const Container = styled.div`
                 font-weight: 600;
             }
         }
-        
+        .deposit-field {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-direction: column;
+            margin: 20px 0 0 0;
+            width: 100%;
+            h2 {
+                width: 100%;
+                text-align: left;
+                font-weight: 650;
+                margin: 0 0 15px;
+            }
+            .input-wrap {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: 100%;
+                background-color: rgb(255, 255, 255, 0.1);
+                border-radius: 15px;
+
+                .inner-items {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 10px;
+
+                    input {
+                        background-color: rgb(255, 255, 255, 0);
+                        border: none;
+                        width: 90%;
+                        color: #ffffff;
+                    }
+                    span {
+                        color: #ffffff;                       
+                    }
+                }
+            }
+        }
     }
   }
 `
