@@ -1,0 +1,181 @@
+import { useState } from "react";
+import styled from 'styled-components';
+import VideoContainer from 'components/VideoContainer';
+import Video from 'components/Video';
+import Backdrop from 'components/Backdrop';
+import { AiOutlineArrowLeft } from "react-icons/ai";
+import { IoMdSettings } from "react-icons/io";
+import { BiChevronDown } from "react-icons/bi";
+import { crypto_list } from 'data';
+const AddLiquidity = () => {
+    const [selectedToken, setSelectedToken] = useState<TokenProps | null>(null);
+    const [selected2Token, setSelected2Token] = useState<TokenProps | null>(null);
+    return (
+        <Container>
+            <Backdrop intensity={5} />
+            <VideoContainer>
+                <Video autoPlay loop muted playsInline>
+                    <source src="/videos/MainVideo.mp4" />
+                    Your browser does not support the video tag.
+                </Video>
+            </VideoContainer>
+            <section className="content-wrap">
+                <div className="header">
+                    <AiOutlineArrowLeft color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
+                    <h1>Add liquidity</h1>
+                    <div className="settings-wrap">
+                        <p>Clear all</p>
+                        <IoMdSettings color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
+                    </div>
+                </div>
+                <hr />
+                <section className="inner-section">
+                    <h2>Select pair</h2>
+                    <section className="pairs">
+                        <div className="pair">
+                            <span>
+                                {selectedToken ? (
+                                    <>
+                                        <img src={selectedToken.icon} alt={selectedToken.icon} />
+                                        <p>{selectedToken.symbol}</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                                        <p>{crypto_list[0]['symbol']}</p>
+                                    </>
+                                )}
+                            </span>
+                            <BiChevronDown color="#ffffff" size={25} />
+                        </div>
+
+                        <div className="pair">
+                            <span>
+                                {selected2Token ? (
+                                    <>
+                                        <img src={selected2Token.icon} alt={selected2Token.icon} />
+                                        <p>{selected2Token.symbol}</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                        <p>{crypto_list[1]['symbol']}</p>
+                                    </>
+                                )}
+                            </span>
+                            <BiChevronDown color="#ffffff" size={25} />
+                        </div>
+                    </section>
+                </section>
+            </section>
+        </Container>
+    )
+}
+
+export default AddLiquidity;
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  font-family: 'Nunito Sans', sans-serif;
+  padding: 20px;
+  .content-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 650px;
+    width: 100%;
+    background-color: rgb(255, 255, 255, 0.1);
+    z-index: 4;
+    border-radius: 15px;
+    padding: 15px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin: 20px 0;
+
+        h1 {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .settings-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+
+            p {
+                color: #FC72FF;
+                font-size: 12px;
+            }
+        }
+    }
+    hr {
+        border: 1px solid #4c4c4c;
+        width: 100%;
+        border-width: 0.1px;
+    }
+    .inner-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        margin: 20px 0;
+        gap: 10px;
+        h2 {
+            width: 100%;
+            text-align: left;
+            color: #ffffff;
+        }
+        .pairs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            .pair {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 5px;
+                padding: 0 10px;
+                background-color: rgb(255, 255, 255, 0.1);
+                border-radius: 12px;
+                height: 30px;
+                max-width: 300px;
+                width: 100%;
+                height: 50px;
+                cursor: pointer;
+                span {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                p {
+                color: #ffffff;
+                font-size: 20px;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                }
+                img {
+                width: 25px;
+                height: 25px;
+                }
+            }
+        }
+        
+    }
+  }
+`

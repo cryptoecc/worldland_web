@@ -25,6 +25,12 @@ export declare global {
     intensity: number;
   }
 
+  interface TokenProps {
+    symbol: string;
+    title: string;
+    icon: string;
+  }
+
   interface selectedCrypto {}
 
   type ADDRESS_TYPE = {

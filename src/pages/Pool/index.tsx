@@ -4,8 +4,11 @@ import Video from 'components/Video';
 import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 
 const Pool = () => {
+    const navigate = useNavigate();
+
     return (
         <Container>
             <Backdrop intensity={5} />
@@ -18,7 +21,7 @@ const Pool = () => {
             <section className="content-wrap">
                 <div className="header">
                     <h1>Pools</h1>
-                    <button className="add-liquidity">
+                    <button onClick={() => navigate('add-liquidity')} className="add-liquidity">
                         + New position
                     </button>
                 </div>

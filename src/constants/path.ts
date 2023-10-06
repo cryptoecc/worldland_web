@@ -13,4 +13,5 @@ export const PATH = {
   LEARN_FAQ: '/learn/faq',
   SWAP: '/swap',
   POOL: '/pool',
+  ADD: '/pool/add-liquidity',
 };

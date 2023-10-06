@@ -15,6 +15,7 @@ import HowWorks from 'components/learn/Post/HowWorks';
 import Governance from 'components/learn/Post/Governance';
 import Index from 'pages/Index';
 import Pool from 'pages/Pool';
+import AddLiquidity from 'pages/Pool/AddLiquidity';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -38,7 +39,9 @@ const Router = () => {
           ],
         },
         { path: `${PATH.SWAP}`, element: <Swap /> },
-        { path: `${PATH.POOL}`, element: <Pool /> }
+        { path: `${PATH.POOL}`, element: <Pool /> },
+        { path: `${PATH.ADD}`, element: <AddLiquidity /> },
+
       ]
     },
   ]);
