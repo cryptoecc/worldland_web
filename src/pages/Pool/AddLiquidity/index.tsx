@@ -48,7 +48,6 @@ const AddLiquidity = () => {
                             </span>
                             <BiChevronDown color="#ffffff" size={25} />
                         </div>
-
                         <div className="pair">
                             <span>
                                 {selected2Token ? (
@@ -66,6 +65,18 @@ const AddLiquidity = () => {
                             <BiChevronDown color="#ffffff" size={25} />
                         </div>
                     </section>
+                    <section className="fee-tier">
+                        <div>
+                            <h3>0.3% fee tier</h3>
+                            <p>100% select</p>
+                        </div>
+                        <button className="edit-btn">Edit</button>
+                    </section>
+                    <div className="current-price-box">
+                        <p>Current price:</p>
+                        <h2>0.00020500</h2>
+                        <p>ETH per DAI</p>
+                    </div>
                 </section>
             </section>
         </Container>
@@ -132,7 +143,7 @@ const Container = styled.div`
         flex-direction: column;
         width: 100%;
         margin: 20px 0;
-        gap: 10px;
+        gap: 20px;
         h2 {
             width: 100%;
             text-align: left;
@@ -173,6 +184,63 @@ const Container = styled.div`
                 width: 25px;
                 height: 25px;
                 }
+            }
+        }
+
+        .fee-tier {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            border: 1px solid rgb(255, 255, 255, 0.1);
+            border-radius: 20px;
+            width: 100%;
+            height: 120px;
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-direction: column;
+                height: 100%;
+                padding: 10px 0;
+
+                h3 {
+                    color: #ffffff;
+                }
+                p {
+                    color: #ffffff;
+                    background-color: rgb(255, 255, 255, 0.1);
+                    font-size: 10px;
+                    padding: 8px;
+                    border-radius: 10px;
+                }
+            }
+            button {
+                color: #a1a1a1;
+                font-size: 18px;
+                border: 1px solid  rgb(255, 255, 255, 0.1);
+                padding: 8px;
+                border-radius: 10px;
+                font-weight: 550;
+            }
+            button:hover {
+                background-color: rgb(255, 255, 255, 0.1);
+                cursor: pointer;
+            }
+        }
+        .current-price-box {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-direction: column;
+            width: 100%;
+            gap: 10px;
+            p {
+                color: #ffffff;
+                font-size: 12px;
+            }
+            h2 {
+                font-weight: 600;
             }
         }
         
