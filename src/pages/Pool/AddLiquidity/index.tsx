@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
@@ -7,31 +7,30 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
 import { crypto_list } from 'data';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TokenModal from "components/TokenModal";
 const AddLiquidity = () => {
     const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
     const [modal, setModal] = useState(false);
+    const location = useLocation;
     const mapIndexToFunction: ImapIndexToFunction = {
         0: (obj: TokenProps) => setSelectedToken0(obj),
         1: (obj: TokenProps) => setSelectedToken1(obj),
     }
     const navigate = useNavigate();
-
-
-
     const handleTokenClick = (param: TokenProps) => {
         mapIndexToFunction[selectedTokenInputField](param)
         setModal(false);
     };
-
     function handleModalOpen(index: number) {
         setSelectedTokenInputField(index);
         setModal(prev => !prev);
     }
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location])
     return (
         <Container>
             <Backdrop intensity={5} />
@@ -424,6 +423,7 @@ const Container = styled.div`
                 /* background-color: rgb(255, 255, 255, 0.1); */
                 background-color: rgb(149, 60, 53);
                 border-radius: 20px;
+                cursor: pointer;
             }
         }
     }
