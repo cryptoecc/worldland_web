@@ -106,8 +106,17 @@ const AddLiquidity = () => {
                                 <div className="inner-items">
                                     <input type="text" placeholder="0" />
                                     <span className="token-card">
-                                        <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                                        <p>{crypto_list[0]['symbol']}</p>
+                                        {selectedToken0 ? (
+                                            <>
+                                                <img src={selectedToken0.icon} alt={selectedToken0.icon} />
+                                                <p>{selectedToken0.symbol}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                                                <p>{crypto_list[0]['symbol']}</p>
+                                            </>
+                                        )}
                                     </span>
                                 </div>
                                 <div className="inner-items">
@@ -119,8 +128,17 @@ const AddLiquidity = () => {
                                 <div className="inner-items">
                                     <input type="text" placeholder="0" />
                                     <span className="token-card">
-                                        <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
-                                        <p>{crypto_list[1]['symbol']}</p>
+                                        {selectedToken1 ? (
+                                            <>
+                                                <img src={selectedToken1.icon} alt={selectedToken1.icon} />
+                                                <p>{selectedToken1.symbol}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                                <p>{crypto_list[1]['symbol']}</p>
+                                            </>
+                                        )}
                                     </span>
                                 </div>
                                 <div className="inner-items">
