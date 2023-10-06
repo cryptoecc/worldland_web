@@ -10,6 +10,10 @@ import AddNetworkButton from 'components/web3/AddNetworkButton';
 import MobileMetamask from 'components/web3/MobileAddNetwork';
 
 const HeaderWrapper = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
   font-family: 'Inter';
   height: 65px;
   background: ${theme.colors.black};
@@ -22,6 +26,7 @@ const HeaderWrapper = styled.header`
   user-select: none;
   border-bottom: 1px solid ${theme.colors.black700};
   width: 100%;
+ 
 
   ${maxQuery.tablet} {
     flex-direction: row;

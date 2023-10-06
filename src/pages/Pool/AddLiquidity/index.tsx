@@ -7,9 +7,11 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { IoMdSettings } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
 import { crypto_list } from 'data';
+import { useNavigate } from "react-router-dom";
 const AddLiquidity = () => {
     const [selectedToken, setSelectedToken] = useState<TokenProps | null>(null);
     const [selected2Token, setSelected2Token] = useState<TokenProps | null>(null);
+    const navigate = useNavigate();
     return (
         <Container>
             <Backdrop intensity={5} />
@@ -21,7 +23,7 @@ const AddLiquidity = () => {
             </VideoContainer>
             <section className="content-wrap">
                 <div className="header">
-                    <AiOutlineArrowLeft color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
+                    <AiOutlineArrowLeft onClick={() => navigate(-1)} color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
                     <h1>Add liquidity</h1>
                     <div className="settings-wrap">
                         <p>Clear all</p>
@@ -79,16 +81,36 @@ const AddLiquidity = () => {
                     </div>
                     <section className="deposit-field">
                         <h2>Deposit amounts</h2>
-                        <div className="input-wrap">
-                            <div className="inner-items">
-                                <input type="text" />
-                                <span>ETH</span>
+                        <div className="input-hold">
+                            <div className="input-wrap">
+                                <div className="inner-items">
+                                    <input type="text" placeholder="0" />
+                                    <span className="token-card">
+                                        <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                                        <p>{crypto_list[0]['symbol']}</p>
+                                    </span>
+                                </div>
+                                <div className="inner-items">
+                                    <p className="amount-in-usd">$10.07B</p>
+                                    <p className="balance">Balance: 0 <span className="max-btn">MAX</span></p>
+                                </div>
                             </div>
-                            <div className="inner-items">
-                                <p className="amount-in-usd">$10.07B</p>
-                                <p className="balance">Balance: 0 <span>Max</span></p>
+                            <div className="input-wrap">
+                                <div className="inner-items">
+                                    <input type="text" placeholder="0" />
+                                    <span className="token-card">
+                                        <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                        <p>{crypto_list[1]['symbol']}</p>
+                                    </span>
+                                </div>
+                                <div className="inner-items">
+                                    <p className="amount-in-usd">$10.07B</p>
+                                    <p className="balance">Balance: 0 <span className="max-btn">MAX</span></p>
+                                </div>
                             </div>
                         </div>
+                        {/* <button className="deposit-btn">Enter an amount</button> */}
+                        <button className="deposit-btn">Insufficient DAI balance</button>
                     </section>
                 </section>
             </section>
@@ -107,6 +129,8 @@ const Container = styled.div`
   position: relative;
   font-family: 'Nunito Sans', sans-serif;
   padding: 20px;
+  margin: 120px 0;
+  
   .content-wrap {
     display: flex;
     align-items: center;
@@ -155,7 +179,7 @@ const Container = styled.div`
         justify-content: center;
         flex-direction: column;
         width: 100%;
-        margin: 20px 0;
+        margin: 20px 0 0;
         gap: 20px;
         h2 {
             width: 100%;
@@ -174,6 +198,7 @@ const Container = styled.div`
                 gap: 5px;
                 padding: 0 10px;
                 background-color: rgb(255, 255, 255, 0.1);
+                border: 1px solid rgb(255, 255, 255, 0.2);
                 border-radius: 12px;
                 height: 30px;
                 max-width: 300px;
@@ -197,6 +222,9 @@ const Container = styled.div`
                 width: 25px;
                 height: 25px;
                 }
+            }
+            .pair:hover {
+                border: 1px solid rgb(255, 255, 255, 0);
             }
         }
 
@@ -263,38 +291,95 @@ const Container = styled.div`
             flex-direction: column;
             margin: 20px 0 0 0;
             width: 100%;
+
             h2 {
                 width: 100%;
                 text-align: left;
                 font-weight: 650;
                 margin: 0 0 15px;
             }
-            .input-wrap {
+
+            .input-hold {
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
                 width: 100%;
-                background-color: rgb(255, 255, 255, 0.1);
-                border-radius: 15px;
+                gap: 15px;
 
-                .inner-items {
+                .input-wrap {
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
+                    justify-content: center;
+                    flex-direction: column;
                     width: 100%;
-                    padding: 10px;
-
-                    input {
-                        background-color: rgb(255, 255, 255, 0);
-                        border: none;
-                        width: 90%;
-                        color: #ffffff;
-                    }
-                    span {
-                        color: #ffffff;                       
+                    background-color: rgb(255, 255, 255, 0.1);
+                    border-radius: 20px;
+                    border: 1px solid rgb(255, 255, 255, 0.2);
+                    padding: 10px 0;
+    
+                    .inner-items {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        width: 100%;
+                        padding: 10px 20px;
+    
+                        input {
+                            background-color: rgb(255, 255, 255, 0);
+                            border: none;
+                            width: 90%;
+                            color: #ffffff;
+                            font-size: 22px;
+                            font-weight: 550;
+                        }
+                        p {
+                            color: #ffffff;
+                            font-weight: 550;
+                            font-size: 13px;
+                        }
+                        .max-btn {
+                                background-color: rgb(49, 28, 50, 0.6);
+                                padding: 7px;
+                                border-radius: 15px;
+                                color: #CE5FD1;
+                                font-size: 12px;
+                            }
+                        .token-card {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            color: #ffffff;
+                            background-color: rgb(0, 0, 0, 0.4);
+                            border-radius: 20px;
+                            padding: 10px;
+                            gap: 10px;
+                            p {
+                                font-size: 20px;
+                                font-weight: 900;
+                            }
+                            img {
+                              width: 25px;
+                              height: 25px;
+                            } 
+                        }
                     }
                 }
+                .input-wrap:hover {
+                    border: 1px solid rgb(255, 255, 255, 0);
+                    cursor: pointer;
+                }
+            }
+            .deposit-btn {
+                width: 100%;
+                padding: 15px;
+                margin: 20px 0 0;
+                font-size: 20px;
+                font-weight: 600;
+                color: #9f9f9f;
+                /* background-color: rgb(255, 255, 255, 0.1); */
+                background-color: rgb(149, 60, 53);
+                border-radius: 20px;
             }
         }
     }
