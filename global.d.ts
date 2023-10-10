@@ -29,12 +29,16 @@ export declare global {
     symbol: string;
     title: string;
     icon: string;
+    amount: string;
   }
 
   interface selectedCrypto {}
 
   interface ImapIndexToFunction {
     [key: number]: (obj: TokenProps) => void;
+  }
+  interface ImapIndexToInput {
+    [key: number]: (amount: string) => void;
   }
 
   type ADDRESS_TYPE = {

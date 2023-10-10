@@ -4,16 +4,12 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { crypto_list } from 'data';
 import { useEffect, useState } from 'react';
 
-type Token = {
-  icon: string;
-  title: string;
-  symbol: string;
-};
+
 
 const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
   //   const [selectedToken, setSelectedToken] = useState(null);
 
-  const handleTokenClicks = (token: any) => {
+  const handleTokenClicks = (token: TokenProps) => {
     handleTokenClick(token);
     close(false);
   };

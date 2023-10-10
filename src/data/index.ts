@@ -9,11 +9,13 @@ export const crypto_list = [
     symbol: 'ETH',
     title: 'ETHER',
     icon: eth_logo,
+    amount: '0',
   },
   {
     symbol: 'DAI',
     title: 'Dai',
     icon: dai_logo,
+    amount: '0',
   },
   // {
   //   symbol: 'WETH',

@@ -19,6 +19,7 @@ import {
     useContractRead,
 } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES } from "utils/enum";
+import { setDeadline } from "utils/util";
 import { SEPOLIA_ADDRESSES } from "configs/contract_addresses";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
@@ -29,6 +30,8 @@ const AddLiquidity = () => {
     const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
+    const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('0');
+    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
     const [modal, setModal] = useState(false);
     const location = useLocation;
     const approvalAmount = '1000000';
@@ -36,9 +39,13 @@ const AddLiquidity = () => {
         0: (obj: TokenProps) => setSelectedToken0(obj),
         1: (obj: TokenProps) => setSelectedToken1(obj),
     }
+    const mapIndexToInput: ImapIndexToInput = {
+        0: (amount: string) => setSelectedTokenAmount0(amount),
+        1: (amount: string) => setSelectedTokenAmount1(amount),
+    }
     const navigate = useNavigate();
-    const handleTokenClick = (param: TokenProps) => {
-        mapIndexToFunction[selectedTokenInputField](param)
+    const handleTokenClick = (params: TokenProps) => {
+        mapIndexToFunction[selectedTokenInputField](params)
         setModal(false);
     };
     function handleModalOpen(index: number) {
@@ -97,6 +104,38 @@ const AddLiquidity = () => {
             console.log({ approvalErrB: err });
         }
     })
+    const { data: _, write: AddLiquidity } = useContractWrite({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: 'addLiquidity',
+        onSuccess(data) {
+            console.log({ approvalB: data });
+        },
+        onError(err) {
+            console.log({ approvalErrB: err });
+        }
+    })
+
+    async function handleAddLiquidity() {
+        let deadline = await setDeadline(3600);
+        AddLiquidity({
+            args: [
+                SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+                SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+                to_wei(selectedTokenAmount0),
+                to_wei(selectedTokenAmount1),
+                to_wei(to_wei('1')),
+                to_wei(to_wei('1')),
+                address,
+                deadline,
+            ],
+        });
+    }
+
+    function tokenAmountInputHandler(index: number, amount: string) {
+        mapIndexToInput[index](amount);
+    }
+
 
     function handleApprovals() {
         approveA();
@@ -183,7 +222,7 @@ const AddLiquidity = () => {
                         <div className="input-hold">
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input type="text" placeholder="0" />
+                                    <input onChange={(e) => tokenAmountInputHandler(0, e.target.value)} type="text" placeholder="0" />
                                     <span className="token-card">
                                         {selectedToken0 ? (
                                             <>
@@ -205,7 +244,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input type="text" placeholder="0" />
+                                    <input onChange={(e) => tokenAmountInputHandler(1, e.target.value)} type="text" placeholder="0" />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>
@@ -226,8 +265,9 @@ const AddLiquidity = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* <button className="deposit-btn">Enter an amount</button> */}
-                        <button onClick={handleApprovals} className="deposit-btn">{allowanceA > 0 ? 'Insufficient DAI balance' : 'Approve'}</button>
+                        <button onClick={handleAddLiquidity} className="deposit-btn">Add liquidity</button>
+                        {/* <button onClick={AddLiquidity} className="deposit-btn">Enter an amount</button> */}
+                        {/* <button onClick={handleApprovals} className="deposit-btn">{allowanceA > 0 ? 'Insufficient DAI balance' : 'Approve'}</button> */}
                     </section>
                 </section>
             </section>

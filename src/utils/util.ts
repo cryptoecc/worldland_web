@@ -31,7 +31,7 @@ export async function getBlockNumber() {
   return { latest: latest, current: current, next: next };
 }
 
-export async function setDeadline(expiry: number | string) {
+export async function setDeadline(expiry: number) {
   const blockGenerationTime = 15;
   const latestTimeStamp = (await web3.eth.getBlock('latest')).timestamp;
   return latestTimeStamp + BigInt(blockGenerationTime) + BigInt(expiry);

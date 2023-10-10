@@ -7,6 +7,11 @@ import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';
 import { abi as DAI_TOKEN_ADDRESS } from './contract-abi/dai_token_abi';
 import { abi as WRAPETH } from './contract-abi/wrappedeth_abi';
 
+//lv-swap abi
+
+import { abi as LVSWAPV2_ROUTER } from './contract-abi/lvswapV2Router02_abi';
+import { abi as LVSWAPV2_FACTORY } from './contract-abi/lvswapV2Router02_abi';
+
 export const MAP_STR_ABI = {
   ETHEREUM_BRIDGE_ABI,
   POLYGON_BRIDGE_ABI,
@@ -16,4 +21,6 @@ export const MAP_STR_ABI = {
   UNISWAPV2_FACTORY,
   DAI_TOKEN_ADDRESS,
   WRAPETH,
+  LVSWAPV2_ROUTER,
+  LVSWAPV2_FACTORY,
 };
