@@ -38,6 +38,25 @@ export const worldland_testnet = {
   },
 } as const satisfies Chain;
 
+export const sepolia_custom = {
+  id: 11155111,
+  name: 'sepolia-custom',
+  network: 'sepolia-custom',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Sepolia ETH',
+    symbol: 'Sepolia ETH',
+  },
+  rpcUrls: {
+    public: { http: ['https://sepolia.infura.io/v3/ef552e15a99640269292b3ec67869520'] },
+    default: { http: ['https://sepolia.infura.io/v3/ef552e15a99640269292b3ec67869520'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'SepoliaTestnet', url: 'https://sepolia.etherscan.io/' },
+    default: { name: 'SepoliaTestnet', url: 'https://sepolia.etherscan.io/' },
+  },
+} as const satisfies Chain;
+
 export const chainImages = {
   103: 'https://lv-storage1.s3.amazonaws.com/logo_2.svg',
 };

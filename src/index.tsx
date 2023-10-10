@@ -9,9 +9,9 @@ import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { arbitrum, mainnet, sepolia } from 'wagmi/chains';
 import { HelmetProvider } from 'react-helmet-async';
-import { worldland, worldland_testnet, chainImages } from 'utils/wagmi';
+import { worldland, worldland_testnet, sepolia_custom, chainImages } from 'utils/wagmi';
 
-const chains = [worldland, worldland_testnet, arbitrum, mainnet, sepolia];
+const chains = [sepolia_custom, worldland, worldland_testnet, arbitrum, mainnet, sepolia];
 const projectId = '90f6c51de51a4046732827e944ba4958';
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
