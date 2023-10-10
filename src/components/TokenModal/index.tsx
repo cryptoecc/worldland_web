@@ -18,9 +18,6 @@ const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
     close(false);
   };
 
-  //   useEffect(() => {
-  //     console.log(selectedToken);
-  //   }, [selectedToken]);
 
   return (
     <Container>
