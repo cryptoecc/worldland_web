@@ -1,5 +1,6 @@
-const Web3 = require('web3');
-const { web3_wld: web3 } = require('../configs/web3-wld');
+import { web3_wld as web3 } from 'configs/web3-wld';
+import { Web3 } from 'web3';
+
 export const from_wei = (val: string) => Web3.utils.fromWei('' + val, 'ether');
 export const to_wei = (val: string) => Web3.utils.toWei('' + val, 'ether');
 
@@ -25,13 +26,13 @@ export function putCommaAtPrice(data: number | string, precision: number | strin
 
 export async function getBlockNumber() {
   const latest = (await web3.eth.getBlock('latest')).number;
-  const current = latest + 1;
-  const next = current + 1;
+  const current = latest + BigInt(1);
+  const next = current + BigInt(1);
   return { latest: latest, current: current, next: next };
 }
 
-export async function setDeadline(expiry: number) {
+export async function setDeadline(expiry: number | string) {
   const blockGenerationTime = 15;
   const latestTimeStamp = (await web3.eth.getBlock('latest')).timestamp;
-  return latestTimeStamp + blockGenerationTime + expiry;
+  return latestTimeStamp + BigInt(blockGenerationTime) + BigInt(expiry);
 }

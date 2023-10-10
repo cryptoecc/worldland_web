@@ -1,6 +1,7 @@
 import { url } from './network_urls';
 import { nettype } from './nettype';
-const Web3 = require('web3');
+const { Web3 } = require('web3');
+
 const dynamic_urls = {
   testnet: url['sepolia-testnet'],
   mainnet: url['worldland-seoul'],

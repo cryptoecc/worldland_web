@@ -18,13 +18,20 @@ import {
     useWaitForTransaction,
     useContractRead,
 } from 'wagmi';
+import { ABI, CONTRACT_ADDRESSES } from "utils/enum";
+import { SEPOLIA_ADDRESSES } from "configs/contract_addresses";
+import { MAP_STR_ABI } from "configs/abis";
+import { web3_wld } from "configs/web3-wld";
+import { from_wei, to_wei } from "utils/util";
 
 const AddLiquidity = () => {
+    const { address } = useAccount()
     const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
     const [modal, setModal] = useState(false);
     const location = useLocation;
+    const approvalAmount = '1000000';
     const mapIndexToFunction: ImapIndexToFunction = {
         0: (obj: TokenProps) => setSelectedToken0(obj),
         1: (obj: TokenProps) => setSelectedToken1(obj),
@@ -39,8 +46,66 @@ const AddLiquidity = () => {
         setModal(prev => !prev);
     }
 
-    const { chain } = useNetwork();
+    const { data: allowanceA } = useContractRead({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ success: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+    const { data: allowanceB } = useContractRead({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ success: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
 
+    const { data: approvalA, write: approveA } = useContractWrite({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        functionName: 'approve',
+        onSuccess(data) {
+            console.log({ approvalA: data });
+        },
+        onError(err) {
+            console.log({ approvalErrA: err });
+        }
+    })
+    const { data: approvalB, write: approveB } = useContractWrite({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        functionName: 'approve',
+        onSuccess(data) {
+            console.log({ approvalB: data });
+        },
+        onError(err) {
+            console.log({ approvalErrB: err });
+        }
+    })
+
+    function handleApprovals() {
+        approveA();
+        approveB();
+    }
+
+
+
+    const { chain } = useNetwork();
 
 
     useEffect(() => {
@@ -162,7 +227,7 @@ const AddLiquidity = () => {
                             </div>
                         </div>
                         {/* <button className="deposit-btn">Enter an amount</button> */}
-                        <button className="deposit-btn">Insufficient DAI balance</button>
+                        <button onClick={handleApprovals} className="deposit-btn">{allowanceA > 0 ? 'Insufficient DAI balance' : 'Approve'}</button>
                     </section>
                 </section>
             </section>
