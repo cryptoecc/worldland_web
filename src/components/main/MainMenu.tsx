@@ -102,6 +102,9 @@ const MainMenu = () => {
                   <SpaceLink href="/pool">
                     <Strong>Pool</Strong>
                   </SpaceLink>
+                  <SpaceLink href="http://3.34.198.64/" target="_blank">
+                    <Strong>My AI</Strong>
+                  </SpaceLink>
                 </div>
               </div>
             </User>
