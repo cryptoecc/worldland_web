@@ -19,6 +19,7 @@ import { to_wei } from 'utils/util';
 import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
+import Web3 from 'web3';
 
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -31,6 +32,7 @@ const Swap = () => {
   const [selectedToken, setSelectedToken] = useState(null);
   const [selected2Token, setSelected2Token] = useState(null);
   const [selectedInputField, setSelectedInputField] = useState('first');
+  const [web3, setWeb3] = useState<Web3 | null>(null);
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -74,6 +76,30 @@ const Swap = () => {
     },
   });
 
+  // const getAccountsOut = async () => {
+  //   console.log('123123123');
+  //   if (web3) {
+  //     console.log('1111');
+  //     const contract = new web3.eth.Contract(
+  //       MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
+  //       WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+  //     );
+  //     console.log(contract);
+  //     try {
+  //       console.log('123');
+  //       const result: any = await (contract.methods.getAmountsOut as any)(
+  //         '0x71A831bb5155818396B70C5f5Fc1ae221Fd51E56',
+  //         input,
+  //         [[WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS]], [WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]]],
+  //       ).call();
+
+  //       console.log(result);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  // };
+
   const {
     data: amountOut,
     isError,
@@ -83,8 +109,9 @@ const Swap = () => {
     abi: MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
     functionName: FUNCTION.GETAMOUNTSOUT,
     args: [
-      input,
-      [WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS], WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]],
+      '0x71A831bb5155818396B70C5f5Fc1ae221Fd51E56',
+      input.toString(),
+      [[WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS]], [WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]]],
     ],
     onSuccess(data) {
       console.log({ data });
@@ -93,6 +120,11 @@ const Swap = () => {
       console.log({ data });
     },
   });
+
+  console.log('@ value', [
+    WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS],
+    WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS],
+  ]);
 
   const { write } = useContractWrite({
     chainId: chain?.id,
@@ -158,8 +190,14 @@ const Swap = () => {
   }
 
   useEffect(() => {
-    console.log(selectedToken);
-  }, [selectedToken]);
+    let currentWeb3 = web3;
+
+    if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      currentWeb3 = new Web3(window.ethereum);
+      setWeb3(currentWeb3);
+    }
+    // getAccountsOut();
+  }, [input]);
 
   return (
     <Container>
@@ -200,4 +238,3 @@ const Container = styled.section`
   height: 100vh;
   position: relative;
 `;
-
