@@ -110,8 +110,8 @@ const Swap = () => {
     functionName: FUNCTION.GETAMOUNTSOUT,
     args: [
       '0x71A831bb5155818396B70C5f5Fc1ae221Fd51E56',
-      input.toString(),
-      [[WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS]], [WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]]],
+      to_wei(input),
+      [WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS], WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]],
     ],
     onSuccess(data) {
       console.log({ data });
