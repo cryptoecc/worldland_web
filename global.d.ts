@@ -30,7 +30,7 @@ export declare global {
     title: string;
     icon: string;
     amount: string;
-    address: string;
+    address: `0x${string}`;
   }
 
   interface selectedCrypto {}

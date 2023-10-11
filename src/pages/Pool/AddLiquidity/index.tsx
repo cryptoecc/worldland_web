@@ -20,18 +20,17 @@ import {
 } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, TOKEN } from "utils/enum";
 import { handleBtnState, putCommaAtPrice, setDeadline } from "utils/util";
-import { SEPOLIA_ADDRESSES } from "configs/contract_addresses";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
-import { mapNetToAddress } from "configs/contract_address_config";
+import { MAPNETTOADDRESS } from "configs/contract_address_config";
 
 const AddLiquidity = () => {
     const { address } = useAccount()
     const [btnState, setBtnState] = useState<number>(1)
     const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps | null>(null);
-    const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
-    const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
+    const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
+    const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
     const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('0');
     const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
@@ -46,6 +45,7 @@ const AddLiquidity = () => {
         0: (amount: string) => setSelectedTokenAmount0(amount),
         1: (amount: string) => setSelectedTokenAmount1(amount),
     }
+
     const navigate = useNavigate();
     const handleTokenClick = (params: TokenProps) => {
         mapIndexToFunction[selectedTokenInputField](params)
@@ -57,7 +57,7 @@ const AddLiquidity = () => {
     }
 
     const { data: tokenBalanceA } = useContractRead({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
+        address: selectedToken0?.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'balanceOf',
         args: [address],
@@ -70,7 +70,7 @@ const AddLiquidity = () => {
         }
     })
     const { data: tokenBalanceB } = useContractRead({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
+        address: selectedToken1?.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'balanceOf',
         args: [address],
@@ -83,11 +83,12 @@ const AddLiquidity = () => {
         }
     })
 
+
     const { data: allowanceA } = useContractRead({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
+        address: selectedToken0?.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
-        args: [address, mapNetToAddress[CONTRACT_ADDRESSES.ROUTER]],
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
         // watch: true,
         onSuccess(data: any) {
             console.log({ allowanceA: data })
@@ -97,10 +98,10 @@ const AddLiquidity = () => {
         }
     })
     const { data: allowanceB } = useContractRead({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
+        address: selectedToken1?.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
-        args: [address, mapNetToAddress[CONTRACT_ADDRESSES.ROUTER]],
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
         // watch: true,
         onSuccess(data: any) {
             console.log({ allowanceB: data })
@@ -111,9 +112,9 @@ const AddLiquidity = () => {
     })
 
     const { data: approvalA, write: approveA } = useContractWrite({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
+        address: selectedToken0?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-        args: [mapNetToAddress[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
         functionName: 'approve',
         onSuccess(data) {
             console.log({ approvalA: data });
@@ -123,9 +124,9 @@ const AddLiquidity = () => {
         }
     })
     const { data: approvalB, write: approveB } = useContractWrite({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
+        address: selectedToken1?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-        args: [mapNetToAddress[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
         functionName: 'approve',
         onSuccess(data) {
             console.log({ approvalB: data });
@@ -135,7 +136,7 @@ const AddLiquidity = () => {
         }
     })
     const { data: _, write: AddLiquidity } = useContractWrite({
-        address: mapNetToAddress[CONTRACT_ADDRESSES.ROUTER],
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
         functionName: 'addLiquidity',
         onSuccess(data) {
@@ -183,14 +184,17 @@ const AddLiquidity = () => {
 
     useEffect(() => {
         if (selectedTokenAmount0 === "") {
+            // empty field
             setBtnState(0);
         } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0)) {
+            // balance is not enough
             setBtnState(1);
-            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
         } else if (Number(selectedTokenAmount0) > Number(from_wei(allowanceA))
             || Number(selectedTokenAmount0) > Number(from_wei(allowanceB))) {
+            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
             setBtnState(2);
         } else {
+            // permission to add liquidity
             setBtnState(3);
         }
     }, [selectedTokenAmount0, allowanceA, allowanceB, tokenBalanceA])

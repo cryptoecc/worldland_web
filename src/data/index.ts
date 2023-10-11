@@ -4,8 +4,8 @@ import dai_logo from 'assets/static/coin-logo/dai-logo.png';
 import usdc_logo from 'assets/static/coin-logo/usdc-logo.png';
 import wETH_logo from 'assets/static/coin-logo/wETH-logo.png';
 // token address import
-import { SEPOLIA_ADDRESSES } from 'configs/contract_addresses';
 import { CONTRACT_ADDRESSES } from 'utils/enum';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 
 export const crypto_list = [
   {
@@ -13,14 +13,14 @@ export const crypto_list = [
     title: 'ETHER',
     icon: eth_logo,
     amount: '0',
-    address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
   },
   {
     symbol: 'DAI',
     title: 'Dai',
     icon: dai_logo,
     amount: '0',
-    address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
   },
   // {
   //   symbol: 'WETH',
