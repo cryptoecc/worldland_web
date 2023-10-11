@@ -111,6 +111,27 @@ const AddLiquidity = () => {
         }
     })
 
+
+    const { data: amountOut } = useContractRead({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: 'getAmountOut',
+        args: [
+            MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+            to_wei(selectedTokenAmount0 ? selectedTokenAmount0 : "0"),
+            selectedToken0?.address,
+            selectedToken1?.address
+        ],
+        // watch: true,
+        onSuccess(data: any) {
+            console.log({ amountOut: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+
+
     const { data: approvalA, write: approveA } = useContractWrite({
         address: selectedToken0?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
@@ -263,8 +284,8 @@ const AddLiquidity = () => {
                     </section>
                     <div className="current-price-box">
                         <p>Current price:</p>
-                        <h2>0.00020500</h2>
-                        <p>ETH per DAI</p>
+                        <h2>{putCommaAtPrice(from_wei(amountOut ? amountOut : "0"), 3)}</h2>
+                        <p>{selectedToken1.symbol} per {selectedToken0.symbol}</p>
                     </div>
                     <section className="deposit-field">
                         <h2>Deposit amounts</h2>
@@ -293,7 +314,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input onChange={(e) => tokenAmountInputHandler(1, e.target.value)} type="text" placeholder="0" />
+                                    <input value={putCommaAtPrice(from_wei(amountOut ? amountOut : "0"), 3)} type="text" placeholder={amountOut} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>
