@@ -24,6 +24,7 @@ import { SEPOLIA_ADDRESSES } from "configs/contract_addresses";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
+import { mapNetToAddress } from "configs/contract_address_config";
 
 const AddLiquidity = () => {
     const { address } = useAccount()
@@ -56,7 +57,7 @@ const AddLiquidity = () => {
     }
 
     const { data: tokenBalanceA } = useContractRead({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'balanceOf',
         args: [address],
@@ -69,7 +70,7 @@ const AddLiquidity = () => {
         }
     })
     const { data: tokenBalanceB } = useContractRead({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'balanceOf',
         args: [address],
@@ -83,10 +84,10 @@ const AddLiquidity = () => {
     })
 
     const { data: allowanceA } = useContractRead({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
-        args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
+        args: [address, mapNetToAddress[CONTRACT_ADDRESSES.ROUTER]],
         // watch: true,
         onSuccess(data: any) {
             console.log({ allowanceA: data })
@@ -96,10 +97,10 @@ const AddLiquidity = () => {
         }
     })
     const { data: allowanceB } = useContractRead({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
-        args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
+        args: [address, mapNetToAddress[CONTRACT_ADDRESSES.ROUTER]],
         // watch: true,
         onSuccess(data: any) {
             console.log({ allowanceB: data })
@@ -110,9 +111,9 @@ const AddLiquidity = () => {
     })
 
     const { data: approvalA, write: approveA } = useContractWrite({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENA],
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-        args: [SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        args: [mapNetToAddress[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
         functionName: 'approve',
         onSuccess(data) {
             console.log({ approvalA: data });
@@ -122,9 +123,9 @@ const AddLiquidity = () => {
         }
     })
     const { data: approvalB, write: approveB } = useContractWrite({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.TOKENB],
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-        args: [SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        args: [mapNetToAddress[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
         functionName: 'approve',
         onSuccess(data) {
             console.log({ approvalB: data });
@@ -134,7 +135,7 @@ const AddLiquidity = () => {
         }
     })
     const { data: _, write: AddLiquidity } = useContractWrite({
-        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        address: mapNetToAddress[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
         functionName: 'addLiquidity',
         onSuccess(data) {
