@@ -18,8 +18,8 @@ import {
     useWaitForTransaction,
     useContractRead,
 } from 'wagmi';
-import { ABI, CONTRACT_ADDRESSES } from "utils/enum";
-import { setDeadline } from "utils/util";
+import { ABI, CONTRACT_ADDRESSES, TOKEN } from "utils/enum";
+import { handleBtnState, putCommaAtPrice, setDeadline } from "utils/util";
 import { SEPOLIA_ADDRESSES } from "configs/contract_addresses";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
@@ -27,6 +27,8 @@ import { from_wei, to_wei } from "utils/util";
 
 const AddLiquidity = () => {
     const { address } = useAccount()
+    const [btnState, setBtnState] = useState<number>(1)
+    const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps | null>(null);
     const [selectedToken0, setSelectedToken0] = useState<TokenProps | null>(null);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps | null>(null);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
@@ -53,14 +55,41 @@ const AddLiquidity = () => {
         setModal(prev => !prev);
     }
 
+    const { data: tokenBalanceA } = useContractRead({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'balanceOf',
+        args: [address],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ tokenBalanceA: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+    const { data: tokenBalanceB } = useContractRead({
+        address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'balanceOf',
+        args: [address],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ tokenBalanceB: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+
     const { data: allowanceA } = useContractRead({
         address: SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
         args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
-        watch: true,
+        // watch: true,
         onSuccess(data: any) {
-            console.log({ success: data })
+            console.log({ allowanceA: data })
         },
         onError(data: any) {
             console.log({ error: data })
@@ -73,7 +102,7 @@ const AddLiquidity = () => {
         args: [address, SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]],
         // watch: true,
         onSuccess(data: any) {
-            console.log({ success: data })
+            console.log({ allowanceB: data })
         },
         onError(data: any) {
             console.log({ error: data })
@@ -120,12 +149,12 @@ const AddLiquidity = () => {
         let deadline = await setDeadline(3600);
         AddLiquidity({
             args: [
-                SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENA],
-                SEPOLIA_ADDRESSES[CONTRACT_ADDRESSES.TOKENB],
+                selectedToken0?.address,
+                selectedToken1?.address,
                 to_wei(selectedTokenAmount0),
                 to_wei(selectedTokenAmount1),
-                to_wei(to_wei('1')),
-                to_wei(to_wei('1')),
+                to_wei("10"),
+                to_wei("10"),
                 address,
                 deadline,
             ],
@@ -150,6 +179,21 @@ const AddLiquidity = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location])
+
+    useEffect(() => {
+        if (selectedTokenAmount0 === "") {
+            setBtnState(0);
+        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0)) {
+            setBtnState(1);
+            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+        } else if (Number(selectedTokenAmount0) > Number(from_wei(allowanceA))
+            || Number(selectedTokenAmount0) > Number(from_wei(allowanceB))) {
+            setBtnState(2);
+        } else {
+            setBtnState(3);
+        }
+    }, [selectedTokenAmount0, allowanceA, allowanceB, tokenBalanceA])
+
     return (
         <Container>
             <Backdrop intensity={5} />
@@ -239,7 +283,7 @@ const AddLiquidity = () => {
                                 </div>
                                 <div className="inner-items">
                                     <p className="amount-in-usd">$10.07B</p>
-                                    <p className="balance">Balance: 0 <span className="max-btn">MAX</span></p>
+                                    <p className="balance">Balance: {putCommaAtPrice(from_wei(tokenBalanceA), 3)} <span className="max-btn">MAX</span></p>
                                 </div>
                             </div>
                             <div className="input-wrap">
@@ -261,11 +305,11 @@ const AddLiquidity = () => {
                                 </div>
                                 <div className="inner-items">
                                     <p className="amount-in-usd">$10.07B</p>
-                                    <p className="balance">Balance: 0 <span className="max-btn">MAX</span></p>
+                                    <p className="balance">Balance: {putCommaAtPrice(from_wei(tokenBalanceB), 3)} <span className="max-btn">MAX</span></p>
                                 </div>
                             </div>
                         </div>
-                        <button onClick={handleAddLiquidity} className="deposit-btn">Add liquidity</button>
+                        <button onClick={handleAddLiquidity} className="deposit-btn">{handleBtnState(btnState, lowBalanceToken)}</button>
                         {/* <button onClick={AddLiquidity} className="deposit-btn">Enter an amount</button> */}
                         {/* <button onClick={handleApprovals} className="deposit-btn">{allowanceA > 0 ? 'Insufficient DAI balance' : 'Approve'}</button> */}
                     </section>

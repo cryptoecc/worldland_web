@@ -30,6 +30,7 @@ export declare global {
     title: string;
     icon: string;
     amount: string;
+    address: string;
   }
 
   interface selectedCrypto {}
@@ -39,6 +40,10 @@ export declare global {
   }
   interface ImapIndexToInput {
     [key: number]: (amount: string) => void;
+  }
+
+  interface ImapMessageToObject {
+    [key: number]: ((token: TokenProps) => void) | string;
   }
 
   type ADDRESS_TYPE = {

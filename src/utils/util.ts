@@ -1,4 +1,5 @@
 import { web3_wld as web3 } from 'configs/web3-wld';
+import { mapMessageToObject } from 'data';
 import { Web3 } from 'web3';
 
 export const from_wei = (val: string) => Web3.utils.fromWei('' + val, 'ether');
@@ -35,4 +36,11 @@ export async function setDeadline(expiry: number) {
   const blockGenerationTime = 15;
   const latestTimeStamp = (await web3.eth.getBlock('latest')).timestamp;
   return latestTimeStamp + BigInt(blockGenerationTime) + BigInt(expiry);
+}
+
+export function handleBtnState(state: number, token: TokenProps | null) {
+  if (state === 0) {
+    return mapMessageToObject[state](token);
+  }
+  return mapMessageToObject[state];
 }
