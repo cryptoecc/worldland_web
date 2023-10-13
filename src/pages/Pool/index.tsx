@@ -21,7 +21,7 @@ interface Ipairs {
 
 const Pool = () => {
     const { address, isConnected } = useAccount()
-    const [pairs, setPairs] = useState<string[]>(["ee"])
+    const [pairs, setPairs] = useState<string[]>([])
     const navigate = useNavigate();
 
     const { data: pair } = useContractRead({
@@ -42,9 +42,17 @@ const Pool = () => {
         let _pairs: string[] = [];
         if (Number(from_wei(pair)) > 0) {
             _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
             setPairs(_pairs);
         }
-    }, [])
+    }, [address])
 
     return (
         <Container pairs={pairs}>
@@ -72,34 +80,36 @@ const Pool = () => {
                             <li>Current Price</li>
                         </ul>
                         <ul className="pairs">
-                            <li>
-                                <span className="pair-logo">
-                                    <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                                    <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
-                                    <p className="pair-name">
-                                        {crypto_list[0]['symbol']}/{crypto_list[1]['symbol']}
+                            {pairs.map((el, i) => (
+                                <li key={i}>
+                                    <span className="pair-logo">
+                                        <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                                        <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                        <p className="pair-name">
+                                            {crypto_list[0]['symbol']}/{crypto_list[1]['symbol']}
+                                        </p>
+                                    </span>
+                                    <span className="range">
+                                        <p>
+                                            14.3660 {"->"} 20.4877
+                                        </p>
+                                        <p>
+                                            {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
+                                        </p>
+                                    </span>
+                                    <p className="value-in-usd">
+                                        $40,234,534.20
                                     </p>
-                                </span>
-                                <span className="range">
-                                    <p>
-                                        14.3660 {"->"} 20.4877
-                                    </p>
-                                    <p>
-                                        {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
-                                    </p>
-                                </span>
-                                <p className="value-in-usd">
-                                    $40,234,534.20
-                                </p>
 
-                                <span className="status">
-                                    <p>In Range</p>
-                                </span>
+                                    <span className="status">
+                                        <p>In Range</p>
+                                    </span>
 
-                                <p className="value-in-token">
-                                    $17.7228 {crypto_list[1]['symbol']}
-                                </p>
-                            </li>
+                                    <p className="value-in-token">
+                                        14.3660 {crypto_list[1]['symbol']}
+                                    </p>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -131,7 +141,6 @@ const Container = styled.div<Ipairs>`
   justify-content: center;
   flex-direction: column;
   height: 100vh;
-  position: relative;
   font-family: 'Nunito Sans', sans-serif;
   padding: 20px;
   .content-wrap {
@@ -168,16 +177,17 @@ const Container = styled.div<Ipairs>`
     }
     .active-positions {
         display: flex;
-        align-items: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "flex-start" : "center"};
+        align-items: ${(props: Ipairs) => props.pairs && props?.pairs.length === 0 ? "center" : "flex-start"};
         justify-content: center;
         border-radius: 15px;
         background-color: rgb(255, 255, 255, 0.1);
         width: 100%;
         max-width: inherit;
-        height: 300px;
+        height: 100%;
         padding: 0;
+        overflow-y: hidden;
         .no-positions {
-            display: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "none" : "flex"};
+            display: ${(props: Ipairs) => props.pairs && props?.pairs.length === 0 ? "flex" : "none"};
             align-items: center;
             justify-content: center;
             gap: 20px;
@@ -192,7 +202,7 @@ const Container = styled.div<Ipairs>`
             }
         }
         .positions {
-            display: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "flex" : "none"};
+            display: ${(props: Ipairs) => props.pairs && props?.pairs.length === 0 ? "none" : "flex"};
             align-items: center;
             justify-content: center;
             flex-direction: column;
@@ -203,6 +213,7 @@ const Container = styled.div<Ipairs>`
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
+              
                 width: 100%;
                 padding: 15px 30px;
                 background-color: rgb(24, 32, 47, 0.6);
@@ -218,6 +229,18 @@ const Container = styled.div<Ipairs>`
                 display: flex;
                 flex-direction: column;
                 width: 100%;
+                height: 100%;
+                max-height: 300px;
+                overflow-y: scroll;
+
+                &::-webkit-scrollbar {
+                    width: 0;
+                    height: 0;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: transparent;
+                }
 
                 li {
                     display: flex;
@@ -228,6 +251,7 @@ const Container = styled.div<Ipairs>`
                     gap: 50px;
                     font-weight: 600;
                     color: #c6c6c6;
+                    font-size: 14px;
 
                     .pair-logo {
                         display: flex;
@@ -235,7 +259,7 @@ const Container = styled.div<Ipairs>`
                         justify-content: flex-start;
                         gap: 10px;
                         width: 100%;
-                        max-width: 310px;
+                        max-width: 330px;
                         
 
                         .image {
@@ -256,10 +280,12 @@ const Container = styled.div<Ipairs>`
                         gap: 5px;
                         font-weight: 600;
                         color: #c6c6c6;
+                        width: 100%;
+                        max-width: 150px;
                     }
                     .value-in-usd {
                         width: 100%;
-                        max-width: 170px;
+                        max-width: 150px;
                     }
                        
                     .status {
