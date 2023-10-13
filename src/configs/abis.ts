@@ -1,6 +1,6 @@
 import { abi as ETHEREUM_BRIDGE_ABI } from './contract-abi/ethereum_bridge_abi';
 import { abi as POLYGON_BRIDGE_ABI } from './contract-abi/worldland_bridge_abi';
-import { abi as ERC20_ABI } from './contract-abi/erc20_tokenbase_abi';
+import { abi as ERC20_ABI } from './contract-abi/erc20_abi';
 import { abi as UNISWAPV2_ROUTER } from './contract-abi/uniswapV2Router02';
 import { abi as UNISWAPV2_PAIR } from './contract-abi/uniswapV2Pair_abi';
 import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';

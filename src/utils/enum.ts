@@ -45,3 +45,11 @@ export enum CHAINDS {
   WORLDLAND_SEOUL = 'WORLDLAND_SEOUL',
   WORLDLAND_GWANGJU = 'WORLDLAND_GWANGJU',
 }
+
+export enum TOKEN {
+  SYMBOL = 'symbol',
+  TITLE = 'title',
+  ICON = 'icon',
+  AMOUNT = 'amount',
+  ADDRESS = 'address',
+}
