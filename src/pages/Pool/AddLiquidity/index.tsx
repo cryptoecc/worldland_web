@@ -10,13 +10,13 @@ import { crypto_list } from 'data';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TokenModal from 'components/TokenModal';
 import {
-  useAccount,
-  useNetwork,
-  useSwitchNetwork,
-  useBalance,
-  useContractWrite,
-  useWaitForTransaction,
-  useContractRead,
+    useAccount,
+    useNetwork,
+    useSwitchNetwork,
+    useBalance,
+    useContractWrite,
+    useWaitForTransaction,
+    useContractRead,
 } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, TOKEN } from 'utils/enum';
 import { handleBtnState, putCommaAtPrice, setDeadline } from 'utils/util';
@@ -25,236 +25,236 @@ import { web3_wld } from 'configs/web3-wld';
 import { from_wei, to_wei } from 'utils/util';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 const AddLiquidity = () => {
-  const { address, isConnected } = useAccount();
-  const [btnState, setBtnState] = useState<number>(1);
-  const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps>(crypto_list[0]);
-  const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
-  const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
-  const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
-  const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
-  const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
-  const [disabled, setDisabled] = useState<boolean>(false);
-  const [modal, setModal] = useState(false);
-  const location = useLocation;
-  const approvalAmount = '1000000';
-  const mapIndexToFunction: ImapIndexToFunction = {
-    0: (obj: TokenProps) => setSelectedToken0(obj),
-    1: (obj: TokenProps) => setSelectedToken1(obj),
-  };
-  const mapIndexToInput: ImapIndexToInput = {
-    0: (amount: string) => setSelectedTokenAmount0(amount),
-    1: (amount: string) => setSelectedTokenAmount1(amount),
-  };
-  const navigate = useNavigate();
-  const handleTokenClick = (params: TokenProps) => {
-    mapIndexToFunction[selectedTokenInputField](params);
-    setModal(false);
-  };
-  function handleModalOpen(index: number) {
-    setSelectedTokenInputField(index);
-    setModal((prev) => !prev);
-  }
-  const { data: tokenBalanceA } = useContractRead({
-    address: selectedToken0?.address,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: 'balanceOf',
-    args: [address],
-    watch: true,
-    onSuccess(data: any) {
-      console.log({ tokenBalanceA: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-  const { data: tokenBalanceB } = useContractRead({
-    address: selectedToken1?.address,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: 'balanceOf',
-    args: [address],
-    watch: true,
-    onSuccess(data: any) {
-      console.log({ tokenBalanceB: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-  const { data: allowanceA } = useContractRead({
-    address: selectedToken0?.address,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: 'allowance',
-    args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-    // watch: true,
-    onSuccess(data: any) {
-      console.log({ allowanceA: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-  const { data: allowanceB } = useContractRead({
-    address: selectedToken1?.address,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: 'allowance',
-    args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-    // watch: true,
-    onSuccess(data: any) {
-      console.log({ allowanceB: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-  const { data: amountOut } = useContractRead({
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: 'getAmountOut',
-    args: [
-      MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-      to_wei(selectedTokenAmount0 ? selectedTokenAmount0 : '0'),
-      selectedToken0?.address,
-      selectedToken1?.address,
-    ],
-    // watch: true,
-    onSuccess(data: any) {
-      console.log({ amountOut: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-  const { data: approvalA, write: approveA } = useContractWrite({
-    address: selectedToken0?.address,
-    abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-    args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-    functionName: 'approve',
-    onSuccess(data) {
-      console.log({ approvalA: data });
-    },
-    onError(err) {
-      console.log({ approvalErrA: err });
-    },
-  });
-  const { data: approvalB, write: approveB } = useContractWrite({
-    address: selectedToken1?.address,
-    abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-    args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-    functionName: 'approve',
-    onSuccess(data) {
-      console.log({ approvalB: data });
-    },
-    onError(err) {
-      console.log({ approvalErrB: err });
-    },
-  });
-  const { data: _, write: AddLiquidity } = useContractWrite({
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: 'addLiquidity',
-    onSuccess(data) {
-      console.log({ approvalB: data });
-    },
-    onError(err) {
-      console.log({ approvalErrB: err });
-    },
-  });
-  async function handleAddLiquidity() {
-    let deadline = await setDeadline(3600);
-    AddLiquidity({
-      args: [
-        selectedToken0?.address,
-        selectedToken1?.address,
-        to_wei(selectedTokenAmount0),
-        to_wei(amountOut),
-        to_wei('10'),
-        to_wei('10'),
-        address,
-        deadline,
-      ],
+    const { address, isConnected } = useAccount();
+    const [btnState, setBtnState] = useState<number>(1);
+    const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps>(crypto_list[0]);
+    const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
+    const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
+    const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
+    const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
+    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
+    const [disabled, setDisabled] = useState<boolean>(false);
+    const [modal, setModal] = useState(false);
+    const location = useLocation;
+    const approvalAmount = '1000000';
+    const mapIndexToFunction: ImapIndexToFunction = {
+        0: (obj: TokenProps) => setSelectedToken0(obj),
+        1: (obj: TokenProps) => setSelectedToken1(obj),
+    };
+    const mapIndexToInput: ImapIndexToInput = {
+        0: (amount: string) => setSelectedTokenAmount0(amount),
+        1: (amount: string) => setSelectedTokenAmount1(amount),
+    };
+    const navigate = useNavigate();
+    const handleTokenClick = (params: TokenProps) => {
+        mapIndexToFunction[selectedTokenInputField](params);
+        setModal(false);
+    };
+    function handleModalOpen(index: number) {
+        setSelectedTokenInputField(index);
+        setModal((prev) => !prev);
+    }
+    const { data: tokenBalanceA } = useContractRead({
+        address: selectedToken0?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'balanceOf',
+        args: [address],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ tokenBalanceA: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
     });
-    setSelectedTokenAmount0('0');
-  }
-  function tokenAmountInputHandler(index: number, amount: string) {
-    mapIndexToInput[index](amount);
-  }
-  function handleApprovals() {
-    approveA();
-    approveB();
-    setSelectedTokenAmount0('0');
-  }
-  function handleFunctionSelector() {
-    if (!isConnected) {
-      // metamask is not connected
-      return;
-    } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
-      // empty field
-      return;
-    } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
-      // balance A is not enough
-      return;
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
-      // balance B is not enough
-      return;
-    } else if (
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
-    ) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-      handleApprovals();
-    } else {
-      // permission to add liquidity
-      handleAddLiquidity();
+    const { data: tokenBalanceB } = useContractRead({
+        address: selectedToken1?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'balanceOf',
+        args: [address],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ tokenBalanceB: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+    const { data: allowanceA } = useContractRead({
+        address: selectedToken0?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
+        // watch: true,
+        onSuccess(data: any) {
+            console.log({ allowanceA: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+    const { data: allowanceB } = useContractRead({
+        address: selectedToken1?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
+        // watch: true,
+        onSuccess(data: any) {
+            console.log({ allowanceB: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+    const { data: amountOut } = useContractRead({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: 'getAmountOut',
+        args: [
+            MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+            to_wei(selectedTokenAmount0 ? selectedTokenAmount0 : '0'),
+            selectedToken0?.address,
+            selectedToken1?.address,
+        ],
+        // watch: true,
+        onSuccess(data: any) {
+            console.log({ amountOut: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+    const { data: approvalA, write: approveA } = useContractWrite({
+        address: selectedToken0?.address,
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        functionName: 'approve',
+        onSuccess(data) {
+            console.log({ approvalA: data });
+        },
+        onError(err) {
+            console.log({ approvalErrA: err });
+        },
+    });
+    const { data: approvalB, write: approveB } = useContractWrite({
+        address: selectedToken1?.address,
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
+        functionName: 'approve',
+        onSuccess(data) {
+            console.log({ approvalB: data });
+        },
+        onError(err) {
+            console.log({ approvalErrB: err });
+        },
+    });
+    const { data: _, write: AddLiquidity } = useContractWrite({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: 'addLiquidity',
+        onSuccess(data) {
+            console.log({ approvalB: data });
+        },
+        onError(err) {
+            console.log({ approvalErrB: err });
+        },
+    });
+    async function handleAddLiquidity() {
+        let deadline = await setDeadline(3600);
+        AddLiquidity({
+            args: [
+                selectedToken0?.address,
+                selectedToken1?.address,
+                to_wei(selectedTokenAmount0),
+                to_wei(amountOut),
+                to_wei('10'),
+                to_wei('10'),
+                address,
+                deadline,
+            ],
+        });
+        setSelectedTokenAmount0('0');
     }
-  }
-  function handleClear() {
-    tokenAmountInputHandler(0, '');
-  }
-  const { chain } = useNetwork();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-  useEffect(() => {
-    if (!isConnected) {
-      // metamask is not connected
-      setDisabled(true);
-      setBtnState(4);
-    } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
-      // empty field
-      setDisabled(true);
-      setBtnState(0);
-    } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
-      // balance A is not enough
-      setDisabled(true);
-      setBtnState(1);
-      setLowBalanceToken(selectedToken0);
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
-      // balance B is not enough
-      setDisabled(true);
-      setBtnState(1);
-      setLowBalanceToken(selectedToken1);
-    } else if (
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
-    ) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-      setBtnState(2);
-    } else {
-      // permission to add liquidity
-      setBtnState(3);
-      setDisabled(false);
+    function tokenAmountInputHandler(index: number, amount: string) {
+        mapIndexToInput[index](amount);
     }
-  }, [
-    selectedTokenAmount0,
-    allowanceA,
-    allowanceB,
-    amountOut,
-    isConnected,
-    selectedToken0,
-    selectedToken1,
-    tokenBalanceA,
-    tokenBalanceB,
-  ]);
+    function handleApprovals() {
+        approveA();
+        approveB();
+        setSelectedTokenAmount0('0');
+    }
+    function handleFunctionSelector() {
+        if (!isConnected) {
+            // metamask is not connected
+            return;
+        } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
+            // empty field
+            return;
+        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
+            // balance A is not enough
+            return;
+        } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+            // balance B is not enough
+            return;
+        } else if (
+            Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
+            Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
+        ) {
+            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+            handleApprovals();
+        } else {
+            // permission to add liquidity
+            handleAddLiquidity();
+        }
+    }
+    function handleClear() {
+        tokenAmountInputHandler(0, '');
+    }
+    const { chain } = useNetwork();
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
+    useEffect(() => {
+        if (!isConnected) {
+            // metamask is not connected
+            setDisabled(true);
+            setBtnState(4);
+        } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
+            // empty field
+            setDisabled(true);
+            setBtnState(0);
+        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
+            // balance A is not enough
+            setDisabled(true);
+            setBtnState(1);
+            setLowBalanceToken(selectedToken0);
+        } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+            // balance B is not enough
+            setDisabled(true);
+            setBtnState(1);
+            setLowBalanceToken(selectedToken1);
+        } else if (
+            Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
+            Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
+        ) {
+            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+            setBtnState(2);
+        } else {
+            // permission to add liquidity
+            setBtnState(3);
+            setDisabled(false);
+        }
+    }, [
+        selectedTokenAmount0,
+        allowanceA,
+        allowanceB,
+        amountOut,
+        isConnected,
+        selectedToken0,
+        selectedToken1,
+        tokenBalanceA,
+        tokenBalanceB,
+    ]);
 };
 export default AddLiquidity;
 
