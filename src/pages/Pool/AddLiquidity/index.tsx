@@ -26,7 +26,7 @@ import { from_wei, to_wei } from "utils/util";
 import { MAPNETTOADDRESS } from "configs/contract_address_config";
 
 const AddLiquidity = () => {
-    const { address } = useAccount()
+    const { address, isConnected } = useAccount()
     const [btnState, setBtnState] = useState<number>(1)
     const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps | null>(null);
     const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
@@ -42,7 +42,7 @@ const AddLiquidity = () => {
         1: (obj: TokenProps) => setSelectedToken1(obj),
     }
     const mapIndexToInput: ImapIndexToInput = {
-        0: (amount: string) => setSelectedTokenAmount0(amount),
+        0: (amount: string) => setSelectedTokenAmount0(amount ? amount : "0"),
         1: (amount: string) => setSelectedTokenAmount1(amount),
     }
 
@@ -204,14 +204,17 @@ const AddLiquidity = () => {
     }, [location])
 
     useEffect(() => {
-        if (selectedTokenAmount0 === "") {
+        if (!isConnected) {
+            // metamask is not connected
+            setBtnState(4);
+        } else if (selectedTokenAmount0 === "") {
             // empty field
             setBtnState(0);
-        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0)) {
+        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0")) {
             // balance is not enough
             setBtnState(1);
-        } else if (Number(selectedTokenAmount0) > Number(from_wei(allowanceA))
-            || Number(selectedTokenAmount0) > Number(from_wei(allowanceB))) {
+        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
+            || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
             // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
             setBtnState(2);
         } else {
@@ -284,7 +287,7 @@ const AddLiquidity = () => {
                     </section>
                     <div className="current-price-box">
                         <p>Current price:</p>
-                        <h2>{putCommaAtPrice(from_wei(amountOut ? amountOut : "0"), 3)}</h2>
+                        <h2>{putCommaAtPrice(from_wei(amountOut), 3)}</h2>
                         <p>{selectedToken1.symbol} per {selectedToken0.symbol}</p>
                     </div>
                     <section className="deposit-field">
@@ -314,7 +317,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input value={putCommaAtPrice(from_wei(amountOut ? amountOut : "0"), 3)} type="text" placeholder={amountOut} />
+                                    <input value={putCommaAtPrice(from_wei(amountOut), 3)} type="text" placeholder={amountOut} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>

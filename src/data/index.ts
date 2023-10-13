@@ -54,4 +54,5 @@ export const mapMessageToObject: any = {
   1: (token: TokenProps) => `Insufficient ${token.symbol} balance`,
   2: 'Approve',
   3: 'Add liquidity',
+  4: 'Connect wallet',
 };
