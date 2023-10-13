@@ -5,54 +5,66 @@ import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount, useContractReads } from 'wagmi';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { from_wei } from 'utils/util';
 import { crypto_list } from 'data';
+import { PAIR_ADRESSES } from 'configs/contract_addresses';
+import { erc20ABI } from 'wagmi';
+
 
 
 
 interface Ipairs {
-    pairs?: string[];
+    pairs?: ImapPairToBalance[];
 }
 
 const Pool = () => {
     const { address, isConnected } = useAccount()
-    const [pairs, setPairs] = useState<string[]>([])
+    const [pairs, setPairs] = useState<ImapPairToBalance[]>([])
     const navigate = useNavigate();
 
-    const { data: pair } = useContractRead({
-        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR],
-        abi: MAP_STR_ABI[ABI.ERC20_ABI],
-        functionName: 'balanceOf',
-        args: [address],
-        watch: true,
+    const { data: _pairs } = useContractReads({
+        contracts: [
+            {
+                address: PAIR_ADRESSES[0],
+                abi: erc20ABI,
+                functionName: 'balanceOf',
+                args: [address as any],
+            },
+            {
+                address: PAIR_ADRESSES[1],
+                abi: erc20ABI,
+                functionName: 'balanceOf',
+                args: [address as any],
+            }
+        ],
+        // watch: true,
         onSuccess(data: any) {
             console.log({ pairBalance: data })
+            let result;
+            const arr = [];
+
+            for (let i = 0; i < data.length; i++) {
+                result = {
+                    // token address : balance
+                    [PAIR_ADRESSES[i]]: data[i].result
+                }
+                if (Number(from_wei(data[i].result)) > 0) {
+                    // user has a balance of LP tokens
+                    arr.push(result);
+                }
+            }
+            setPairs(arr);
+
         },
         onError(data: any) {
             console.log({ error: data })
         }
     })
-
-    useEffect(() => {
-        let _pairs: string[] = [];
-        if (Number(from_wei(pair)) > 0) {
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
-            setPairs(_pairs);
-        }
-    }, [address])
 
     return (
         <Container pairs={pairs}>

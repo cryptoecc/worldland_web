@@ -46,6 +46,10 @@ export declare global {
     [key: number]: ((token: TokenProps) => void) | string;
   }
 
+  interface ImapPairToBalance {
+    [key: `0x${string}`]: string;
+  }
+
   type ADDRESS_TYPE = {
     [key: string]: `0x${string}` | any;
   };
