@@ -5,12 +5,49 @@ import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { useAccount, useContractRead } from 'wagmi';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import { ABI, CONTRACT_ADDRESSES } from 'utils/enum';
+import { MAP_STR_ABI } from 'configs/abis';
+import { useEffect, useState } from 'react';
+import { from_wei } from 'utils/util';
+import { crypto_list } from 'data';
+
+
+
+interface Ipairs {
+    pairs?: string[];
+}
 
 const Pool = () => {
+    const { address, isConnected } = useAccount()
+    const [pairs, setPairs] = useState<string[]>(["ee"])
     const navigate = useNavigate();
 
+    const { data: pair } = useContractRead({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR],
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'balanceOf',
+        args: [address],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ pairBalance: data })
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+
+    useEffect(() => {
+        let _pairs: string[] = [];
+        if (Number(from_wei(pair)) > 0) {
+            _pairs.push(MAPNETTOADDRESS[CONTRACT_ADDRESSES.PAIR]);
+            setPairs(_pairs);
+        }
+    }, [])
+
     return (
-        <Container>
+        <Container pairs={pairs}>
             <Backdrop intensity={5} />
             <VideoContainer>
                 <Video autoPlay loop muted playsInline>
@@ -26,6 +63,46 @@ const Pool = () => {
                     </button>
                 </div>
                 <div className="active-positions">
+                    <div className="positions">
+                        <ul className="header">
+                            <li>Pool</li>
+                            <li>Range</li>
+                            <li>Value</li>
+                            <li>Status</li>
+                            <li>Current Price</li>
+                        </ul>
+                        <ul className="pairs">
+                            <li>
+                                <span className="pair-logo">
+                                    <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
+                                    <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                    <p className="pair-name">
+                                        {crypto_list[0]['symbol']}/{crypto_list[1]['symbol']}
+                                    </p>
+                                </span>
+                                <span className="range">
+                                    <p>
+                                        14.3660 {"->"} 20.4877
+                                    </p>
+                                    <p>
+                                        {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
+                                    </p>
+                                </span>
+                                <p className="value-in-usd">
+                                    $40,234,534.20
+                                </p>
+
+                                <span className="status">
+                                    <p>In Range</p>
+                                </span>
+
+                                <p className="value-in-token">
+                                    $17.7228 {crypto_list[1]['symbol']}
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+
                     <div className="no-positions">
                         <ImDrawer2 color="#ffffff" size={55} />
                         <h3>Your active liquidity positions will appear here.</h3>
@@ -48,7 +125,7 @@ const Pool = () => {
 
 export default Pool;
 
-const Container = styled.div`
+const Container = styled.div<Ipairs>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,12 +139,11 @@ const Container = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    z-index: 4;
-    max-width: 900px;
+    z-index: 5;
+    max-width: 1100px;
     width: 100%;
     gap: 30px;
-
-
+    overflow: hidden;
     .header {
         display: flex;
         align-items: center;
@@ -92,15 +168,16 @@ const Container = styled.div`
     }
     .active-positions {
         display: flex;
-        align-items: center;
+        align-items: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "flex-start" : "center"};
         justify-content: center;
         border-radius: 15px;
         background-color: rgb(255, 255, 255, 0.1);
         width: 100%;
         max-width: inherit;
         height: 300px;
+        padding: 0;
         .no-positions {
-            display: flex;
+            display: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "none" : "flex"};
             align-items: center;
             justify-content: center;
             gap: 20px;
@@ -112,6 +189,97 @@ const Container = styled.div`
                 max-width: 320px;
                 text-align: center;
                 line-height: 1.4;
+            }
+        }
+        .positions {
+            display: ${(props: Ipairs) => props.pairs && props?.pairs.length > 0 ? "flex" : "none"};
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #ffffff;
+            max-width: 100%;
+            width: 100%;
+            .header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 15px 30px;
+                background-color: rgb(24, 32, 47, 0.6);
+                border-radius: 15px 15px 0 0;
+                color: #7a7a7a;
+
+                li:nth-of-type(1) {
+                    width: 100%;
+                    max-width: 250px;
+                }
+            }
+            .pairs {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+
+                li {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    width: 100%;
+                    padding: 7px 0;
+                    gap: 50px;
+                    font-weight: 600;
+                    color: #c6c6c6;
+
+                    .pair-logo {
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-start;
+                        gap: 10px;
+                        width: 100%;
+                        max-width: 310px;
+                        
+
+                        .image {
+                            width: 35px;
+                            height: 35px;
+                            border: 3px solid rgb(24, 32, 47, 0.7);
+                            border-radius: 50%;
+                        }
+                        .move {
+                            transform: translateX(23px);
+                        }
+                    }
+                    .range {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        flex-direction: column;
+                        gap: 5px;
+                        font-weight: 600;
+                        color: #c6c6c6;
+                    }
+                    .value-in-usd {
+                        width: 100%;
+                        max-width: 170px;
+                    }
+                       
+                    .status {
+                            font-size: 12px;
+                            border-radius: 20px;
+                            background-color:  rgb(0, 255, 25, 0.4);
+                            padding: 3px 10px;
+                        }
+                    .value-in-token {
+                        max-width: 170px;
+                        width: 100%;
+                        text-align: right;
+                    }
+                }
+                li:nth-of-type(odd) {
+                    background-color: rgb(255, 255, 255, 0.1);
+                }
+                li:nth-of-type(even) {
+                    background-color: none;
+                }
             }
         }
     } 
