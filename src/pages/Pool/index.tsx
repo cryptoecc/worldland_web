@@ -5,12 +5,12 @@ import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useContractReads } from 'wagmi';
+import { useAccount, useContractRead, useContractReads } from 'wagmi';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
 import { useState } from 'react';
-import { from_wei } from 'utils/util';
+import { from_wei, putCommaAtPrice, to_wei } from 'utils/util';
 import { crypto_list } from 'data';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
@@ -27,7 +27,7 @@ const Pool = () => {
     const [pairs, setPairs] = useState<ImapPairToBalance[]>([])
     const navigate = useNavigate();
 
-    const { data: _pairs } = useContractReads({
+    const { data } = useContractReads({
         contracts: [
             {
                 address: PAIR_ADRESSES[0],
@@ -47,7 +47,6 @@ const Pool = () => {
             console.log({ pairBalance: data })
             let result;
             const arr = [];
-
             for (let i = 0; i < data.length; i++) {
                 result = {
                     // token address : balance
@@ -60,6 +59,25 @@ const Pool = () => {
             }
             setPairs(arr);
 
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+
+    const { data: amountOut } = useContractRead({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: 'getAmountOut',
+        args: [
+            MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+            to_wei("1"),
+            MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+            MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+        ],
+        // watch: true,
+        onSuccess(data: any) {
+            console.log({ amountOut: data })
         },
         onError(data: any) {
             console.log({ error: data })
@@ -103,14 +121,14 @@ const Pool = () => {
                                     </span>
                                     <span className="range">
                                         <p>
-                                            14.3660 {"->"} 20.4877
+                                            {putCommaAtPrice(from_wei(amountOut), 3)} {"->"} {putCommaAtPrice(1, 3)}
                                         </p>
                                         <p>
                                             {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
                                         </p>
                                     </span>
                                     <p className="value-in-usd">
-                                        $40,234,534.20
+                                        $ -
                                     </p>
 
                                     <span className="status">
@@ -118,7 +136,7 @@ const Pool = () => {
                                     </span>
 
                                     <p className="value-in-token">
-                                        14.3660 {crypto_list[1]['symbol']}
+                                        {putCommaAtPrice(from_wei(amountOut), 3)} {crypto_list[1]['symbol']}
                                     </p>
                                 </li>
                             ))}
@@ -205,6 +223,7 @@ const Container = styled.div<Ipairs>`
             gap: 20px;
             flex-direction: column;
             color: #ffffff;
+            height: 300px;
 
             h3 {
                 font-size: 20px;

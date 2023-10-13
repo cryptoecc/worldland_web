@@ -55,6 +55,10 @@ export declare global {
     [key: `0x${string}`]: string;
   }
 
+  interface ImapPair {
+    result: string;
+  }
+
   type ADDRESS_TYPE = {
     [key: string]: `0x${string}` | any;
   };
