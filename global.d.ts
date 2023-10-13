@@ -15,6 +15,11 @@ export declare global {
     openModalForSecondInput: any;
   }
 
+  interface AiSwapProps {
+    input: string;
+    output: string;
+  }
+
   interface TokenModalProps {
     close: Function;
     handleTokenClick: React.Dispatch<React.SetStateAction<any>>;

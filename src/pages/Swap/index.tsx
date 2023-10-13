@@ -21,10 +21,16 @@ import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
 import Web3 from 'web3';
 
+interface AmountOutData {
+  amountOut: any;
+  isError?: any;
+  isLoading?: any;
+}
+
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
   const { address, isConnected } = useAccount();
-  const [input, setInput] = useState<string>('1000000000000000000');
+  const [input, setInput] = useState<string>('');
   const [output, setOutput] = useState<string>('');
   const [currentTxHash, setCurrentTxHash] = useState<`0x${string}` | undefined>();
 
@@ -113,8 +119,11 @@ const Swap = () => {
       to_wei(input),
       [WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS], WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]],
     ],
-    onSuccess(data) {
-      console.log({ data });
+    onSuccess(data: any) {
+      console.log('뭐냐', data);
+      console.log(data[1]);
+      const outputWei = web3!.utils.fromWei(data[1], 'ether');
+      setOutput(outputWei);
     },
     onError(data) {
       console.log({ data });
@@ -179,9 +188,11 @@ const Swap = () => {
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
       case Field.INPUT:
+        console.log('input');
         setInput(typedValue);
         break;
       case Field.OUTPUT:
+        console.log('output');
         setOutput(typedValue);
         break;
       default:
@@ -196,6 +207,7 @@ const Swap = () => {
       currentWeb3 = new Web3(window.ethereum);
       setWeb3(currentWeb3);
     }
+
     // getAccountsOut();
   }, [input]);
 

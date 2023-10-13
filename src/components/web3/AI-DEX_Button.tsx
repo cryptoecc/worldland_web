@@ -216,7 +216,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         from: account,
         to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
-        gasPrice: '10000000000',
+        gasPrice: '100000000000',
         gas: 3000000,
       };
 
