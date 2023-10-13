@@ -6,6 +6,8 @@ import { crypto_list } from 'data';
 import { Field } from '../../utils/enum';
 import Web3Button from 'components/web3/Web3Button';
 import { AiDexButton } from 'components/web3/AI-DEX_Button';
+import { useEffect, useState } from 'react';
+import { AiSwapButton } from 'components/web3/AI-SWAP_Button';
 
 const SwapInputTab = ({
   input,
@@ -17,6 +19,9 @@ const SwapInputTab = ({
   openModalForFirstInput,
   openModalForSecondInput,
 }: SwapInputTabProps) => {
+  const bigInt = output.toString();
+  console.log(input);
+
   return (
     <Container>
       <ul>
@@ -61,12 +66,7 @@ const SwapInputTab = ({
         <div className="input-hold">
           <div className="input-and-label">
             <label htmlFor="output">You receive</label>
-            <input
-              id="output"
-              type="text"
-              placeholder="0"
-              onChange={(e) => inputHandler(Field.OUTPUT, e.target.value)}
-            />
+            <input id="output" type="text" placeholder="0" defaultValue={bigInt.slice(0, 11)} />
           </div>
           <div onClick={openModalForSecondInput} className="selected-coin-2nd blue-bgd">
             <>
@@ -77,15 +77,15 @@ const SwapInputTab = ({
                 </>
               ) : (
                 <>
-                  <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                  <p>{crypto_list[0]['symbol']}</p>
+                  <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                  <p>{crypto_list[1]['symbol']}</p>
                 </>
               )}
             </>
             <BiChevronDown color="#ffffff" size={25} />
           </div>
         </div>
-        <Button>Connect Wallet</Button>
+        <AiSwapButton input={input} output={bigInt} />
       </div>
     </Container>
   );
@@ -173,7 +173,9 @@ const Container = styled.div`
           border: none;
           outline: none;
           background: transparent;
-          width: 70%;
+          /* width: 80%; */
+          width: 230px;
+          overflow: hidden;
           color: #ffffff;
           font-weight: 600;
         }
