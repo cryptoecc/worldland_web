@@ -28,12 +28,13 @@ import { MAPNETTOADDRESS } from "configs/contract_address_config";
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
     const [btnState, setBtnState] = useState<number>(1)
-    const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps | null>(null);
+    const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps>(crypto_list[0]);
     const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
     const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
-    const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('0');
+    const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
     const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
+    const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
     const location = useLocation;
     const approvalAmount = '1000000';
@@ -42,7 +43,7 @@ const AddLiquidity = () => {
         1: (obj: TokenProps) => setSelectedToken1(obj),
     }
     const mapIndexToInput: ImapIndexToInput = {
-        0: (amount: string) => setSelectedTokenAmount0(amount ? amount : "0"),
+        0: (amount: string) => setSelectedTokenAmount0(amount),
         1: (amount: string) => setSelectedTokenAmount1(amount),
     }
 
@@ -175,13 +176,14 @@ const AddLiquidity = () => {
                 selectedToken0?.address,
                 selectedToken1?.address,
                 to_wei(selectedTokenAmount0),
-                to_wei(selectedTokenAmount1),
+                to_wei(amountOut),
                 to_wei("10"),
                 to_wei("10"),
                 address,
                 deadline,
             ],
         });
+        setSelectedTokenAmount0("0");
     }
 
     function tokenAmountInputHandler(index: number, amount: string) {
@@ -192,9 +194,35 @@ const AddLiquidity = () => {
     function handleApprovals() {
         approveA();
         approveB();
+        setSelectedTokenAmount0("0")
     }
 
+    function handleFunctionSelector() {
+        if (!isConnected) {
+            // metamask is not connected
+            return;
+        } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
+            // empty field
+            return;
+        } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0")) {
+            // balance A is not enough
+            return;
+        } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+            // balance B is not enough
+            return;
+        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
+            || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+            // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+            handleApprovals();
+        } else {
+            // permission to add liquidity
+            handleAddLiquidity();
+        }
+    }
 
+    function handleClear() {
+        tokenAmountInputHandler(0, "");
+    }
 
     const { chain } = useNetwork();
 
@@ -206,13 +234,22 @@ const AddLiquidity = () => {
     useEffect(() => {
         if (!isConnected) {
             // metamask is not connected
+            setDisabled(true);
             setBtnState(4);
-        } else if (selectedTokenAmount0 === "") {
+        } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
             // empty field
+            setDisabled(true);
             setBtnState(0);
         } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0")) {
-            // balance is not enough
+            // balance A is not enough
+            setDisabled(true);
             setBtnState(1);
+            setLowBalanceToken(selectedToken0)
+        } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+            // balance B is not enough
+            setDisabled(true);
+            setBtnState(1);
+            setLowBalanceToken(selectedToken1)
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
             || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
             // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
@@ -220,8 +257,19 @@ const AddLiquidity = () => {
         } else {
             // permission to add liquidity
             setBtnState(3);
+            setDisabled(false)
         }
-    }, [selectedTokenAmount0, allowanceA, allowanceB, tokenBalanceA])
+    }, [
+        selectedTokenAmount0,
+        allowanceA,
+        allowanceB,
+        amountOut,
+        isConnected,
+        selectedToken0,
+        selectedToken1,
+        tokenBalanceA,
+        tokenBalanceB
+    ])
 
     return (
         <Container>
@@ -237,7 +285,7 @@ const AddLiquidity = () => {
                     <AiOutlineArrowLeft onClick={() => navigate(-1)} color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
                     <h1>Add liquidity</h1>
                     <div className="settings-wrap">
-                        <p>Clear all</p>
+                        <p onClick={handleClear}>Clear all</p>
                         <IoMdSettings color="#b4b4b4" size={25} style={{ cursor: "pointer" }} />
                     </div>
                 </div>
@@ -295,7 +343,7 @@ const AddLiquidity = () => {
                         <div className="input-hold">
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input onChange={(e) => tokenAmountInputHandler(0, e.target.value)} type="text" placeholder="0" />
+                                    <input value={selectedTokenAmount0} onChange={(e) => tokenAmountInputHandler(0, e.target.value)} type="text" placeholder="0" />
                                     <span className="token-card">
                                         {selectedToken0 ? (
                                             <>
@@ -338,9 +386,7 @@ const AddLiquidity = () => {
                                 </div>
                             </div>
                         </div>
-                        <button onClick={handleAddLiquidity} className="deposit-btn">{handleBtnState(btnState, lowBalanceToken)}</button>
-                        {/* <button onClick={AddLiquidity} className="deposit-btn">Enter an amount</button> */}
-                        {/* <button onClick={handleApprovals} className="deposit-btn">{allowanceA > 0 ? 'Insufficient DAI balance' : 'Approve'}</button> */}
+                        <button onClick={handleFunctionSelector} disabled={disabled} className="deposit-btn">{handleBtnState(btnState, lowBalanceToken)}</button>
                     </section>
                 </section>
             </section>
@@ -401,6 +447,7 @@ const Container = styled.div`
             p {
                 color: #FC72FF;
                 font-size: 12px;
+                cursor: pointer;
             }
         }
     }
@@ -613,12 +660,17 @@ const Container = styled.div`
                 margin: 20px 0 0;
                 font-size: 20px;
                 font-weight: 600;
-                color: #9f9f9f;
-                /* background-color: rgb(255, 255, 255, 0.1); */
+                color: #ffffff;
                 background-color: rgb(149, 60, 53);
                 border-radius: 20px;
                 cursor: pointer;
+
+               &:disabled {
+                    background-color: rgb(255, 255, 255, 0.1);
+                    color: #6a6a6a;
+                }
             }
+
         }
     }
   }
