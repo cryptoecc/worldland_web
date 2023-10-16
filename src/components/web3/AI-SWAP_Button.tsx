@@ -3,7 +3,7 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { SEPOLIA_ADDRESSES, WLD_ADDRESSES } from 'configs/contract_addresses';
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { ABI, CONTRACT_ADDRESSES } from 'utils/enum';
+import { ABI, CONTRACT_ADDRESSES, FUNCTION, Field } from 'utils/enum';
 import { to_wei, setDeadline } from 'utils/util';
 // import Web3 from 'web3';
 import {
@@ -35,30 +35,32 @@ const Button = styled.button`
   }
 `;
 
-export const AiSwapButton = ({ input, output }: AiSwapProps) => {
+export const AiSwapButton = ({ input, output, setInputHandler }: AiSwapProps) => {
   //   const [web3, setWeb3] = useState<Web3 | null>(null);
   const { address, isConnected } = useAccount();
 
   console.log(address);
 
-  const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132';
-  const token1 = '0x689ccf9a3B752C8Cb19fF5c6eCeec36eA86233AB';
+  const token0 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA];
+  const token1 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB];;
 
   const swapPath = [token0, token1];
 
   const handleSwap = async () => {
     let deadline = await setDeadline(3600);
     Swap({
-      args: [to_wei(input), to_wei(output), swapPath, address, deadline],
+      args: [to_wei(input), output, swapPath, address, deadline],
     });
   };
 
   const { data: _, write: Swap } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: 'swapExactTokensForTokens',
+    functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
     onSuccess(data) {
       console.log({ data });
+      setInputHandler(Field.INPUT, "");
+      setInputHandler(Field.OUTPUT, "");
     },
     onError(err) {
       console.log({ approvalErrB: err });
@@ -167,12 +169,10 @@ export const AiSwapButton = ({ input, output }: AiSwapProps) => {
   //   };
 
   const handleOneClick = () => {
-    console.log('click');
     handleSwap();
-    // swapTransaction();
   };
 
-  //   swapTransaction();
+
 
   return <Button onClick={handleOneClick}>Swap</Button>;
 };

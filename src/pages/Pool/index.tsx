@@ -121,7 +121,7 @@ const Pool = () => {
                                     </span>
                                     <span className="range">
                                         <p>
-                                            {putCommaAtPrice(from_wei(amountOut), 3)} {"->"} {putCommaAtPrice(1, 3)}
+                                            {putCommaAtPrice(from_wei(amountOut), 5)} {"->"} {putCommaAtPrice(1, 5)}
                                         </p>
                                         <p>
                                             {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
@@ -136,7 +136,7 @@ const Pool = () => {
                                     </span>
 
                                     <p className="value-in-token">
-                                        {putCommaAtPrice(from_wei(amountOut), 3)} {crypto_list[1]['symbol']}
+                                        {putCommaAtPrice(from_wei(amountOut), 5)} {crypto_list[1]['symbol']}
                                     </p>
                                 </li>
                             ))}

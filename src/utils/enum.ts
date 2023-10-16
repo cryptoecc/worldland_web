@@ -40,6 +40,7 @@ export enum FUNCTION {
   GETAMOUNTOUT = 'getAmountOut',
   GETAMOUNTSOUT = 'getAmountsOut',
   BURN = 'BURN',
+  SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',
 }
 
 export enum CHAINDS {

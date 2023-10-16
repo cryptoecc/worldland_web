@@ -18,6 +18,7 @@ export declare global {
   interface AiSwapProps {
     input: string;
     output: string;
+    setInputHandler: (field: Field, value: string) => void;
   }
 
   interface TokenModalProps {

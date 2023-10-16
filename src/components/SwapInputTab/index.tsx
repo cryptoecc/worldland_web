@@ -8,6 +8,7 @@ import Web3Button from 'components/web3/Web3Button';
 import { AiDexButton } from 'components/web3/AI-DEX_Button';
 import { useEffect, useState } from 'react';
 import { AiSwapButton } from 'components/web3/AI-SWAP_Button';
+import { from_wei, putCommaAtPrice } from 'utils/util';
 
 const SwapInputTab = ({
   input,
@@ -19,7 +20,7 @@ const SwapInputTab = ({
   openModalForFirstInput,
   openModalForSecondInput,
 }: SwapInputTabProps) => {
-  const bigInt = output.toString();
+  const bigInt = output && output.toString();
   console.log(input);
 
   return (
@@ -43,7 +44,7 @@ const SwapInputTab = ({
         <div className="input-hold">
           <div className="input-and-label">
             <label htmlFor="input">You pay</label>
-            <input id="input" type="text" placeholder="0" onChange={(e) => inputHandler(Field.INPUT, e.target.value)} />
+            <input id="input" type="text" placeholder="0" onChange={(e) => inputHandler(Field.INPUT, e.target.value)} value={input} />
           </div>
           <div onClick={openModalForFirstInput} className="selected-coin">
             <>
@@ -66,7 +67,7 @@ const SwapInputTab = ({
         <div className="input-hold">
           <div className="input-and-label">
             <label htmlFor="output">You receive</label>
-            <input id="output" type="text" placeholder="0" defaultValue={bigInt.slice(0, 11)} />
+            <input id="output" readOnly type="text" placeholder="0" defaultValue={bigInt ? putCommaAtPrice(from_wei(bigInt), 5) : ""} />
           </div>
           <div onClick={openModalForSecondInput} className="selected-coin-2nd blue-bgd">
             <>
@@ -85,7 +86,7 @@ const SwapInputTab = ({
             <BiChevronDown color="#ffffff" size={25} />
           </div>
         </div>
-        <AiSwapButton input={input} output={bigInt} />
+        <AiSwapButton input={input} output={bigInt} setInputHandler={inputHandler} />
       </div>
     </Container>
   );

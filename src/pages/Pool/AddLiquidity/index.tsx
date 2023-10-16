@@ -365,7 +365,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input value={putCommaAtPrice(from_wei(amountOut), 3)} type="text" placeholder={amountOut} />
+                                    <input value={amountOut ? putCommaAtPrice(from_wei(amountOut), 5) : ""} type="text" placeholder={amountOut} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>

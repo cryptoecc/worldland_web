@@ -20,6 +20,7 @@ import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/e
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
 import Web3 from 'web3';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 
 interface AmountOutData {
   amountOut: any;
@@ -106,29 +107,48 @@ const Swap = () => {
   //   }
   // };
 
-  const {
-    data: amountOut,
-    isError,
-    isLoading,
-  } = useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.UNISWAP][CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-    functionName: FUNCTION.GETAMOUNTSOUT,
+  // const {
+  //   data: amountOut,
+  //   isError,
+  //   isLoading,
+  // } = useContractRead({
+  //   address: WLD_ADDRESSES[CONTRACT_ADDRESSES.UNISWAP][CONTRACT_ADDRESSES.ROUTER],
+  //   abi: MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
+  //   functionName: FUNCTION.GETAMOUNTSOUT,
+  //   args: [
+  //     '0x71A831bb5155818396B70C5f5Fc1ae221Fd51E56',
+  //     to_wei(input),
+  //     [WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS], WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]],
+  //   ],
+  //   onSuccess(data: any) {
+  //     console.log('뭐냐', data);
+  //     console.log(data[1]);
+  //     const outputWei = web3!.utils.fromWei(data[1], 'ether');
+  //     setOutput(outputWei);
+  //   },
+  //   onError(data) {
+  //     console.log({ data });
+  //   },
+  // });
+
+  const { data: amountOut } = useContractRead({
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+    functionName: 'getAmountOut',
     args: [
-      '0x71A831bb5155818396B70C5f5Fc1ae221Fd51E56',
-      to_wei(input),
-      [WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS], WLD_ADDRESSES[CONTRACT_ADDRESSES.LVT_ADDRESS]],
+      MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+      to_wei(input ? input : "0"),
+      MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+      MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
     ],
+    // watch: true,
     onSuccess(data: any) {
-      console.log('뭐냐', data);
-      console.log(data[1]);
-      const outputWei = web3!.utils.fromWei(data[1], 'ether');
-      setOutput(outputWei);
+      console.log({ amountOut: data })
     },
-    onError(data) {
-      console.log({ data });
-    },
-  });
+    onError(data: any) {
+      console.log({ error: data })
+    }
+  })
 
   console.log('@ value', [
     WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS],
@@ -224,7 +244,7 @@ const Swap = () => {
         open={setModal}
         inputHandler={userInputHandler}
         input={input}
-        output={output}
+        output={amountOut}
         selectedToken={selectedToken}
         selected2Token={selected2Token}
         openModalForFirstInput={openModalForFirstInput}
