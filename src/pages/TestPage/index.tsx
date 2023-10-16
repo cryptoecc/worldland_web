@@ -1,0 +1,322 @@
+import { ChangeEvent, useEffect, useState, FC } from 'react';
+import { styled } from 'styled-components';
+import BigNumber from 'bignumber.js';
+import { contractABI, contractAddress } from '../../utils/ChainLink_goerli';
+import { MAP_STR_ABI } from 'configs/abis';
+import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
+import Web3 from 'web3';
+import { WLD_ADDRESSES } from 'configs/contract_addresses';
+import { Spin, Space } from 'antd';
+// console.log('@?', TEST_ADDRESS.FACTORY);
+const Container = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+`;
+
+const InputWrapper = styled.div`
+  margin: 10px; /* 입력란 간의 간격 조정 */
+  display: flex;
+`;
+
+const InputBox = styled.input`
+  margin-right: 10px; /* 입력란 간의 간격 조정 */
+`;
+
+const CommonDiv = styled.div`
+  margin: 10px; /* 입력란 간의 간격 조정 */
+  color: white;
+`;
+
+const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  width: 200px;
+  height: 30px;
+  color: #ffffff;
+  font-family: 'Inter';
+  font-size: 14px;
+  font-weight: bold;
+  justify-content: space-around;
+  background-color: gray;
+
+  :hover {
+    cursor: pointer;
+    background-color: #4b4949;
+  }
+`;
+
+const TestPage = () => {
+  const [inputValues, setInputValues] = useState(Array(10).fill(''));
+  const [priceValues, setPriceValues] = useState(Array(10).fill(''));
+  const [txloading, setTxloading] = useState(false);
+  const [web3, setWeb3] = useState<Web3 | null>(null);
+  const [latestRound, setLatestRound] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [priceList, setPriceList] = useState<string[]>([]);
+  const [predPrice, setPredPrice] = useState();
+  const [account, setAccount] = useState<string | null>(null);
+  const [timestamp, setTimestamp] = useState('');
+
+  const setInputValuesFromTempList = () => {
+    setInputValues([...priceList.slice(0, 10)]);
+  };
+
+  // 렌더링 시 chainlink에서 가격 가져오기
+  useEffect(() => {
+    let currentWeb3 = web3;
+    setLoading(true);
+    if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
+      currentWeb3 = new Web3(window.ethereum);
+      setWeb3(currentWeb3);
+    }
+    if (currentWeb3) {
+      try {
+        setAccount(account);
+        console.log(account, '??');
+      } catch (error) {
+        console.error('메타마스크 연결에 실패 : ', error);
+      }
+    }
+    getData();
+    // fetchData();
+  }, [web3]);
+
+  const getData = async () => {
+    //(1) 가격 가져오기
+    if (web3) {
+      const contract = new web3.eth.Contract(contractABI, contractAddress);
+      try {
+        //latestRound 호출
+        const roundIDList: string[] = [];
+        const result: any = await contract.methods.latestRound().call();
+        const roundID = new BigNumber(result);
+        const roundID_str = roundID.toString();
+
+        setLatestRound(roundID_str);
+
+        //가장 최근 기준으로 과거 9개의 roundId 삽입
+        for (let i = 9; i >= 1; i--) {
+          const roundIDMinus = roundID.minus(i);
+          roundIDList.push(roundIDMinus.toString());
+        }
+        roundIDList.push(roundID_str);
+
+        //getAnswer 호출
+        const answer = new BigNumber(await (contract.methods.getAnswer as any)(roundID_str).call());
+        const BIG_TEN = new BigNumber(10);
+        const answer_Big = answer.dividedBy(BIG_TEN.pow(8)).toFixed(2); // 10^8로 나누고, 소수점 두 자리까지
+        const answer_str = answer_Big.toString();
+        console.log('언제냐 getAnswer :', answer_str);
+
+        //getTimestamp 호출
+        const timestamp = new BigNumber(await (contract.methods.getTimestamp as any)(roundID_str).call());
+        const date = new Date(timestamp.toNumber() * 1000); //1000곱해서 밀리초로 변환
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+
+        setTimestamp(formattedDate);
+
+        //10개의 roundId에 대한 가격 데이터
+        const tempPriceList: string[] = [];
+        for (let i = 0; i < roundIDList.length; i++) {
+          try {
+            const price = new BigNumber(await (contract.methods.getAnswer as any)(roundIDList[i]).call());
+            const price_Big = price.dividedBy(BIG_TEN.pow(8)).toFixed(2);
+            const price_str = price_Big.toString();
+            tempPriceList.push(price_str);
+          } catch (error) {
+            console.error(`getAnswer 호출 중 오류 발생한 roundID ${roundIDList[i]}:`, error);
+          }
+        }
+        console.log('templist다', tempPriceList);
+        setPriceList(tempPriceList);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('호출 중 오류 발생:', error);
+      }
+    }
+  };
+
+  //(2) 예측모델로 가격 정보 보내고, 예측값 가져오기
+  const fetchData = async () => {
+    console.log(priceList);
+    let url = 'https://api.worldland.foundation/?';
+
+    //priceList의 10개의 값을 쿼리 파라미터로 추가
+    if (priceList && priceList.length > 0) {
+      priceList.forEach((price, index) => {
+        url += `&input_data_${index}=${price}`;
+      });
+    }
+
+    console.log(url);
+    //fetch로 GET요청
+    try {
+      const response = await fetch(url);
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+      if (data) {
+        console.log('123');
+        const tempPredList = data.prediction;
+        console.log(tempPredList);
+        setPriceValues(tempPredList);
+        setLoading(false);
+
+        // await sendTransaction(tempPredList);
+      }
+    } catch (error) {
+      console.error('예측 모델 요청 중 오류 발생:', error);
+    }
+  };
+
+  const sendTransaction = async (priceValues: any) => {
+    if (web3) {
+      const contract = await new web3.eth.Contract(
+        MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
+        WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+      );
+
+      const accounts = await web3.eth.getAccounts();
+      const account = accounts[0]; // 첫 번째 계정을 가져올 수 있습니다.
+      console.log('현재 연결된 계정:', account);
+      // const account = await web3.eth.getAccounts();
+
+      // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'; // Router 배포할 때 WETH address
+      const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
+      const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
+      const BlockNumber = await web3.eth.getBlockNumber();
+      console.log(BlockNumber);
+      let BN = web3.utils.toWei(Number([priceValues[0]]), 'ether');
+      let BN2 = web3.utils.toWei(Number([priceValues[1]]), 'ether');
+      let BN3 = web3.utils.toWei(Number([priceValues[2]]), 'ether');
+      let BN4 = web3.utils.toWei(Number([priceValues[3]]), 'ether');
+      let BN5 = web3.utils.toWei(Number([priceValues[4]]), 'ether');
+      let BN6 = web3.utils.toWei(Number([priceValues[5]]), 'ether');
+      let BN7 = web3.utils.toWei(Number([priceValues[6]]), 'ether');
+      let BN8 = web3.utils.toWei(Number([priceValues[7]]), 'ether');
+      let BN9 = web3.utils.toWei(Number([priceValues[8]]), 'ether');
+      let BN10 = web3.utils.toWei(Number([priceValues[9]]), 'ether');
+      let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
+
+      const txObject = {
+        from: account,
+        to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
+        gasPrice: '10000000000',
+        gas: 3000000,
+      };
+
+      try {
+        const result = await web3.eth.sendTransaction(txObject);
+        console.log('트랜잭션 결과:', result);
+      } catch (error: any) {
+        console.error('트랜잭션을 보내는 중에 오류 발생:', error);
+        window.alert('트랜잭션을 보내는 중에 오류 발생: ' + error.message);
+        // document.getElementById('error-message').textContent = '트랜잭션 실패: ' + error.message;
+      }
+      // await sendTransaction(txObject);
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+    const value = e.target.value;
+    if (/^\d*\.?\d*$/.test(value)) {
+      const newPriceValues = [...priceValues];
+      newPriceValues[index] = value;
+      setPriceValues(newPriceValues);
+    }
+  };
+
+  //가격 조회+예측모델로 전송+예측값 받아오기 한 번에 실행
+  const handleOneClick = async () => {
+    if (!loading) {
+      fetchData();
+    } else {
+      console.log('error');
+    }
+  };
+
+  return (
+    <Container>
+      <CommonDiv color="white">
+        Price Setter TestPage입니다.
+        <br />
+        <br /> 컨트랙트를 배포한 계정만 시장가격을 설정할 수 있습니다.
+        <br />
+        <br /> 테스트에 앞서 아래와 같은 내용으로 세팅을 부탁드립니다.
+        <br />
+        <br /> 1. 메타마스크 설치
+        <br />
+        <br /> 2. Sepolia network 로 설정
+      </CommonDiv>
+      <br />
+      <CommonDiv color="white"></CommonDiv>
+      {Array.from({ length: 2 }, (_, rowIndex) => (
+        <InputWrapper key={rowIndex}>
+          {Array.from({ length: 5 }, (_, colIndex) => {
+            const index = rowIndex * 5 + colIndex;
+            return (
+              <InputBox
+                key={index}
+                type="text"
+                placeholder={`Market Price ${index + 1}`}
+                value={inputValues[index]}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+            );
+          })}
+        </InputWrapper>
+      ))}
+      <StyledButton onClick={setInputValuesFromTempList}>
+        {loading === true ? (
+          <Space size="large">
+            <Spin />
+          </Space>
+        ) : (
+          <div>
+            현재 시장가 버튼
+            {predPrice === '' ? '' : <p>{predPrice}</p>}
+          </div>
+        )}
+      </StyledButton>
+      {Array.from({ length: 2 }, (_, rowIndex) => (
+        <>
+          <InputWrapper key={rowIndex}>
+            {Array.from({ length: 5 }, (_, colIndex) => {
+              const index = rowIndex * 5 + colIndex;
+              return (
+                <InputBox
+                  key={index}
+                  type="text"
+                  placeholder={`Predicted Price ${index + 1}`}
+                  value={priceValues[index]}
+                  onChange={(e) => handleInputChange(e, index)}
+                />
+              );
+            })}
+          </InputWrapper>
+        </>
+      ))}
+      <StyledButton onClick={() => handleOneClick()}>
+        <div>AI 가격 예측 버튼</div>
+      </StyledButton>
+      <br />
+      <StyledButton onClick={sendTransaction}>예측된 시장가 입력</StyledButton>
+      {/* <StyledButton onClick={connectToSepoliaNetwork}>ds</StyledButton> */}
+    </Container>
+  );
+};
+
+export default TestPage;

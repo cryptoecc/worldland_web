@@ -16,11 +16,14 @@ import Governance from 'components/learn/Post/Governance';
 import Index from 'pages/Index';
 import Pool from 'pages/Pool';
 import AddLiquidity from 'pages/Pool/AddLiquidity';
+import TestPage from 'pages/TestPage';
 
 const Router = () => {
   const router = createBrowserRouter([
     {
-      path: `${PATH.MAIN}`, element: <Index />, children: [
+      path: `${PATH.MAIN}`,
+      element: <Index />,
+      children: [
         { index: true, element: <Main /> },
         {
           path: `${PATH.LEARN}`,
@@ -40,9 +43,9 @@ const Router = () => {
         },
         { path: `${PATH.SWAP}`, element: <Swap /> },
         { path: `${PATH.POOL}`, element: <Pool /> },
+        { path: `${PATH.TESTPAGE}`, element: <TestPage /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
-
-      ]
+      ],
     },
   ]);
 
