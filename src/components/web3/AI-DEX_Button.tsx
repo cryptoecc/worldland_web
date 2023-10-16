@@ -193,24 +193,21 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await web3.eth.getBlockNumber();
 
-      let BN = web3.utils.toWei(Number([tempPredList[0]]), 'ether');
-      let BN2 = web3.utils.toWei(Number([tempPredList[1]]), 'ether');
-      let BN3 = web3.utils.toWei(Number([tempPredList[2]]), 'ether');
-      let BN4 = web3.utils.toWei(Number([tempPredList[3]]), 'ether');
-      let BN5 = web3.utils.toWei(Number([tempPredList[4]]), 'ether');
-      let BN6 = web3.utils.toWei(Number([tempPredList[5]]), 'ether');
-      let BN7 = web3.utils.toWei(Number([tempPredList[6]]), 'ether');
-      let BN8 = web3.utils.toWei(Number([tempPredList[7]]), 'ether');
-      let BN9 = web3.utils.toWei(Number([tempPredList[8]]), 'ether');
-      let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
-      let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
-      // console.log('--리믹스 테스트 console:', account);
-      // console.log('token0, token1 address : ', token0, token1);
-      // console.log(BlockNumber);
-      // console.log(PredictedPrice, '@여기까지 remix에 넣어서 테스트');
-      // console.log('@BN값들 나열', BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10);
-      // console.log('@앞으로 10개 블록의 예측값', PredictedPrice);
-      // console.log('@이거랑 비교', tempPredList);
+      // let BN = web3.utils.toWei(Number([tempPredList[0]]), 'ether');
+      // let BN2 = web3.utils.toWei(Number([tempPredList[1]]), 'ether');
+      // let BN3 = web3.utils.toWei(Number([tempPredList[2]]), 'ether');
+      // let BN4 = web3.utils.toWei(Number([tempPredList[3]]), 'ether');
+      // let BN5 = web3.utils.toWei(Number([tempPredList[4]]), 'ether');
+      // let BN6 = web3.utils.toWei(Number([tempPredList[5]]), 'ether');
+      // let BN7 = web3.utils.toWei(Number([tempPredList[6]]), 'ether');
+      // let BN8 = web3.utils.toWei(Number([tempPredList[7]]), 'ether');
+      // let BN9 = web3.utils.toWei(Number([tempPredList[8]]), 'ether');
+      // let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
+      // let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
+      let PredictedPrice = [];
+      for (let i = 0; i < 10; i++) {
+        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'))
+      }
 
       const txObject = {
         from: account,

@@ -35,12 +35,12 @@ const Pool = () => {
                 functionName: 'balanceOf',
                 args: [address as any],
             },
-            {
-                address: PAIR_ADRESSES[1],
-                abi: erc20ABI,
-                functionName: 'balanceOf',
-                args: [address as any],
-            }
+            // {
+            //     address: PAIR_ADRESSES[1],
+            //     abi: erc20ABI,
+            //     functionName: 'balanceOf',
+            //     args: [address as any],
+            // }
         ],
         // watch: true,
         onSuccess(data: any) {
