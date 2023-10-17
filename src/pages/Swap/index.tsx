@@ -236,9 +236,6 @@ const Swap = () => {
     } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : "0")) {
       // balance A is not enough
       return;
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
-      // balance B is not enough
-      return;
     } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))
       && Number(input ? input : "0") > Number(from_wei(allowanceB))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
@@ -336,14 +333,10 @@ const Swap = () => {
       setDisabled(true);
       setBtnState(1);
       setSpotlightToken(selectedToken)
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
-      // balance B is not enough
-      setDisabled(true);
-      setBtnState(1);
-      setSpotlightToken(selected2Token)
     } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))
       || Number(input ? input : "0") > Number(from_wei(allowanceB))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+      setDisabled(false);
       setBtnState(2);
     } else {
       // permission to swap

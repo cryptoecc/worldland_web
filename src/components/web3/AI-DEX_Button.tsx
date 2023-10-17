@@ -184,21 +184,17 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       const accounts = await web3.eth.getAccounts();
       console.log('계정 :', accounts);
 
-      // const privateKey = process.env.REACT_APP_PRIVATE_KEY;
-      const privateKey = "ee1dc3395bd9770499cb5fe60ac4672d5adebab50ff56cf1e80b70a02d9256c6";
+      const privateKey = process.env.REACT_APP_PRIVATE_KEY;
 
-      // const account = process.env.REACT_APP_ACCOUNT;
-      const account = "0x210706cbd9D26c26c727f4d3007D819390934375";
+      const account = process.env.REACT_APP_ACCOUNT;
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
-      // const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
-      // const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
-      const token0 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA]; // eth token address
-      const token1 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB];
+      const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
+      const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await web3.eth.getBlockNumber();
       let PredictedPrice = [];
       for (let i = 0; i < 10; i++) {
-        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'))
+        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
 
       const txObject = {
@@ -231,8 +227,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         const response = await (getAmountOut.methods.getAmountOut as any)(
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
           amountIn,
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+          WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS],
+          WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS],
         ).call();
 
         console.log('amountsOut :', response);
