@@ -216,10 +216,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       try {
         if (privateKey) {
-          // const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
+          const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
 
-          // const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-          // console.log('Transaction Hash', receipt.transactionHash);
+          const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+          console.log('Transaction Hash', receipt.transactionHash);
         } else {
           console.error('개인 키가 정의되어 있지 않습니다');
         }
