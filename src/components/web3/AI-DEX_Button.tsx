@@ -40,7 +40,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
-    // getData();
     let currentWeb3 = web3;
     if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       currentWeb3 = new Web3(window.ethereum);
@@ -54,14 +53,19 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       }
     }
 
-    // const interval = setInterval(() => {
-    //   getData();
-    // }, 35000)
 
-    // return () => clearInterval(interval)
 
 
   }, [web3]);
+
+  useEffect(() => {
+    getData();
+    const interval = setInterval(() => {
+      getData();
+    }, 35000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const getData = async () => {
     //(1) 가격 가져오기
@@ -201,7 +205,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
 
-      const nonce = await web3.eth.getTransactionCount(account, "latest")
+      let nonce = await web3.eth.getTransactionCount(account)
+      console.log({ nonce })
       const txObject = {
         from: account,
         // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
@@ -209,6 +214,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
         gasPrice: '100000000000',
         gas: 3000000,
+        nonce: nonce
       };
 
 
