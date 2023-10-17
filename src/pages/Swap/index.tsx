@@ -260,7 +260,7 @@ const Swap = () => {
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
     functionName: 'allowance',
     args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-    // watch: true,
+    watch: true,
     onSuccess(data: any) {
       console.log({ allowanceA: data })
     },
@@ -273,7 +273,7 @@ const Swap = () => {
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
     functionName: 'allowance',
     args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-    // watch: true,
+    watch: true,
     onSuccess(data: any) {
       console.log({ allowanceB: data })
     },
