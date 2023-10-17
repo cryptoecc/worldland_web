@@ -87,7 +87,7 @@ const Swap = () => {
   const { data: amountOut } = useContractRead({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: 'getAmountOut',
+    functionName: FUNCTION.GETAMOUNTOUT,
     args: [
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
       to_wei(input ? input : "0"),

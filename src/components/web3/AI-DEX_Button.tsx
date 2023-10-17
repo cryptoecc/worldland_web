@@ -7,6 +7,7 @@ import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/e
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { Spin, Space } from 'antd';
 import styled from 'styled-components';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -176,34 +177,25 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     if (web3) {
       const contract = await new web3.eth.Contract(
         MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-        WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        // WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
       );
 
       const accounts = await web3.eth.getAccounts();
       console.log('계정 :', accounts);
 
-      const privateKey = process.env.REACT_APP_PRIVATE_KEY;
+      // const privateKey = process.env.REACT_APP_PRIVATE_KEY;
+      const privateKey = "ee1dc3395bd9770499cb5fe60ac4672d5adebab50ff56cf1e80b70a02d9256c6";
 
-      const account = process.env.REACT_APP_ACCOUNT;
-
-      console.log(account);
+      // const account = process.env.REACT_APP_ACCOUNT;
+      const account = "0x210706cbd9D26c26c727f4d3007D819390934375";
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
-      const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
-      const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
+      // const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
+      // const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
+      const token0 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA]; // eth token address
+      const token1 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB];
       const BlockNumber = await web3.eth.getBlockNumber();
-
-      // let BN = web3.utils.toWei(Number([tempPredList[0]]), 'ether');
-      // let BN2 = web3.utils.toWei(Number([tempPredList[1]]), 'ether');
-      // let BN3 = web3.utils.toWei(Number([tempPredList[2]]), 'ether');
-      // let BN4 = web3.utils.toWei(Number([tempPredList[3]]), 'ether');
-      // let BN5 = web3.utils.toWei(Number([tempPredList[4]]), 'ether');
-      // let BN6 = web3.utils.toWei(Number([tempPredList[5]]), 'ether');
-      // let BN7 = web3.utils.toWei(Number([tempPredList[6]]), 'ether');
-      // let BN8 = web3.utils.toWei(Number([tempPredList[7]]), 'ether');
-      // let BN9 = web3.utils.toWei(Number([tempPredList[8]]), 'ether');
-      // let BN10 = web3.utils.toWei(Number([tempPredList[9]]), 'ether');
-      // let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
       let PredictedPrice = [];
       for (let i = 0; i < 10; i++) {
         PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'))
@@ -211,7 +203,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       const txObject = {
         from: account,
-        to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
         gasPrice: '100000000000',
         gas: 3000000,
@@ -231,16 +224,15 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
         const getAmountOut = new web3.eth.Contract(
           MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-          WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+          MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         );
 
-        console.log(getAmountOut);
 
         const response = await (getAmountOut.methods.getAmountOut as any)(
-          WLD_ADDRESSES[CONTRACT_ADDRESSES.FACTORY],
+          MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
           amountIn,
-          WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS],
-          WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS],
+          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
         ).call();
 
         console.log('amountsOut :', response);
