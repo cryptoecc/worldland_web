@@ -194,7 +194,7 @@ const TestPage = () => {
       // const account = await web3.eth.getAccounts();
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'; // Router 배포할 때 WETH address
-      const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
+      const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await web3.eth.getBlockNumber();
       console.log(BlockNumber);

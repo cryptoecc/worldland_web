@@ -189,7 +189,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       console.log(account);
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
-      const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132'; // eth token address
+      const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await web3.eth.getBlockNumber();
 
@@ -206,7 +206,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       // let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
       let PredictedPrice = [];
       for (let i = 0; i < 10; i++) {
-        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'))
+        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
 
       const txObject = {
@@ -239,7 +239,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         const response = await (getAmountOut.methods.getAmountOut as any)(
           WLD_ADDRESSES[CONTRACT_ADDRESSES.FACTORY],
           amountIn,
-          WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS],
+          WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS],
           WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS],
         ).call();
 
