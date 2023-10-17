@@ -39,6 +39,7 @@ const Swap = () => {
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
   const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0])
+  const [amountOut, setAmountOut] = useState<string>("")
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -84,19 +85,20 @@ const Swap = () => {
 
 
 
-  const { data: amountOut } = useContractRead({
+  const { data: _amountOut } = useContractRead({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.GETAMOUNTOUT,
+    watch: true,
     args: [
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
       to_wei(input ? input : "0"),
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
     ],
-    // watch: true,
     onSuccess(data: any) {
       console.log({ amountOut: data })
+      setAmountOut(data)
     },
     onError(data: any) {
       console.log({ error: data })

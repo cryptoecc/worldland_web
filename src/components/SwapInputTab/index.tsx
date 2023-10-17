@@ -24,7 +24,6 @@ const SwapInputTab = ({
   spotlightToken,
   funcExec
 }: SwapInputTabProps) => {
-  const bigInt = output && output.toString();
 
   return (
     <Container>
@@ -70,7 +69,7 @@ const SwapInputTab = ({
         <div className="input-hold">
           <div className="input-and-label">
             <label htmlFor="output">You receive</label>
-            <input id="output" readOnly type="text" placeholder="0" defaultValue={bigInt ? putCommaAtPrice(from_wei(bigInt), 5) : ""} />
+            <input id="output" readOnly type="text" placeholder="0" value={output ? putCommaAtPrice(from_wei(output), 5) : ""} />
           </div>
           <div onClick={openModalForSecondInput} className="selected-coin-2nd blue-bgd">
             <>
@@ -80,7 +79,7 @@ const SwapInputTab = ({
                   <p>{selected2Token.symbol}</p>
                 </>
               ) : (
-                <>
+                <>1
                   <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
                   <p>{crypto_list[1]['symbol']}</p>
                 </>
@@ -91,7 +90,7 @@ const SwapInputTab = ({
         </div>
         <AiSwapButton
           input={input}
-          output={bigInt}
+          output={output}
           setInputHandler={inputHandler}
           btnState={btnState}
           disabled={disabled}
