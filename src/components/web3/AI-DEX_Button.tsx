@@ -40,7 +40,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
-    getData();
+    // getData();
     let currentWeb3 = web3;
     if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       currentWeb3 = new Web3(window.ethereum);
@@ -54,11 +54,11 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       }
     }
 
-    const interval = setInterval(() => {
-      getData();
-    }, 35000)
+    // const interval = setInterval(() => {
+    //   getData();
+    // }, 35000)
 
-    return () => clearInterval(interval)
+    // return () => clearInterval(interval)
 
 
   }, [web3]);
@@ -191,7 +191,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       const account: string = process.env.REACT_APP_ACCOUNT as string;
 
-      const nonce = await web3.eth.getTransactionCount(account, "latest")
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
@@ -202,17 +201,16 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
 
+      const nonce = await web3.eth.getTransactionCount(account, "latest")
       const txObject = {
         from: account,
         // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
         to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
-        // gasPrice: '100000000000',
-        // gas: 3000000,
-        nonce
+        gasPrice: '100000000000',
+        gas: 3000000,
       };
 
-      console.log({ nonce })
 
       try {
         if (privateKey) {
