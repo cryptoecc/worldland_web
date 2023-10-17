@@ -55,4 +55,6 @@ export const mapMessageToObject: any = {
   2: 'Approve',
   3: 'Add liquidity',
   4: 'Connect wallet',
+  5: (token: TokenProps) => `Enter ${token.symbol} amount`,
+  6: 'Swap',
 };

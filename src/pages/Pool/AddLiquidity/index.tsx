@@ -19,7 +19,7 @@ import {
     useContractRead,
 } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, TOKEN } from "utils/enum";
-import { handleBtnState, putCommaAtPrice, setDeadline } from "utils/util";
+import { handleAddLiquidityBtnState, putCommaAtPrice, setDeadline } from "utils/util";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
@@ -191,9 +191,12 @@ const AddLiquidity = () => {
     }
 
 
-    function handleApprovals() {
-        approveA();
-        approveB();
+    function handleApprovals(index: number) {
+        let mapApprovalToIndex: any = {
+            0: approveA,
+            1: approveB,
+        }
+        mapApprovalToIndex[index]()
         setSelectedTokenAmount0("0")
     }
 
@@ -211,10 +214,20 @@ const AddLiquidity = () => {
             // balance B is not enough
             return;
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
-            || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+            && Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
             // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-            handleApprovals();
+            // approves two tokens automatically if allowance of both of them is low
+            handleApprovals(0);
+            handleApprovals(1);
+        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))) {
+            // if allowanceA is low
+            handleApprovals(0);
+        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+            // if allowanceB is low
+            handleApprovals(1);
+
         } else {
+
             // permission to add liquidity
             handleAddLiquidity();
         }
@@ -386,7 +399,7 @@ const AddLiquidity = () => {
                                 </div>
                             </div>
                         </div>
-                        <button onClick={handleFunctionSelector} disabled={disabled} className="deposit-btn">{handleBtnState(btnState, lowBalanceToken)}</button>
+                        <button onClick={handleFunctionSelector} disabled={disabled} className="deposit-btn">{handleAddLiquidityBtnState(btnState, lowBalanceToken)}</button>
                     </section>
                 </section>
             </section>

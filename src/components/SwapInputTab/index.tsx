@@ -19,9 +19,12 @@ const SwapInputTab = ({
   selected2Token,
   openModalForFirstInput,
   openModalForSecondInput,
+  btnState,
+  disabled,
+  spotlightToken,
+  funcExec
 }: SwapInputTabProps) => {
   const bigInt = output && output.toString();
-  console.log(input);
 
   return (
     <Container>
@@ -86,7 +89,15 @@ const SwapInputTab = ({
             <BiChevronDown color="#ffffff" size={25} />
           </div>
         </div>
-        <AiSwapButton input={input} output={bigInt} setInputHandler={inputHandler} />
+        <AiSwapButton
+          input={input}
+          output={bigInt}
+          setInputHandler={inputHandler}
+          btnState={btnState}
+          disabled={disabled}
+          spotlightToken={spotlightToken}
+          funcExec={funcExec}
+        />
       </div>
     </Container>
   );

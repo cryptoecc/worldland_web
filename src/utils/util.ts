@@ -38,8 +38,14 @@ export async function setDeadline(expiry: number) {
   return latestTimeStamp + BigInt(blockGenerationTime) + BigInt(expiry);
 }
 
-export function handleBtnState(state: number, token?: TokenProps | null) {
+export function handleAddLiquidityBtnState(state: number, token?: TokenProps | null) {
   if (state === 1) {
+    return mapMessageToObject[state](token);
+  }
+  return mapMessageToObject[state];
+}
+export function handleSwapBtnState(state: number, token?: TokenProps | null) {
+  if (state === 1 || state === 5) {
     return mapMessageToObject[state](token);
   }
   return mapMessageToObject[state];

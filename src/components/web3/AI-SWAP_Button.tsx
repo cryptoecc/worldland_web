@@ -4,7 +4,7 @@ import { SEPOLIA_ADDRESSES, WLD_ADDRESSES } from 'configs/contract_addresses';
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, Field } from 'utils/enum';
-import { to_wei, setDeadline } from 'utils/util';
+import { to_wei, setDeadline, handleSwapBtnState } from 'utils/util';
 // import Web3 from 'web3';
 import {
   useAccount,
@@ -15,10 +15,6 @@ import {
   useWaitForTransaction,
   useContractRead,
 } from 'wagmi';
-
-interface Props {
-  onAccountConnected: (account: string) => void;
-}
 
 const Button = styled.button`
   width: 100%;
@@ -33,146 +29,21 @@ const Button = styled.button`
   &:hover {
     background-color: #1c2232;
   }
+
+  &:disabled {
+    background-color: rgb(255, 255, 255, 0.1);
+    color: #6a6a6a;
+  }
 `;
 
-export const AiSwapButton = ({ input, output, setInputHandler }: AiSwapProps) => {
-  //   const [web3, setWeb3] = useState<Web3 | null>(null);
-  const { address, isConnected } = useAccount();
-
-  console.log(address);
-
-  const token0 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA];
-  const token1 = MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB];;
-
-  const swapPath = [token0, token1];
-
-  const handleSwap = async () => {
-    let deadline = await setDeadline(3600);
-    Swap({
-      args: [to_wei(input), output, swapPath, address, deadline],
-    });
-  };
-
-  const { data: _, write: Swap } = useContractWrite({
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
-    onSuccess(data) {
-      console.log({ data });
-      setInputHandler(Field.INPUT, "");
-      setInputHandler(Field.OUTPUT, "");
-    },
-    onError(err) {
-      console.log({ approvalErrB: err });
-    },
-  });
-
-  //   console.log(web3);
-
-  //   const asdf = web3.eth
-  //     .getAccounts()
-  //     .then((accounts) => {
-  //       const accountAddress = accounts[0]; // 첫 번째 계정 주소를 가져옵니다.
-  //       console.log('계정 주소:', accountAddress);
-  //     })
-  //     .catch((error) => {
-  //       console.error('계정 주소 가져오기 오류:', error);
-  //     });
-
-  //   console.log(asdf);
-
-  //   console.log(account);
-
-  //   const getBlockNumber = async () => {
-  //     if (web3) {
-  //       const latest = BigInt((await web3.eth.getBlock('latest')).number);
-  //       const current = latest + BigInt(1);
-  //       const next = current + BigInt(1);
-  //       return { latest: latest, current: current, next: next };
-  //     }
-  //   };
-  //   useEffect(() => {
-  //     let currentWeb3 = web3;
-  //     if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-  //       currentWeb3 = new Web3(window.ethereum);
-  //       setWeb3(currentWeb3);
-  //     }
-  //   }, [web3]);
-
-  //   const setDeadline = async (expiry: number) => {
-  //     if (web3) {
-  //       const blockGenerationTime = BigInt(15);
-  //       const latestTimeStamp = BigInt((await web3.eth.getBlock('latest')).timestamp);
-  //       return latestTimeStamp + blockGenerationTime + BigInt(expiry);
-  //     }
-  //   };
-
-  //   const swapTransaction = async () => {
-  //     if (web3) {
-  //       const contract = await new web3.eth.Contract(
-  //         MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-  //         WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
-  //       );
-
-  //       const factory = await new web3.eth.Contract(
-  //         MAP_STR_ABI[ABI.UNISWAPV2_FACTORY],
-  //         WLD_ADDRESSES[CONTRACT_ADDRESSES.FACTORY],
-  //       );
-
-  //       const getData = await (factory.methods.allPairsLength as any)().call();
-  //       console.log(getData);
-
-  //       console.log('swap', contract);
-
-  //   const weiInput = web3.utils.toWei(input, 'ether');
-  //   const weiOutput = web3.utils.toWei(output, 'ether');
-
-  //   //       const accounts = await web3.eth.getAccounts();
-  //   //       console.log('swap user', accounts);
-
-  //   //       let deadline = await setDeadline(3600);
-  //   //       console.log('dead', deadline);
-  //   //       const asdf = deadline?.toString();
-
-  //   // const token0 = '0x28707aFb11CC97DD5884E6466eE8E5A7F1301132';
-  //   // const token1 = '0x689ccf9a3B752C8Cb19fF5c6eCeec36eA86233AB';
-
-  //   // const swapPath = [token0, token1];
-
-  //   //       console.log(weiOutput);
-  //   //       console.log(weiInput);
-
-  //   const response = await(contract.methods.swapExactTokensForTokens as any)(
-  //     weiInput,
-  //     weiOutput,
-  //     swapPath,
-  //     '0x7d3C7Cca6958E2323BbD0759Ba7F4C29b5f82C9f',
-  //     asdf,
-  //   )
-  //     .send({
-  //       from: '0x7d3C7Cca6958E2323BbD0759Ba7F4C29b5f82C9f',
-  //       gas: 20000,
-  //       gasPrice: '20000000000',
-  //     })
-  //     .on('transactionHash', (hash: any) => {
-  //       console.log('Transaction hash', hash);
-  //     })
-  //     .on('receipt', (receipt: any) => {
-  //       console.log('Transaction receipt:', receipt);
-  //     })
-  //     .on('error', (error: any) => {
-  //       console.error('Transaction error:', error);
-  //     });
-
-  //       console.log(response);
-  //     }
-  //   };
-
-  const handleOneClick = () => {
-    handleSwap();
-  };
-
-
-
-  return <Button onClick={handleOneClick}>Swap</Button>;
+export const AiSwapButton = ({
+  input,
+  output,
+  btnState,
+  disabled,
+  spotlightToken,
+  setInputHandler,
+  funcExec
+}: AiSwapProps) => {
+  return <Button disabled={disabled} onClick={funcExec}>{handleSwapBtnState(btnState, spotlightToken)}</Button>;
 };

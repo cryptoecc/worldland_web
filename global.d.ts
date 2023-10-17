@@ -13,12 +13,20 @@ export declare global {
     selected2Token: any;
     openModalForFirstInput: any;
     openModalForSecondInput: any;
+    spotlightToken: TokenProps;
+    btnState: number;
+    disabled: boolean;
+    funcExec: () => void;
   }
 
   interface AiSwapProps {
     input: string;
     output: string;
     setInputHandler: (field: Field, value: string) => void;
+    spotlightToken: TokenProps;
+    btnState: number;
+    disabled: boolean;
+    funcExec: () => void;
   }
 
   interface TokenModalProps {
