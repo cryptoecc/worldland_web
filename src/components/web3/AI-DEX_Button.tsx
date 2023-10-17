@@ -30,11 +30,9 @@ const StyledButton = styled.button`
 export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [latestRound, setLatestRound] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [timestamp, setTimestamp] = useState('');
   const [loading, setLoading] = useState(false);
   const [txloading, setTxloading] = useState(false);
-  const [priceList, setPriceList] = useState<string[]>([]);
+  // const [priceList, setPriceList] = useState<string[]>([]);
   const [amountOut, setAmountOut] = useState('');
   const [predPrice, setPredPrice] = useState();
 
@@ -42,8 +40,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
+    getData();
     let currentWeb3 = web3;
-    setLoading(true);
     if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       currentWeb3 = new Web3(window.ethereum);
       setWeb3(currentWeb3);
@@ -55,8 +53,14 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         console.error('메타마스크 연결에 실패 : ', error);
       }
     }
-    getData();
-    // fetchData();
+
+    const interval = setInterval(() => {
+      getData();
+    }, 35000)
+
+    return () => clearInterval(interval)
+
+
   }, [web3]);
 
   const getData = async () => {
@@ -122,8 +126,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           }
         }
         console.log('templist다', tempPriceList);
-        setPriceList(tempPriceList);
-
+        fetchData(tempPriceList);
         setLoading(false);
       } catch (error) {
         console.error('호출 중 오류 발생:', error);
@@ -132,7 +135,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
   };
 
   //(2) 예측모델로 가격 정보 보내고, 예측값 가져오기
-  const fetchData = async () => {
+  const fetchData = async (priceList: string[]) => {
     // txloading spinner
     setTxloading(true);
 
@@ -165,7 +168,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
         await sendTransaction(tempPredList);
 
-        setLoading(true);
+        // setLoading(true);
       }
     } catch (error) {
       console.error('예측 모델 요청 중 오류 발생:', error);
@@ -186,7 +189,9 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       const privateKey = process.env.REACT_APP_PRIVATE_KEY;
 
-      const account = process.env.REACT_APP_ACCOUNT;
+      const account: string = process.env.REACT_APP_ACCOUNT as string;
+
+      const nonce = await web3.eth.getTransactionCount(account, "latest")
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
@@ -202,16 +207,19 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
         to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
-        gasPrice: '100000000000',
-        gas: 3000000,
+        // gasPrice: '100000000000',
+        // gas: 3000000,
+        nonce
       };
+
+      console.log({ nonce })
 
       try {
         if (privateKey) {
-          const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
+          // const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
 
-          const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-          console.log('Transaction Hash', receipt.transactionHash);
+          // const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+          // console.log('Transaction Hash', receipt.transactionHash);
         } else {
           console.error('개인 키가 정의되어 있지 않습니다');
         }
@@ -250,7 +258,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
   //가격 조회+예측모델로 전송+예측값 받아오기 한 번에 실행
   const handleOneClick = async () => {
     if (!loading) {
-      fetchData();
+      getData();
     } else {
       console.log('error');
     }

@@ -18,7 +18,7 @@ import {
     useWaitForTransaction,
     useContractRead,
 } from 'wagmi';
-import { ABI, CONTRACT_ADDRESSES, TOKEN } from "utils/enum";
+import { ABI, CONTRACT_ADDRESSES, FUNCTION, TOKEN } from "utils/enum";
 import { handleAddLiquidityBtnState, putCommaAtPrice, setDeadline } from "utils/util";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
@@ -36,6 +36,7 @@ const AddLiquidity = () => {
     const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
     const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
+    const [amountOut, setAmountOut] = useState<string>("");
     const location = useLocation;
     const approvalAmount = '1000000';
     const mapIndexToFunction: ImapIndexToFunction = {
@@ -90,7 +91,7 @@ const AddLiquidity = () => {
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
         args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-        // watch: true,
+        watch: true,
         onSuccess(data: any) {
             console.log({ allowanceA: data })
         },
@@ -103,7 +104,7 @@ const AddLiquidity = () => {
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: 'allowance',
         args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-        // watch: true,
+        watch: true,
         onSuccess(data: any) {
             console.log({ allowanceB: data })
         },
@@ -113,19 +114,20 @@ const AddLiquidity = () => {
     })
 
 
-    const { data: amountOut } = useContractRead({
+    const { data: _amountOut } = useContractRead({
         address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-        functionName: 'getAmountOut',
+        functionName: FUNCTION.GETAMOUNTOUT,
         args: [
             MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
             to_wei(selectedTokenAmount0 ? selectedTokenAmount0 : "0"),
             selectedToken0?.address,
             selectedToken1?.address
         ],
-        // watch: true,
+        watch: true,
         onSuccess(data: any) {
             console.log({ amountOut: data })
+            setAmountOut(data)
         },
         onError(data: any) {
             console.log({ error: data })
@@ -133,7 +135,7 @@ const AddLiquidity = () => {
     })
 
 
-    const { data: approvalA, write: approveA } = useContractWrite({
+    const { write: approveA } = useContractWrite({
         address: selectedToken0?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
@@ -145,7 +147,7 @@ const AddLiquidity = () => {
             console.log({ approvalErrA: err });
         }
     })
-    const { data: approvalB, write: approveB } = useContractWrite({
+    const { write: approveB } = useContractWrite({
         address: selectedToken1?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
@@ -378,7 +380,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input value={amountOut ? putCommaAtPrice(from_wei(amountOut), 5) : ""} type="text" placeholder={amountOut} />
+                                    <input value={amountOut ? putCommaAtPrice(from_wei(amountOut), 5) : ""} type="text" placeholder={"0"} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>

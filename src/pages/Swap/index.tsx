@@ -193,39 +193,17 @@ const Swap = () => {
     functionName: 'approve',
     onSuccess(data) {
       console.log({ approvalA: data });
+      userInputHandler(Field.INPUT, "")
+      userInputHandler(Field.OUTPUT, "")
     },
     onError(err) {
       console.log({ approvalErrA: err });
     }
   })
-  const { data: approvalB, write: approveB } = useContractWrite({
-    address: selected2Token?.address,
-    abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
-    args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-    functionName: 'approve',
-    onSuccess(data) {
-      console.log({ approvalB: data });
-    },
-    onError(err) {
-      console.log({ approvalErrB: err });
-    }
-  })
-
-
   async function handleSwap() {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
     swap({ args: [to_wei(input), output, swapPath, address, deadline], })
-  }
-
-  function handleApprovals(index: number) {
-    let mapApprovalToIndex: any = {
-      0: approveA,
-      1: approveB,
-    }
-    mapApprovalToIndex[index]()
-    userInputHandler(Field.INPUT, "")
-    userInputHandler(Field.OUTPUT, "")
   }
 
   function handleFunctionSelector() {
@@ -238,19 +216,9 @@ const Swap = () => {
     } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : "0")) {
       // balance A is not enough
       return;
-    } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))
-      && Number(input ? input : "0") > Number(from_wei(allowanceB))) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-      // approves two tokens automatically if allowance of both of them is low
-      handleApprovals(0);
-      handleApprovals(1);
     } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))) {
       // if allowanceA is low
-      handleApprovals(0);
-    } else if (Number(input ? input : "0") > Number(from_wei(allowanceB))) {
-      // if allowanceB is low
-      handleApprovals(1);
-
+      approveA()
     } else {
       // permission to add liquidity
       handleSwap();
@@ -270,19 +238,7 @@ const Swap = () => {
       console.log({ error: data })
     }
   })
-  const { data: allowanceB } = useContractRead({
-    address: selected2Token?.address,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: 'allowance',
-    args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
-    watch: true,
-    onSuccess(data: any) {
-      console.log({ allowanceB: data })
-    },
-    onError(data: any) {
-      console.log({ error: data })
-    }
-  })
+
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -335,8 +291,7 @@ const Swap = () => {
       setDisabled(true);
       setBtnState(1);
       setSpotlightToken(selectedToken)
-    } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))
-      || Number(input ? input : "0") > Number(from_wei(allowanceB))) {
+    } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
       setDisabled(false);
       setBtnState(2);
@@ -348,7 +303,6 @@ const Swap = () => {
   }, [
     input,
     allowanceA,
-    allowanceB,
     amountOut,
     isConnected,
     selectedToken,
