@@ -8,6 +8,7 @@ import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { Spin, Space } from 'antd';
 import styled from 'styled-components';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import { web3_eth } from 'configs/web3-eth';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -41,12 +42,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
     getData();
-    let currentWeb3 = web3;
-    if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-      currentWeb3 = new Web3(window.ethereum);
-      setWeb3(currentWeb3);
-    }
-    if (currentWeb3) {
+    let sepolia_web3 = web3_eth; //testnet
+    setWeb3(sepolia_web3);
+
+    if (sepolia_web3) {
       try {
         setAccount(account);
       } catch (error) {
@@ -55,7 +54,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     }
     const interval = setInterval(() => {
       getData();
-    }, 35000)
+    }, 60000)
 
     return () => clearInterval(interval)
 
@@ -91,6 +90,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         //가장 최근 기준으로 과거 9개의 roundId 삽입
         for (let i = 9; i >= 1; i--) {
           const roundIDMinus = roundID.minus(i);
+          console.log({ roundIDMinus });
           roundIDList.push(roundIDMinus.toString());
         }
         roundIDList.push(roundID_str);
@@ -184,14 +184,13 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 모델 값 트랜잭션 보내기
   const sendTransaction = async (tempPredList: any) => {
-    if (web3) {
-      const contract = await new web3.eth.Contract(
-        MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-        // WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+    let worldland_web3 = new Web3(window.ethereum);
+    if (worldland_web3) {
+      const contract = await new worldland_web3.eth.Contract(
+        MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
         MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
       );
-
-      const accounts = await web3.eth.getAccounts();
+      const accounts = await worldland_web3.eth.getAccounts();
       console.log('계정 :', accounts);
 
       const privateKey = process.env.REACT_APP_PRIVATE_KEY;
@@ -202,13 +201,12 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
-      const BlockNumber = await web3.eth.getBlockNumber();
+      const BlockNumber = await worldland_web3.eth.getBlockNumber();
       let PredictedPrice = [];
       for (let i = 0; i < 10; i++) {
-        PredictedPrice.push(web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
+        PredictedPrice.push(worldland_web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
-
-      let nonce = await web3.eth.getTransactionCount(account)
+      let nonce = await worldland_web3.eth.getTransactionCount(account)
       console.log({ nonce })
       const txObject = {
         from: account,
@@ -223,17 +221,17 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       try {
         if (privateKey) {
-          const signedTx = await web3.eth.accounts.signTransaction(txObject, privateKey);
+          const signedTx = await worldland_web3.eth.accounts.signTransaction(txObject, privateKey);
 
-          const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+          const receipt = await worldland_web3.eth.sendSignedTransaction(signedTx.rawTransaction);
           console.log('Transaction Hash', receipt.transactionHash);
         } else {
           console.error('개인 키가 정의되어 있지 않습니다');
         }
 
-        let amountIn = web3.utils.toWei(1, 'ether');
+        let amountIn = worldland_web3.utils.toWei(1, 'ether');
         console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
-        const getAmountOut = new web3.eth.Contract(
+        const getAmountOut = new worldland_web3.eth.Contract(
           MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         );
@@ -247,7 +245,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         ).call();
 
         console.log('amountsOut :', response);
-        const fromwei = web3.utils.fromWei(response, 'ether');
+        const fromwei = worldland_web3.utils.fromWei(response, 'ether');
 
         const amount = Number(fromwei).toFixed(7);
         console.log('fromwei : ', amount);

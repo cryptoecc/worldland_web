@@ -1,5 +1,5 @@
 //export const contractAddress = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"; //mainnet
-export const contractAddress = '0x694AA1769357215DE4FAC081bf1f309aDC325306'; //sepolia
+export const contractAddress = '0x694AA1769357215DE4FAC081bf1f309aDC325306'; //sepolia ETH/USD v3 proxy aggregator
 
 // 0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e goerli
 

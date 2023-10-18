@@ -1,3 +1,3 @@
-const nettype = 'testnet';
+const nettype = 'mainnet';
 
 module.exports = { nettype };
