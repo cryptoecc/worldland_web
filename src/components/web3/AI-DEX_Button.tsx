@@ -40,6 +40,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
+    getData();
     let currentWeb3 = web3;
     if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
       currentWeb3 = new Web3(window.ethereum);
@@ -52,20 +53,22 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         console.error('메타마스크 연결에 실패 : ', error);
       }
     }
-
-
-
-
-  }, [web3]);
-
-  useEffect(() => {
-    getData();
     const interval = setInterval(() => {
       getData();
     }, 35000)
 
     return () => clearInterval(interval)
-  }, [])
+
+  }, [web3]);
+
+  // useEffect(() => {
+  //   getData();
+  //   const interval = setInterval(() => {
+  //     getData();
+  //   }, 35000)
+
+  //   return () => clearInterval(interval)
+  // }, [])
 
   const getData = async () => {
     //(1) 가격 가져오기
