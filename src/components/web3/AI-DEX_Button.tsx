@@ -9,6 +9,7 @@ import { Spin, Space } from 'antd';
 import styled from 'styled-components';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { web3_eth } from 'configs/web3-eth';
+import { web3_wld } from 'configs/web3-wld';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -183,7 +184,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 모델 값 트랜잭션 보내기
   const sendTransaction = async (tempPredList: any) => {
-    let worldland_web3 = new Web3(window.ethereum);
+    let worldland_web3 = web3_wld;
     if (worldland_web3) {
       const contract = await new worldland_web3.eth.Contract(
         MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
@@ -208,7 +209,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       console.log({ nonce });
       const txObject = {
         from: account,
-        // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
         to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
         gasPrice: '100000000000',
@@ -228,12 +228,9 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
         let amountIn = worldland_web3.utils.toWei(1, 'ether');
         console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
-        const getAmountOut = new worldland_web3.eth.Contract(
-          MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-        );
 
-        const response = await (getAmountOut.methods.getAmountOut as any)(
+
+        const response = await (contract.methods.getAmountOut as any)(
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
           amountIn,
           WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS],

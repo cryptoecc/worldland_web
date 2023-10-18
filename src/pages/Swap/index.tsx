@@ -84,8 +84,8 @@ const Swap = () => {
     args: [
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
       to_wei(input ? input : '0'),
-      MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-      MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+      selectedToken?.address,
+      selected2Token?.address,
     ],
     onSuccess(data: any) {
       console.log({ amountOut: data });
