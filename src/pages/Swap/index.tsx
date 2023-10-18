@@ -23,6 +23,8 @@ import Video from 'components/Video';
 import Web3 from 'web3';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { crypto_list } from 'data';
+import Web3ConnectButton from 'components/web3/Web3Button';
+import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
 
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -30,17 +32,18 @@ const Swap = () => {
   const [input, setInput] = useState<string>('');
   const [output, setOutput] = useState<string>('');
   const [currentTxHash, setCurrentTxHash] = useState<`0x${string}` | undefined>();
+  const { open, close } = useWeb3Modal();
 
   // Swap Token 선택
   const [selectedToken, setSelectedToken] = useState<TokenProps>(crypto_list[0]);
   const [selected2Token, setSelected2Token] = useState<TokenProps>(crypto_list[1]);
   const [selectedInputField, setSelectedInputField] = useState('first');
   const [web3, setWeb3] = useState<Web3 | null>(null);
-  const [btnState, setBtnState] = useState<number>(1)
+  const [btnState, setBtnState] = useState<number>(1);
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0])
-  const [amountOut, setAmountOut] = useState<string>("")
+  const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0]);
+  const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
 
   const openModalForFirstInput = () => {
@@ -73,8 +76,6 @@ const Swap = () => {
     },
   });
 
-
-
   const { data: _amountOut } = useContractRead({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
@@ -82,20 +83,18 @@ const Swap = () => {
     watch: true,
     args: [
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-      to_wei(input ? input : "0"),
+      to_wei(input ? input : '0'),
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
     ],
     onSuccess(data: any) {
-      console.log({ amountOut: data })
-      setAmountOut(data)
+      console.log({ amountOut: data });
+      setAmountOut(data);
     },
     onError(data: any) {
-      console.log({ error: data })
-    }
-  })
-
-
+      console.log({ error: data });
+    },
+  });
 
   const { write } = useContractWrite({
     chainId: chain?.id,
@@ -168,8 +167,8 @@ const Swap = () => {
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
     onSuccess(data) {
       console.log({ data });
-      userInputHandler(Field.INPUT, "");
-      userInputHandler(Field.OUTPUT, "");
+      userInputHandler(Field.INPUT, '');
+      userInputHandler(Field.OUTPUT, '');
     },
     onError(err) {
       console.log({ approvalErrB: err });
@@ -183,50 +182,49 @@ const Swap = () => {
     functionName: 'approve',
     onSuccess(data) {
       console.log({ approvalA: data });
-      userInputHandler(Field.INPUT, "")
-      userInputHandler(Field.OUTPUT, "")
+      userInputHandler(Field.INPUT, '');
+      userInputHandler(Field.OUTPUT, '');
       setLoader(true);
     },
     onError(err) {
       console.log({ approvalErrA: err });
       setLoader(false);
-    }
-  })
-
+    },
+  });
 
   const approvalConfirmation = useWaitForTransaction({
     hash: approvalA?.hash,
     staleTime: 2_000,
     onSuccess(data) {
-      console.log('Approve confirmation success: ', data)
+      console.log('Approve confirmation success: ', data);
       setLoader(false);
     },
     onError(err) {
-      console.log("Error: ", err)
+      console.log('Error: ', err);
       setLoader(false);
-    }
-  })
-
+    },
+  });
 
   async function handleSwap() {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
-    swap({ args: [to_wei(input), output, swapPath, address, deadline], })
+    swap({ args: [to_wei(input), output, swapPath, address, deadline] });
   }
 
   function handleFunctionSelector() {
     if (!isConnected) {
       // metamask is not connected
+      open();
       return;
-    } else if (input === "0" || input === "") {
+    } else if (input === '0' || input === '') {
       // empty field
       return;
-    } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : "0")) {
+    } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : '0')) {
       // balance A is not enough
       return;
-    } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))) {
+    } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
       // if allowanceA is low
-      approveA()
+      approveA();
     } else {
       // permission to add liquidity
       handleSwap();
@@ -240,13 +238,12 @@ const Swap = () => {
     args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
     watch: true,
     onSuccess(data: any) {
-      console.log({ allowanceA: data })
+      console.log({ allowanceA: data });
     },
     onError(data: any) {
-      console.log({ error: data })
-    }
-  })
-
+      console.log({ error: data });
+    },
+  });
 
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken?.address,
@@ -255,12 +252,12 @@ const Swap = () => {
     args: [address],
     watch: true,
     onSuccess(data: any) {
-      console.log({ tokenBalanceA: data })
+      console.log({ tokenBalanceA: data });
     },
     onError(data: any) {
-      console.log({ error: data })
-    }
-  })
+      console.log({ error: data });
+    },
+  });
   const { data: tokenBalanceB } = useContractRead({
     address: selected2Token?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -268,13 +265,12 @@ const Swap = () => {
     args: [address],
     watch: true,
     onSuccess(data: any) {
-      console.log({ tokenBalanceB: data })
+      console.log({ tokenBalanceB: data });
     },
     onError(data: any) {
-      console.log({ error: data })
-    }
-  })
-
+      console.log({ error: data });
+    },
+  });
 
   useEffect(() => {
     let currentWeb3 = web3;
@@ -288,37 +284,28 @@ const Swap = () => {
   useEffect(() => {
     if (!isConnected) {
       // metamask is not connected
-      setDisabled(true);
+      // setDisabled(true);
       setBtnState(4);
-    } else if (input === "0" || input === "") {
+    } else if (input === '0' || input === '') {
       // empty field
       setDisabled(true);
       setBtnState(5);
-      setSpotlightToken(selectedToken)
-    } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : "0")) {
+      setSpotlightToken(selectedToken);
+    } else if (Number(from_wei(tokenBalanceA)) < Number(input ? input : '0')) {
       // balance A is not enough
       setDisabled(true);
       setBtnState(1);
-      setSpotlightToken(selectedToken)
-    } else if (Number(input ? input : "0") > Number(from_wei(allowanceA))) {
+      setSpotlightToken(selectedToken);
+    } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
       setDisabled(false);
       setBtnState(2);
     } else {
       // permission to swap
       setBtnState(6);
-      setDisabled(false)
+      setDisabled(false);
     }
-  }, [
-    input,
-    allowanceA,
-    amountOut,
-    isConnected,
-    selectedToken,
-    selected2Token,
-    tokenBalanceA,
-    tokenBalanceB
-  ])
+  }, [input, allowanceA, amountOut, isConnected, selectedToken, selected2Token, tokenBalanceA, tokenBalanceB]);
 
   return (
     <Container>

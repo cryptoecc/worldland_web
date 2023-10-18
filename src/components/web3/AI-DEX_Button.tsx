@@ -54,10 +54,9 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     }
     const interval = setInterval(() => {
       getData();
-    }, 60000)
+    }, 60000);
 
-    return () => clearInterval(interval)
-
+    return () => clearInterval(interval);
   }, [web3]);
 
   // useEffect(() => {
@@ -197,7 +196,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
       const account: string = process.env.REACT_APP_ACCOUNT as string;
 
-
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6';
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
@@ -206,8 +204,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       for (let i = 0; i < 10; i++) {
         PredictedPrice.push(worldland_web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
-      let nonce = await worldland_web3.eth.getTransactionCount(account)
-      console.log({ nonce })
+      let nonce = await worldland_web3.eth.getTransactionCount(account);
+      console.log({ nonce });
       const txObject = {
         from: account,
         // to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
@@ -215,9 +213,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
         gasPrice: '100000000000',
         gas: 3000000,
-        nonce: nonce
+        nonce: nonce,
       };
-
 
       try {
         if (privateKey) {
@@ -235,7 +232,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         );
-
 
         const response = await (getAmountOut.methods.getAmountOut as any)(
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
@@ -287,12 +283,9 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
             <Spin />
           </Space>
         ) : (
-          <div>
-            Predict
-            {predPrice === '' ? '' : <p>{predPrice}</p>}
-          </div>
+          <div></div>
         )}
-
+        {/* 
         {amountOut !== '' ? (
           <div>
             AmountOut
@@ -300,7 +293,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           </div>
         ) : (
           <div></div>
-        )}
+        )} */}
       </StyledButton>
     </div>
   );

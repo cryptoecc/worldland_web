@@ -251,15 +251,28 @@ const TestPage = () => {
   return (
     <Container>
       <CommonDiv color="white">
-        Price Setter TestPage입니다.
         <br />
-        <br /> 컨트랙트를 배포한 계정만 시장가격을 설정할 수 있습니다.
+        테스트 목적
         <br />
-        <br /> 테스트에 앞서 아래와 같은 내용으로 세팅을 부탁드립니다.
+        <br /> 귀 사의 컨트랙트를 배포한 계정만 시장가격을 설정할 수 있고
         <br />
-        <br /> 1. 메타마스크 설치
+        <br /> 다른계정일 경우 컨트랙트 실행이 차단됩니다.
         <br />
-        <br /> 2. Sepolia network 로 설정
+        <br /> 기대결과 : 트랜잭션을 보내는 중에 오류 발생: Returned error: execution reverted: caller is not owner
+        <br />
+        <br /> Test setting
+        <br />
+        <br />
+        <a
+          href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+          target="_blank"
+          style={{ color: 'white', textDecoration: 'none' }}
+        >
+          1. 메타마스크 설치 및 계정생성 Link
+        </a>
+        <br />
+        <br /> 2. 우측 상단 Connect 버튼으로 메타마스크 연동
+        <br />
       </CommonDiv>
       <br />
       <CommonDiv color="white"></CommonDiv>
