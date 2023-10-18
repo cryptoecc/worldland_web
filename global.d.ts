@@ -5,6 +5,7 @@ export declare global {
     myData: any;
   }
   interface SwapInputTabProps {
+    loader: boolean;
     input: string;
     output: string;
     open: Function;
@@ -20,6 +21,7 @@ export declare global {
   }
 
   interface AiSwapProps {
+    loader: boolean;
     input: string;
     output: string;
     setInputHandler: (field: Field, value: string) => void;

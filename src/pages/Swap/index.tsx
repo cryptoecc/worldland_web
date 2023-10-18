@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import TokenModal from 'components/TokenModal';
 import Backdrop from 'components/Backdrop';
 import { chainIds } from 'configs/services/chainIds';
+import { Spin, Space } from 'antd';
 import {
   useAccount,
   useNetwork,
@@ -40,6 +41,7 @@ const Swap = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0])
   const [amountOut, setAmountOut] = useState<string>("")
+  const [loader, setLoader] = useState<boolean>(false);
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -67,18 +69,6 @@ const Swap = () => {
 
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
-      //
-    },
-  });
-
-  const { data } = useWaitForTransaction({
-    chainId: chain?.id,
-    hash: currentTxHash,
-    staleTime: 2_000,
-    onSuccess() {
-      //
-    },
-    onError(error: any) {
       //
     },
   });
@@ -195,11 +185,29 @@ const Swap = () => {
       console.log({ approvalA: data });
       userInputHandler(Field.INPUT, "")
       userInputHandler(Field.OUTPUT, "")
+      setLoader(true);
     },
     onError(err) {
       console.log({ approvalErrA: err });
+      setLoader(false);
     }
   })
+
+
+  const approvalConfirmation = useWaitForTransaction({
+    hash: approvalA?.hash,
+    staleTime: 2_000,
+    onSuccess(data) {
+      console.log('Approve confirmation success: ', data)
+      setLoader(false);
+    },
+    onError(err) {
+      console.log("Error: ", err)
+      setLoader(false);
+    }
+  })
+
+
   async function handleSwap() {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
@@ -238,6 +246,7 @@ const Swap = () => {
       console.log({ error: data })
     }
   })
+
 
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken?.address,
@@ -321,6 +330,7 @@ const Swap = () => {
         </Video>
       </VideoContainer>
       <SwapInputTab
+        loader={loader}
         open={setModal}
         inputHandler={userInputHandler}
         funcExec={handleFunctionSelector}

@@ -5,6 +5,7 @@ import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, Field } from 'utils/enum';
 import { to_wei, setDeadline, handleSwapBtnState } from 'utils/util';
+import { Spin, Space } from 'antd';
 // import Web3 from 'web3';
 import {
   useAccount,
@@ -37,6 +38,7 @@ const Button = styled.button`
 `;
 
 export const AiSwapButton = ({
+  loader,
   input,
   output,
   btnState,
@@ -45,5 +47,12 @@ export const AiSwapButton = ({
   setInputHandler,
   funcExec
 }: AiSwapProps) => {
-  return <Button disabled={disabled} onClick={funcExec}>{handleSwapBtnState(btnState, spotlightToken)}</Button>;
+  return <Button disabled={disabled} onClick={funcExec}>
+    {
+      loader ? (<Space size="large">
+        <Spin />
+      </Space>) :
+        handleSwapBtnState(btnState, spotlightToken)
+    }
+  </Button>;
 };

@@ -11,6 +11,7 @@ import { AiSwapButton } from 'components/web3/AI-SWAP_Button';
 import { from_wei, putCommaAtPrice } from 'utils/util';
 
 const SwapInputTab = ({
+  loader,
   input,
   output,
   open,
@@ -89,6 +90,7 @@ const SwapInputTab = ({
           </div>
         </div>
         <AiSwapButton
+          loader={loader}
           input={input}
           output={output}
           setInputHandler={inputHandler}
