@@ -19,7 +19,6 @@ export const fetchData = (payload) => {
     dispatch(fetchAmountOutRequest());
     try {
       let { amountIn, tokenA, tokenB } = payload;
-      console.log({ AMOUNTIN: amountIn, tokenA, tokenB });
       let txParams = {
         chain: 2,
         contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -27,9 +26,8 @@ export const fetchData = (payload) => {
         methodname: FUNCTION.GETAMOUNTOUT,
         f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], to_wei(amountIn), tokenA, tokenB],
       };
-      let resp = await chain_query(txParams);
-      console.log({ RESPONSE: from_wei(resp) });
-      dispatch(fetchAmountOutSuccess(from_wei(resp.toString())));
+      let resp = (await chain_query(txParams)).toString();
+      dispatch(fetchAmountOutSuccess(resp));
     } catch (err) {
       console.log({ RESPONSEERROR: err });
       dispatch(fetchAmountOutFailure(err));
