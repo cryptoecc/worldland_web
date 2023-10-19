@@ -11,20 +11,25 @@ export const chain_query = async (jargs) => {
   let { chain, contract_address, abikind, methodname, f_args } = jargs;
   contract_address = contract_address.toLowerCase();
   const contract = new chains[chain].eth.Contract(MAP_STR_ABI[abikind], contract_address);
-  return new Promise((resolve, reject) => {
-    contract.methods[methodname](...f_args)
-      .call((err, resp) => {
-        if (err) {
-          resolve(null);
-          return;
-        }
-        resolve(resp);
-      })
-      .catch((err) => {
-        console.log(err);
-        resolve(null);
-      });
-  });
+  console.log({ contract });
+  console.log({ jargs });
+  // return new Promise(async (resolve, reject) => {
+  //   await contract.methods[methodname](...f_args)
+  //     .call((err, resp) => {
+  //       if (err) {
+  //         resolve(null);
+  //         return;
+  //       }
+  //       resolve(resp);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       resolve(null);
+  //     });
+  // });
+  let result = await contract.methods[methodname](...f_args).call();
+  console.log(result);
+  return result;
 };
 
 export const getabist_forfunction = async (jargs) => {

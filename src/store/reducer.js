@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 import { fetchAmountOutRequest, fetchAmountOutSuccess, fetchAmountOutFailure } from './actions';
 
 const initialState = {
-  data: '',
+  data: '0',
   loading: false,
   error: null,
 };

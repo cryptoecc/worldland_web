@@ -70,7 +70,7 @@ const SwapInputTab = ({
         <div className="input-hold">
           <div className="input-and-label">
             <label htmlFor="output">You receive</label>
-            <input id="output" readOnly type="text" placeholder="0" value={output ? putCommaAtPrice(from_wei(output), 5) : ""} />
+            <input id="output" readOnly type="text" placeholder="0" value={output} />
           </div>
           <div onClick={openModalForSecondInput} className="selected-coin-2nd blue-bgd">
             <>

@@ -219,7 +219,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       try {
         if (privateKey) {
           const signedTx = await worldland_web3.eth.accounts.signTransaction(txObject, privateKey);
-
           const receipt = await worldland_web3.eth.sendSignedTransaction(signedTx.rawTransaction);
           console.log('Transaction Hash', receipt.transactionHash);
         } else {

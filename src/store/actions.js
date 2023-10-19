@@ -2,6 +2,7 @@ import { createAction } from '@reduxjs/toolkit';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { chain_query } from 'configs/contract_calls';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
+import { from_wei, to_wei } from 'utils/util';
 
 // export your actions here
 
@@ -26,14 +27,14 @@ export const fetchData = (payload) => {
         methodname: FUNCTION.GETAMOUNTOUT,
         f_args: [
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-          amountIn,
+          to_wei(amountIn),
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
         ],
       };
       let resp = await chain_query(txParams);
-      console.log({ RESPONSE: resp });
-      dispatch(fetchAmountOutSuccess(resp));
+      console.log({ RESPONSE: from_wei(resp) });
+      dispatch(fetchAmountOutSuccess(from_wei(resp.toString())));
     } catch (err) {
       console.log({ RESPONSEERROR: err });
       dispatch(fetchAmountOutFailure(err));

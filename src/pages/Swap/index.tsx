@@ -28,6 +28,7 @@ import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
+import { chain_query } from 'configs/contract_calls';
 
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -49,7 +50,9 @@ const Swap = () => {
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { data: amountOut, loading, error } = useSelector((state: any) => state.data);
+  const { data: amountOut, loading, error } = useSelector((state: any) => state);
+
+  console.log({ AMOUNTOUTSWAP: amountOut });
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -157,6 +160,27 @@ const Swap = () => {
     }, 1000), // 1000ms debounce delay
     []
   );
+
+  // async function handleDebouncedAmountOut(amountIn: string) {
+  // try {
+  //   let txParams = {
+  //     chain: 2,
+  //     contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+  //     abikind: ABI.LVSWAPV2_ROUTER,
+  //     methodname: FUNCTION.GETAMOUNTOUT,
+  //     f_args: [
+  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+  //       input,
+  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+  //     ],
+  //   };
+  //   let resp = await chain_query(txParams);
+  //   console.log({ RESPONSELOCAL: resp })
+  // } catch (err) {
+  //   console.log({ LOCALERROR: err })
+  // }
+  // }
 
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
