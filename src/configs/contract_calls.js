@@ -13,23 +13,7 @@ export const chain_query = async (jargs) => {
   const contract = new chains[chain].eth.Contract(MAP_STR_ABI[abikind], contract_address);
   console.log({ contract });
   console.log({ jargs });
-  // return new Promise(async (resolve, reject) => {
-  //   await contract.methods[methodname](...f_args)
-  //     .call((err, resp) => {
-  //       if (err) {
-  //         resolve(null);
-  //         return;
-  //       }
-  //       resolve(resp);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       resolve(null);
-  //     });
-  // });
-  let result = await contract.methods[methodname](...f_args).call();
-  console.log(result);
-  return result;
+  return await contract.methods[methodname](...f_args).call();
 };
 
 export const getabist_forfunction = async (jargs) => {
