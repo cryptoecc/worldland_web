@@ -24,7 +24,7 @@ import Web3 from 'web3';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { crypto_list } from 'data';
 import Web3ConnectButton from 'components/web3/Web3Button';
-import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
+import { useWeb3Modal } from '@web3modal/react';
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
@@ -293,7 +293,7 @@ const Swap = () => {
   useEffect(() => {
     if (!isConnected) {
       // metamask is not connected
-      // setDisabled(true);
+      setDisabled(false);
       setBtnState(4);
     } else if (input === '0' || input === '') {
       // empty field
