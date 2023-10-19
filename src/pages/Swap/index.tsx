@@ -50,7 +50,7 @@ const Swap = () => {
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { data: amountOut, loading, error } = useSelector((state: any) => state);
+  const { data: amountOut, loading, error } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
 
   console.log({ AMOUNTOUTSWAP: amountOut });
 
@@ -161,7 +161,7 @@ const Swap = () => {
         tokenA: selectedToken?.address,
         tokenB: selected2Token?.address
       }) as any);
-    }, 1000), // 1000ms debounce delay
+    }, 500), // 500ms debounce delay
     [input, selectedToken?.address, selected2Token.address]
   );
 
