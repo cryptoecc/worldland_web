@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import SwapInputTab from 'components/SwapInputTab';
 import { styled } from 'styled-components';
 import TokenModal from 'components/TokenModal';
@@ -25,6 +25,9 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { crypto_list } from 'data';
 import Web3ConnectButton from 'components/web3/Web3Button';
 import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
+import { debounce } from "lodash";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchData } from 'store/actions';
 
 const Swap = () => {
   const [modal, setModal] = useState<boolean>(false);
@@ -43,8 +46,10 @@ const Swap = () => {
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
   const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0]);
-  const [amountOut, setAmountOut] = useState<string>('');
+  // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { data: amountOut, loading, error } = useSelector((state: any) => state.data);
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -76,25 +81,25 @@ const Swap = () => {
     },
   });
 
-  const { data: _amountOut } = useContractRead({
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: FUNCTION.GETAMOUNTOUT,
-    watch: true,
-    args: [
-      MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-      to_wei(input ? input : '0'),
-      selectedToken?.address,
-      selected2Token?.address,
-    ],
-    onSuccess(data: any) {
-      console.log({ amountOut: data });
-      setAmountOut(data);
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
+  // const { data: _amountOut } = useContractRead({
+  //   address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+  //   abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+  //   functionName: FUNCTION.GETAMOUNTOUT,
+  //   watch: true,
+  //   args: [
+  //     MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+  //     to_wei(input ? input : '0'),
+  //     selectedToken?.address,
+  //     selected2Token?.address,
+  //   ],
+  //   onSuccess(data: any) {
+  //     console.log({ amountOut: data });
+  //     // setAmountOut(data);
+  //   },
+  //   onError(data: any) {
+  //     console.log({ error: data });
+  //   },
+  // });
 
   const { write } = useContractWrite({
     chainId: chain?.id,
@@ -146,11 +151,19 @@ const Swap = () => {
     }
   };
 
+  const handleDebouncedAmountOut = useCallback(
+    debounce((input: string) => {
+      dispatch(fetchData({ amountIn: input }) as any);
+    }, 1000), // 1000ms debounce delay
+    []
+  );
+
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
       case Field.INPUT:
         console.log('input');
         setInput(typedValue);
+        handleDebouncedAmountOut(typedValue);
         break;
       case Field.OUTPUT:
         console.log('output');

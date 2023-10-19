@@ -70,6 +70,8 @@ export declare global {
     result: string;
   }
 
+  // types
+
   type ADDRESS_TYPE = {
     [key: string]: `0x${string}` | any;
   };
