@@ -18,19 +18,14 @@ export const fetchData = (payload) => {
   return async (dispatch) => {
     dispatch(fetchAmountOutRequest());
     try {
-      let { amountIn } = payload;
-      console.log({ AMOUNTIN: amountIn });
+      let { amountIn, tokenA, tokenB } = payload;
+      console.log({ AMOUNTIN: amountIn, tokenA, tokenB });
       let txParams = {
         chain: 2,
         contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abikind: ABI.LVSWAPV2_ROUTER,
         methodname: FUNCTION.GETAMOUNTOUT,
-        f_args: [
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-          to_wei(amountIn),
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-          MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-        ],
+        f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], to_wei(amountIn), tokenA, tokenB],
       };
       let resp = await chain_query(txParams);
       console.log({ RESPONSE: from_wei(resp) });

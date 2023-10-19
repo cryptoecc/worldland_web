@@ -156,9 +156,13 @@ const Swap = () => {
 
   const handleDebouncedAmountOut = useCallback(
     debounce((input: string) => {
-      dispatch(fetchData({ amountIn: input }) as any);
+      dispatch(fetchData({
+        amountIn: input,
+        tokenA: selectedToken?.address,
+        tokenB: selected2Token?.address
+      }) as any);
     }, 1000), // 1000ms debounce delay
-    []
+    [selectedToken?.address, selected2Token.address]
   );
 
   // async function handleDebouncedAmountOut(amountIn: string) {
