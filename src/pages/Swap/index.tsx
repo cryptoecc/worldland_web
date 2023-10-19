@@ -162,29 +162,10 @@ const Swap = () => {
         tokenB: selected2Token?.address
       }) as any);
     }, 1000), // 1000ms debounce delay
-    [selectedToken?.address, selected2Token.address]
+    [input, selectedToken?.address, selected2Token.address]
   );
 
-  // async function handleDebouncedAmountOut(amountIn: string) {
-  // try {
-  //   let txParams = {
-  //     chain: 2,
-  //     contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-  //     abikind: ABI.LVSWAPV2_ROUTER,
-  //     methodname: FUNCTION.GETAMOUNTOUT,
-  //     f_args: [
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-  //       input,
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-  //     ],
-  //   };
-  //   let resp = await chain_query(txParams);
-  //   console.log({ RESPONSELOCAL: resp })
-  // } catch (err) {
-  //   console.log({ LOCALERROR: err })
-  // }
-  // }
+
 
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
