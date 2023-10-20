@@ -10,8 +10,9 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { arbitrum, mainnet, sepolia } from 'wagmi/chains';
 import { HelmetProvider } from 'react-helmet-async';
 import { worldland, worldland_testnet, sepolia_custom } from 'utils/wagmi';
-import { Provider } from "react-redux";
-import { store } from "store";
+import { Provider } from 'react-redux';
+import { store } from 'store';
+import { ToastProvider } from 'react-toast-notifications';
 
 const chains = [sepolia_custom, worldland, worldland_testnet, arbitrum, mainnet, sepolia];
 const projectId = '90f6c51de51a4046732827e944ba4958';
@@ -33,7 +34,9 @@ root.render(
         <WagmiConfig config={wagmiConfig}>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
-            <App />
+            <ToastProvider>
+              <App />
+            </ToastProvider>
           </ThemeProvider>
         </WagmiConfig>
         <Web3Modal
