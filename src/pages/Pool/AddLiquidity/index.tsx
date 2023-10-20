@@ -169,7 +169,7 @@ const AddLiquidity = () => {
         address: selectedToken0?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-        functionName: 'approve',
+        functionName: FUNCTION.APPROVE,
         onSuccess(data) {
             console.log({ approvalA: data });
         },
@@ -181,7 +181,7 @@ const AddLiquidity = () => {
         address: selectedToken1?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-        functionName: 'approve',
+        functionName: FUNCTION.APPROVE,
         onSuccess(data) {
             console.log({ approvalB: data });
         },
@@ -192,7 +192,7 @@ const AddLiquidity = () => {
     const { data: _, write: AddLiquidity } = useContractWrite({
         address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-        functionName: 'addLiquidity',
+        functionName: FUNCTION.ADDLIQUIDITY,
         gas: BigInt(250000),
         onSuccess(data) {
             console.log({ approvalB: data });

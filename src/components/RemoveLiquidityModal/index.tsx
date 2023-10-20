@@ -27,6 +27,11 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
         setValue(newValue as number);
     };
 
+    function handleRemoveLiquidity() {
+        let calcLiquidityPercentageToAmount = (Number(from_wei(selectedPair?.balance)) / 100) * value;
+        console.log({ REMOVALAMOUNT: calcLiquidityPercentageToAmount });
+    }
+
     useEffect(() => {
         if (Number(from_wei(allowance)) < Number(from_wei(selectedPair?.balance))) {
             // if allowance is less than user's pair balance
@@ -95,7 +100,7 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
                 <button onClick={handleApprove} disabled={disabled['approve']}>
                     Approve
                 </button>
-                <button disabled={disabled['remove']}>
+                <button onClick={handleRemoveLiquidity} disabled={disabled['remove']}>
                     Remove
                 </button>
             </section>
