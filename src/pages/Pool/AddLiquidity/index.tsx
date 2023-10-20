@@ -24,6 +24,7 @@ import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
 import { MAPNETTOADDRESS } from "configs/contract_address_config";
+import { useWeb3Modal } from '@web3modal/react';
 
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
@@ -37,6 +38,7 @@ const AddLiquidity = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
     const [amountOut, setAmountOut] = useState<string>("");
+    const { open } = useWeb3Modal();
     const location = useLocation;
     const approvalAmount = '1000000';
     const mapIndexToFunction: ImapIndexToFunction = {
@@ -205,6 +207,7 @@ const AddLiquidity = () => {
     function handleFunctionSelector() {
         if (!isConnected) {
             // metamask is not connected
+            open();
             return;
         } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
             // empty field
@@ -249,7 +252,7 @@ const AddLiquidity = () => {
     useEffect(() => {
         if (!isConnected) {
             // metamask is not connected
-            setDisabled(true);
+            setDisabled(false);
             setBtnState(4);
         } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
             // empty field

@@ -2,8 +2,8 @@ import { web3_wld as web3 } from 'configs/web3-wld';
 import { mapMessageToObject } from 'data';
 import { Web3 } from 'web3';
 
-export const from_wei = (val: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '0');
-export const to_wei = (val: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '0');
+export const from_wei = (val: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '');
+export const to_wei = (val: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '');
 
 export function putCommaAtPrice(data: number | string, precision: number | string) {
   let str;
@@ -22,7 +22,7 @@ export function putCommaAtPrice(data: number | string, precision: number | strin
     str[0] = `${str[0]}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return str.join('.');
   }
-  return 0;
+  return '';
 }
 
 export async function getBlockNumber() {
@@ -49,4 +49,8 @@ export function handleSwapBtnState(state: number, token?: TokenProps | null) {
     return mapMessageToObject[state](token);
   }
   return mapMessageToObject[state];
+}
+
+export function testInput(val: string) {
+  return /^[0-9]*[.,]?[0-9]*$/.test(val);
 }

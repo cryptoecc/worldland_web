@@ -1,16 +1,15 @@
 import { createAction } from '@reduxjs/toolkit';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { chain_query } from 'configs/contract_calls';
-import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
-import { from_wei, to_wei } from 'utils/util';
+import { ABI, ACTIONS, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 
 // export your actions here
 
-export const fetchAmountOutRequest = createAction('FETCH_AMOUNT_OUT_REQUEST');
+export const fetchAmountOutRequest = createAction(ACTIONS.FETCH_AMOUNT_OUT_REQUEST);
 
-export const fetchAmountOutSuccess = createAction('FETCH_AMOUNT_OUT_SUCCESS');
+export const fetchAmountOutSuccess = createAction(ACTIONS.FETCH_AMOUNT_OUT_SUCCESS);
 
-export const fetchAmountOutFailure = createAction('FETCH_AMOUNT_OUT_FAILURE');
+export const fetchAmountOutFailure = createAction(ACTIONS.FETCH_AMOUNT_OUT_FAILURE);
 
 // asynchronous tasks here
 
@@ -19,19 +18,20 @@ export const fetchData = (payload) => {
     dispatch(fetchAmountOutRequest());
     try {
       let { amountIn, tokenA, tokenB } = payload;
-      console.log({ AMOUNTIN: amountIn, tokenA, tokenB });
       let txParams = {
         chain: 2,
         contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abikind: ABI.LVSWAPV2_ROUTER,
         methodname: FUNCTION.GETAMOUNTOUT,
-        f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], to_wei(amountIn), tokenA, tokenB],
+        f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], amountIn, tokenA, tokenB],
       };
-      let resp = await chain_query(txParams);
-      console.log({ RESPONSE: from_wei(resp) });
-      dispatch(fetchAmountOutSuccess(from_wei(resp.toString())));
+      if (amountIn) {
+        let resp = (await chain_query(txParams)).toString();
+        dispatch(fetchAmountOutSuccess(resp));
+      } else {
+        dispatch(fetchAmountOutSuccess(''));
+      }
     } catch (err) {
-      console.log({ RESPONSEERROR: err });
       dispatch(fetchAmountOutFailure(err));
     }
   };

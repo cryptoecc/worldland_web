@@ -16,7 +16,7 @@ import {
 } from 'wagmi';
 import { MAP_STR_ABI } from 'configs/abis';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
-import { from_wei, setDeadline, to_wei } from 'utils/util';
+import { from_wei, setDeadline, testInput, to_wei } from 'utils/util';
 import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
@@ -24,7 +24,7 @@ import Web3 from 'web3';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { crypto_list } from 'data';
 import Web3ConnectButton from 'components/web3/Web3Button';
-import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
+import { useWeb3Modal } from '@web3modal/react';
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
@@ -50,9 +50,9 @@ const Swap = () => {
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { data: amountOut, loading, error } = useSelector((state: any) => state);
+  const { data: amountOut, loading, error } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
 
-  console.log({ AMOUNTOUTSWAP: amountOut });
+  console.log({ AMOUNTOUTSWAP: amountOut })
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -69,9 +69,9 @@ const Swap = () => {
       // 첫 번째 입력을 위한 토큰을 선택
       setSelectedToken(token);
     } else if (selectedInputField === 'second') {
-      setSelected2Token(token);
       // 두 번째 입력을 위한 토큰을 선택
       // 여기서 별도의 상태를 업데이트하거나 다른 로직을 실행
+      setSelected2Token(token);
     }
     setModal(false);
   };
@@ -83,26 +83,6 @@ const Swap = () => {
       //
     },
   });
-
-  // const { data: _amountOut } = useContractRead({
-  //   address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-  //   abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-  //   functionName: FUNCTION.GETAMOUNTOUT,
-  //   watch: true,
-  //   args: [
-  //     MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-  //     to_wei(input ? input : '0'),
-  //     selectedToken?.address,
-  //     selected2Token?.address,
-  //   ],
-  //   onSuccess(data: any) {
-  //     console.log({ amountOut: data });
-  //     // setAmountOut(data);
-  //   },
-  //   onError(data: any) {
-  //     console.log({ error: data });
-  //   },
-  // });
 
   const { write } = useContractWrite({
     chainId: chain?.id,
@@ -157,50 +137,38 @@ const Swap = () => {
   const handleDebouncedAmountOut = useCallback(
     debounce((input: string) => {
       dispatch(fetchData({
-        amountIn: input,
+        amountIn: to_wei(input),
         tokenA: selectedToken?.address,
         tokenB: selected2Token?.address
       }) as any);
-    }, 1000), // 1000ms debounce delay
-    [selectedToken?.address, selected2Token.address]
+    }, 500), // 500ms debounce delay
+    [input, selectedToken?.address, selected2Token.address]
   );
 
-  // async function handleDebouncedAmountOut(amountIn: string) {
-  // try {
-  //   let txParams = {
-  //     chain: 2,
-  //     contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-  //     abikind: ABI.LVSWAPV2_ROUTER,
-  //     methodname: FUNCTION.GETAMOUNTOUT,
-  //     f_args: [
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-  //       input,
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-  //       MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-  //     ],
-  //   };
-  //   let resp = await chain_query(txParams);
-  //   console.log({ RESPONSELOCAL: resp })
-  // } catch (err) {
-  //   console.log({ LOCALERROR: err })
-  // }
-  // }
+
 
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
       case Field.INPUT:
-        console.log('input');
-        setInput(typedValue);
-        handleDebouncedAmountOut(typedValue);
+        if (testInput(typedValue) || typedValue === "") {
+          setInput(typedValue);
+          handleDebouncedAmountOut(typedValue);
+        }
         break;
       case Field.OUTPUT:
-        console.log('output');
-        setOutput(typedValue);
+        if (testInput(typedValue) || typedValue === "") {
+          setOutput(typedValue);
+        }
         break;
       default:
         break;
     }
   }
+
+  useEffect(() => {
+    // consistently watches the selected tokens and if changed, updates the output value accordingly
+    handleDebouncedAmountOut(input);
+  }, [selectedToken.address, selected2Token.address])
 
   const { data: _, write: swap } = useContractWrite({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -325,7 +293,7 @@ const Swap = () => {
   useEffect(() => {
     if (!isConnected) {
       // metamask is not connected
-      // setDisabled(true);
+      setDisabled(false);
       setBtnState(4);
     } else if (input === '0' || input === '') {
       // empty field
