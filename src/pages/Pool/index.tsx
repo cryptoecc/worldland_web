@@ -5,7 +5,7 @@ import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useContractRead, useContractReads } from 'wagmi';
+import { useAccount, useContractWrite, useContractRead, useContractReads } from 'wagmi';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
@@ -26,13 +26,13 @@ interface Ipairs {
 const Pool = () => {
     const { address, isConnected } = useAccount()
     const [pairs, setPairs] = useState<ImapPairToBalance[]>([])
+    const [selectedPair, setSelectedPair] = useState<Pair>()
     const navigate = useNavigate();
     const [modal, setModal] = useState<boolean>(false);
     const [amountOut, setAmountOut] = useState<string>("")
+    const [allowanceLP, setAllowanceLP] = useState<string>('')
 
-    function handleTokenClick() {
 
-    }
 
     const { data } = useContractReads({
         contracts: [
@@ -46,21 +46,19 @@ const Pool = () => {
         watch: true,
         onSuccess(data: any) {
             console.log({ pairBalance: data })
-            let result;
             const arr = [];
             for (let i = 0; i < data.length; i++) {
-                result = {
-                    // token address : { balance: tokenbalance, address: tokenaddress }
-                    [PAIR_ADRESSES[i]]: {
-                        balance: data[i].result,
-                        address: PAIR_ADRESSES[i]
-                    }
-                }
-                if (Number(from_wei(data[i].result)) > 0) {
+                data[i]['address'] = PAIR_ADRESSES[i];
+                data[i]['balance'] = data[i].result;
+                delete data[i]['result'];
+                delete data[i]['status'];
+
+                if (Number(from_wei(data[i].balance)) > 0) {
                     // user has a balance of LP tokens
-                    arr.push(result);
+                    arr.push(data[i]);
                 }
             }
+            console.log({ ARRR: arr })
             setPairs(arr);
 
         },
@@ -86,6 +84,41 @@ const Pool = () => {
         },
         onError(data: any) {
             console.log({ error: data })
+        }
+    })
+
+    const { data: _allowance } = useContractRead({
+        address: selectedPair?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ allowanceLP: data })
+            setAllowanceLP(data);
+        },
+        onError(data: any) {
+            console.log({ error: data })
+        }
+    })
+
+    function handlePairClick(pair: Pair) {
+        setModal(true)
+        console.log({ pair })
+        setSelectedPair(pair);
+    }
+
+    const { write: approveLP } = useContractWrite({
+        address: selectedPair?.address,
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], selectedPair?.balance],
+        functionName: 'approve',
+        gas: BigInt(250000),
+        onSuccess(data) {
+            console.log({ approvalLP: data });
+        },
+        onError(err) {
+            console.log({ approvalErrLP: err });
         }
     })
 
@@ -116,7 +149,7 @@ const Pool = () => {
                         </ul>
                         <ul className="pairs">
                             {pairs.map((el, i) => (
-                                <li onClick={() => setModal(true)} key={i}>
+                                <li onClick={() => handlePairClick(el)} key={i}>
                                     <span className="pair-logo">
                                         <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
                                         <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
@@ -167,7 +200,7 @@ const Pool = () => {
             {modal && (
                 <>
                     <Backdrop intensity={10} close={setModal} />
-                    <RemoveLiquidityModal close={setModal} handleTokenClick={handleTokenClick} />
+                    <RemoveLiquidityModal selectedPair={selectedPair} allowance={allowanceLP} handleApprove={approveLP} close={setModal} />
                 </>
             )}
         </Container>

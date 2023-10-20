@@ -36,6 +36,13 @@ export declare global {
     handleTokenClick: React.Dispatch<React.SetStateAction<any>>;
   }
 
+  interface IRemoveLiquidity {
+    close: Function;
+    allowance: string;
+    handleApprove: () => void;
+    selectedPair?: Pair;
+  }
+
   interface BackdropProps {
     close?: Function;
     intensity: number;
@@ -67,8 +74,8 @@ export declare global {
   }
 
   interface Pair {
-    balance: string;
-    address: string;
+    balance?: string;
+    address?: `0x${string}`;
   }
 
   interface ImapPair {

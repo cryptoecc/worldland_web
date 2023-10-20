@@ -2,8 +2,8 @@ import { web3_wld as web3 } from 'configs/web3-wld';
 import { mapMessageToObject } from 'data';
 import { Web3 } from 'web3';
 
-export const from_wei = (val: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '');
-export const to_wei = (val: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '');
+export const from_wei = (val?: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '');
+export const to_wei = (val?: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '');
 
 export function putCommaAtPrice(data: number | string, precision: number | string) {
   let str;

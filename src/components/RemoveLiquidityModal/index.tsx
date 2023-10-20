@@ -6,19 +6,42 @@ import { CgClose } from 'react-icons/cg';
 import { AiOutlineArrowDown, AiOutlineQuestionCircle } from 'react-icons/ai';
 import { crypto_list } from 'data';
 import { IoCloseSharp } from 'react-icons/io5';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAccount } from 'wagmi';
+import { from_wei } from 'utils/util';
 
 
+interface IDisabled {
+    approve?: boolean;
+    remove?: boolean;
+}
 
-const RemoveLiquidityModal = ({ close, handleTokenClick }: TokenModalProps) => {
+
+const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
     const [value, setValue] = useState<number>(30);
     const customValues = [25, 50, 75, 100];
+    const [disabled, setDisabled] = useState<IDisabled>({ approve: true, remove: true });
 
 
     const handleChange = (event: Event, newValue: number | number[]) => {
         setValue(newValue as number);
     };
 
+    useEffect(() => {
+        if (Number(from_wei(allowance)) < Number(from_wei(selectedPair?.balance))) {
+            // if allowance is less than user's pair balance
+            setDisabled(() => ({
+                approve: false,
+                remove: true,
+            }))
+        } else if ((Number(from_wei(allowance)) >= Number(from_wei(selectedPair?.balance)))) {
+            // if allowance is more than user's pair balance
+            setDisabled(() => ({
+                approve: true,
+                remove: false,
+            }))
+        }
+    }, [allowance, selectedPair]);
 
     return (
         <Container>
@@ -69,10 +92,10 @@ const RemoveLiquidityModal = ({ close, handleTokenClick }: TokenModalProps) => {
                 </div>
             </section>
             <section className="btn-wrap">
-                <button className="approve">
+                <button onClick={handleApprove} disabled={disabled['approve']}>
                     Approve
                 </button>
-                <button disabled className="remove">
+                <button disabled={disabled['remove']}>
                     Remove
                 </button>
             </section>
@@ -237,18 +260,13 @@ const Container = styled.section`
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
+            background-color: rgb(58, 113, 221);
 
             &:disabled {
              background-color: rgb(66, 68, 78, 0.5);
              color: rgb(255, 255, 255, 0.1);
              cursor: not-allowed;
             }
-        }
-        .approve {
-            background-color: rgb(58, 113, 221);
-        }
-        .remove {
-            background-color: rgb(66, 68, 78);
         }
     }
 `;
