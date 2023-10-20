@@ -150,7 +150,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     console.log(priceList);
 
     // let url = 'http://13.125.45.171:8000/predict/?';
-    let url = 'https://api.worldland.foundation/?';
+    let url = 'https://aim.worldland.foundation/?';
     // let url = 'http://52.79.47.70:8000/predict/?';
     //let url = "http://localhost:8000/predict/?";
 
@@ -227,7 +227,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
         let amountIn = worldland_web3.utils.toWei(1, 'ether');
         console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
-
 
         const response = await (contract.methods.getAmountOut as any)(
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
