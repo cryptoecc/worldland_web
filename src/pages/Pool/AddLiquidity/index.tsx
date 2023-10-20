@@ -25,6 +25,7 @@ import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
 import { MAPNETTOADDRESS } from "configs/contract_address_config";
 import { useWeb3Modal } from '@web3modal/react';
+import { chain_query } from "configs/contract_calls";
 
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
@@ -38,6 +39,7 @@ const AddLiquidity = () => {
     const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
     const [amountOut, setAmountOut] = useState<string>("");
+    const [currentPrice, setCurrentPrice] = useState<string>("");
     const { open } = useWeb3Modal();
     const location = useLocation;
     const approvalAmount = '1000000';
@@ -59,6 +61,27 @@ const AddLiquidity = () => {
         setSelectedTokenInputField(index);
         setModal(prev => !prev);
     }
+
+    async function queryCurrentPrice() {
+        let args = {
+            chain: 2,
+            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+            abikind: ABI.LVSWAPV2_ROUTER,
+            methodname: FUNCTION.GETAMOUNTOUT,
+            f_args: [
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                to_wei('1'),
+                selectedToken0?.address,
+                selectedToken1?.address
+            ]
+        }
+        let price = await chain_query(args)
+        setCurrentPrice(price)
+    }
+
+    useEffect(() => {
+        queryCurrentPrice();
+    }, [])
 
     const { data: tokenBalanceA } = useContractRead({
         address: selectedToken0?.address,
@@ -129,6 +152,7 @@ const AddLiquidity = () => {
         watch: true,
         onSuccess(data: any) {
             console.log({ amountOut: data })
+            // queryCurrentPrice();
             setAmountOut(data)
         },
         onError(data: any) {
@@ -353,7 +377,7 @@ const AddLiquidity = () => {
                     </section>
                     <div className="current-price-box">
                         <p>Current price:</p>
-                        <h2>{putCommaAtPrice(from_wei(amountOut), 3)}</h2>
+                        <h2>{putCommaAtPrice(from_wei(currentPrice), 5)}</h2>
                         <p>{selectedToken1.symbol} per {selectedToken0.symbol}</p>
                     </div>
                     <section className="deposit-field">
