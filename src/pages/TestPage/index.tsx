@@ -10,6 +10,7 @@ import { Spin, Space } from 'antd';
 import { web3_eth } from 'configs/web3-eth';
 import { web3_wld } from 'configs/web3-wld';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import { useToasts } from 'react-toast-notifications';
 
 const Container = styled.section`
   display: flex;
@@ -53,6 +54,7 @@ const StyledButton = styled.button`
 `;
 
 const TestPage = () => {
+  const { addToast } = useToasts();
   const [inputValues, setInputValues] = useState(Array(10).fill(''));
   const [priceValues, setPriceValues] = useState(Array(10).fill(''));
   const [txloading, setTxloading] = useState(false);
@@ -212,35 +214,17 @@ const TestPage = () => {
         gas: 3000000,
         nonce: nonce,
       };
-      console.log(txObject);
-
-      // console.log(BlockNumber);
-      // let BN = worldland_web3.utils.toWei(Number([priceValues[0]]), 'ether');
-      // let BN2 = worldland_web3.utils.toWei(Number([priceValues[1]]), 'ether');
-      // let BN3 = worldland_web3.utils.toWei(Number([priceValues[2]]), 'ether');
-      // let BN4 = worldland_web3.utils.toWei(Number([priceValues[3]]), 'ether');
-      // let BN5 = worldland_web3.utils.toWei(Number([priceValues[4]]), 'ether');
-      // let BN6 = worldland_web3.utils.toWei(Number([priceValues[5]]), 'ether');
-      // let BN7 = worldland_web3.utils.toWei(Number([priceValues[6]]), 'ether');
-      // let BN8 = worldland_web3.utils.toWei(Number([priceValues[7]]), 'ether');
-      // let BN9 = worldland_web3.utils.toWei(Number([priceValues[8]]), 'ether');
-      // let BN10 = worldland_web3.utils.toWei(Number([priceValues[9]]), 'ether');
-      // let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
-
-      // const txObject = {
-      //   from: account,
-      //   to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
-      //   data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
-      //   gasPrice: '10000000000',
-      //   gas: 3000000,
-      // };
 
       try {
         const result = await worldland_web3.eth.sendTransaction(txObject);
         console.log('트랜잭션 결과:', result);
       } catch (error: any) {
-        console.error('트랜잭션을 보내는 중에 오류 발생:', error);
-        window.alert('트랜잭션을 보내는 중에 오류 발생: ' + error.message);
+        // console.error('트랜잭션을 보내는 중에 오류 발생:', error);
+        // window.alert('트랜잭션을 보내는 중에 오류 발생: ' + error.message);
+        addToast('트랜잭션 처리 중 오류가 발생했습니다.', {
+          appearance: 'error', // 오류 메시지 스타일
+          autoDismiss: true, // 자동 닫기
+        });
       }
     }
   };
