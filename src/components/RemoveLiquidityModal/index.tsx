@@ -72,7 +72,7 @@ const RemoveLiquidityModal = ({ close, handleTokenClick }: TokenModalProps) => {
                 <button className="approve">
                     Approve
                 </button>
-                <button className="remove">
+                <button disabled className="remove">
                     Remove
                 </button>
             </section>
@@ -231,10 +231,18 @@ const Container = styled.section`
         button {
             padding: 15px;
             width: 100%;
-            max-width: 150px;
+            max-width: 170px;
             border-radius: 10px;
             color: #ffffff;
-            font-weight: 24px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+
+            &:disabled {
+             background-color: rgb(66, 68, 78, 0.5);
+             color: rgb(255, 255, 255, 0.1);
+             cursor: not-allowed;
+            }
         }
         .approve {
             background-color: rgb(58, 113, 221);
