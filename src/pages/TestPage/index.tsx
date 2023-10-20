@@ -1,13 +1,16 @@
-import { ChangeEvent, useEffect, useState, FC } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { contractABI, contractAddress } from '../../utils/ChainLink_goerli';
 import { MAP_STR_ABI } from 'configs/abis';
-import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
+import { ABI, CONTRACT_ADDRESSES } from '../../utils/enum';
 import Web3 from 'web3';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { Spin, Space } from 'antd';
-// console.log('@?', TEST_ADDRESS.FACTORY);
+import { web3_eth } from 'configs/web3-eth';
+import { web3_wld } from 'configs/web3-wld';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+
 const Container = styled.section`
   display: flex;
   align-items: center;
@@ -67,22 +70,18 @@ const TestPage = () => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
-    let currentWeb3 = web3;
     setLoading(true);
-    if (!currentWeb3 && typeof window !== 'undefined' && typeof window.ethereum !== 'undefined') {
-      currentWeb3 = new Web3(window.ethereum);
-      setWeb3(currentWeb3);
-    }
-    if (currentWeb3) {
+    getData();
+    let sepolia_web3 = web3_eth; //testnet
+    setWeb3(sepolia_web3);
+    if (sepolia_web3) {
       try {
         setAccount(account);
-        console.log(account, '??');
+        console.log(account);
       } catch (error) {
         console.error('메타마스크 연결에 실패 : ', error);
       }
     }
-    getData();
-    // fetchData();
   }, [web3]);
 
   const getData = async () => {
@@ -121,7 +120,6 @@ const TestPage = () => {
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
         const seconds = String(date.getSeconds()).padStart(2, '0');
-
         const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
 
         setTimestamp(formattedDate);
@@ -151,7 +149,7 @@ const TestPage = () => {
   //(2) 예측모델로 가격 정보 보내고, 예측값 가져오기
   const fetchData = async () => {
     console.log(priceList);
-    let url = 'https://api.worldland.foundation/?';
+    let url = 'https://aim.worldland.foundation/?';
 
     //priceList의 10개의 값을 쿼리 파라미터로 추가
     if (priceList && priceList.length > 0) {
@@ -182,51 +180,68 @@ const TestPage = () => {
   };
 
   const sendTransaction = async (priceValues: any) => {
-    if (web3) {
-      const contract = await new web3.eth.Contract(
-        MAP_STR_ABI[ABI.UNISWAPV2_ROUTER],
-        WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+    let worldland_web3 = web3_wld;
+    if (worldland_web3) {
+      const contract = await new worldland_web3.eth.Contract(
+        MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
       );
-
-      const accounts = await web3.eth.getAccounts();
-      const account = accounts[0]; // 첫 번째 계정을 가져올 수 있습니다.
+      const accounts = await worldland_web3.eth.getAccounts();
+      // console.log(accounts);
+      // const account = accounts[0]; // 첫 번째 계정을 가져올 수 있습니다.
+      const account = '0xd67c40b6488032BAC40C781c52E55e2593345689';
+      setAccount(account);
       console.log('현재 연결된 계정:', account);
       // const account = await web3.eth.getAccounts();
 
       // const token0 = '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'; // Router 배포할 때 WETH address
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
-      const BlockNumber = await web3.eth.getBlockNumber();
-      console.log(BlockNumber);
-      let BN = web3.utils.toWei(Number([priceValues[0]]), 'ether');
-      let BN2 = web3.utils.toWei(Number([priceValues[1]]), 'ether');
-      let BN3 = web3.utils.toWei(Number([priceValues[2]]), 'ether');
-      let BN4 = web3.utils.toWei(Number([priceValues[3]]), 'ether');
-      let BN5 = web3.utils.toWei(Number([priceValues[4]]), 'ether');
-      let BN6 = web3.utils.toWei(Number([priceValues[5]]), 'ether');
-      let BN7 = web3.utils.toWei(Number([priceValues[6]]), 'ether');
-      let BN8 = web3.utils.toWei(Number([priceValues[7]]), 'ether');
-      let BN9 = web3.utils.toWei(Number([priceValues[8]]), 'ether');
-      let BN10 = web3.utils.toWei(Number([priceValues[9]]), 'ether');
-      let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
-
+      const BlockNumber = await worldland_web3.eth.getBlockNumber();
+      let PredictedPrice = [];
+      for (let i = 0; i < 10; i++) {
+        PredictedPrice.push(worldland_web3.utils.toWei(Number([priceValues[i]]), 'ether'));
+      }
+      let nonce = await worldland_web3.eth.getTransactionCount(account);
+      console.log({ nonce });
       const txObject = {
         from: account,
-        to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+        to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
-        gasPrice: '10000000000',
+        gasPrice: '100000000000',
         gas: 3000000,
+        nonce: nonce,
       };
+      console.log(txObject);
+
+      // console.log(BlockNumber);
+      // let BN = worldland_web3.utils.toWei(Number([priceValues[0]]), 'ether');
+      // let BN2 = worldland_web3.utils.toWei(Number([priceValues[1]]), 'ether');
+      // let BN3 = worldland_web3.utils.toWei(Number([priceValues[2]]), 'ether');
+      // let BN4 = worldland_web3.utils.toWei(Number([priceValues[3]]), 'ether');
+      // let BN5 = worldland_web3.utils.toWei(Number([priceValues[4]]), 'ether');
+      // let BN6 = worldland_web3.utils.toWei(Number([priceValues[5]]), 'ether');
+      // let BN7 = worldland_web3.utils.toWei(Number([priceValues[6]]), 'ether');
+      // let BN8 = worldland_web3.utils.toWei(Number([priceValues[7]]), 'ether');
+      // let BN9 = worldland_web3.utils.toWei(Number([priceValues[8]]), 'ether');
+      // let BN10 = worldland_web3.utils.toWei(Number([priceValues[9]]), 'ether');
+      // let PredictedPrice = [BN, BN2, BN3, BN4, BN5, BN6, BN7, BN8, BN9, BN10];
+
+      // const txObject = {
+      //   from: account,
+      //   to: WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER],
+      //   data: (contract.methods.setMarketPricesAtPool as any)(token0, token1, BlockNumber, PredictedPrice).encodeABI(),
+      //   gasPrice: '10000000000',
+      //   gas: 3000000,
+      // };
 
       try {
-        const result = await web3.eth.sendTransaction(txObject);
+        const result = await worldland_web3.eth.sendTransaction(txObject);
         console.log('트랜잭션 결과:', result);
       } catch (error: any) {
         console.error('트랜잭션을 보내는 중에 오류 발생:', error);
         window.alert('트랜잭션을 보내는 중에 오류 발생: ' + error.message);
-        // document.getElementById('error-message').textContent = '트랜잭션 실패: ' + error.message;
       }
-      // await sendTransaction(txObject);
     }
   };
 
@@ -254,11 +269,17 @@ const TestPage = () => {
         <br />
         테스트 목적
         <br />
-        <br /> 귀 사의 컨트랙트를 배포한 계정만 시장가격을 설정할 수 있고
+        <br /> 귀 사의 AI-Swap SmartContract를 배포한 계정만
         <br />
-        <br /> 다른계정일 경우 컨트랙트 실행이 차단됩니다.
+        <br /> AI-Predicted Price를 기반으로 시장가격을 설정할 수 있고
         <br />
-        <br /> 기대결과 : 트랜잭션을 보내는 중에 오류 발생: Returned error: execution reverted: caller is not owner
+        <br /> 다른계정일 경우 시장가격을 설정할 수 없습니다.
+        <br />
+        <br /> 기대결과 :
+        <br />
+        <br />
+        트랜잭션을 보내는 중에 오류 발생: Returned error: execution reverted: caller is not owner
+        <br />
         <br />
         <br /> Test setting
         <br />
@@ -275,7 +296,9 @@ const TestPage = () => {
         <br />
       </CommonDiv>
       <br />
+
       <CommonDiv color="white"></CommonDiv>
+
       {Array.from({ length: 2 }, (_, rowIndex) => (
         <InputWrapper key={rowIndex}>
           {Array.from({ length: 5 }, (_, colIndex) => {
@@ -299,11 +322,12 @@ const TestPage = () => {
           </Space>
         ) : (
           <div>
-            현재 시장가 버튼
+            1. 현재 시장가 버튼
             {predPrice === '' ? '' : <p>{predPrice}</p>}
           </div>
         )}
       </StyledButton>
+      <br />
       {Array.from({ length: 2 }, (_, rowIndex) => (
         <>
           <InputWrapper key={rowIndex}>
@@ -323,10 +347,10 @@ const TestPage = () => {
         </>
       ))}
       <StyledButton onClick={() => handleOneClick()}>
-        <div>AI 가격 예측 버튼</div>
+        <div>2. AI 가격 예측 버튼</div>
       </StyledButton>
       <br />
-      <StyledButton onClick={sendTransaction}>예측된 시장가 입력</StyledButton>
+      <StyledButton onClick={sendTransaction}>3. 예측된 시장가 입력</StyledButton>
       {/* <StyledButton onClick={connectToSepoliaNetwork}>ds</StyledButton> */}
     </Container>
   );
