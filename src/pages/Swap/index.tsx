@@ -174,6 +174,7 @@ const Swap = () => {
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
+    gas: BigInt(250000),
     onSuccess(data) {
       console.log({ data });
       userInputHandler(Field.INPUT, '');
