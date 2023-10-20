@@ -63,6 +63,10 @@ const AddLiquidity = () => {
     }
 
     async function queryCurrentPrice() {
+        // makes a chain query regardless of wallet connection
+        if (selectedToken0?.address === selectedToken1?.address) {
+            return;
+        }
         let args = {
             chain: 2,
             contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -81,7 +85,7 @@ const AddLiquidity = () => {
 
     useEffect(() => {
         queryCurrentPrice();
-    }, [])
+    }, [selectedToken0?.address, selectedToken1?.address])
 
     const { data: tokenBalanceA } = useContractRead({
         address: selectedToken0?.address,
@@ -152,7 +156,7 @@ const AddLiquidity = () => {
         watch: true,
         onSuccess(data: any) {
             console.log({ amountOut: data })
-            // queryCurrentPrice();
+            queryCurrentPrice();
             setAmountOut(data)
         },
         onError(data: any) {

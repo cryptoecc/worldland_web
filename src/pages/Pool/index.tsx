@@ -279,6 +279,7 @@ const Container = styled.div<Ipairs>`
                     font-weight: 600;
                     color: #c6c6c6;
                     font-size: 14px;
+                    cursor: pointer;
 
                     .pair-logo {
                         display: flex;
