@@ -216,7 +216,7 @@ const AddLiquidity = () => {
                 deadline,
             ],
         });
-        setSelectedTokenAmount0("0");
+        setSelectedTokenAmount0("");
     }
 
     function tokenAmountInputHandler(index: number, amount: string) {

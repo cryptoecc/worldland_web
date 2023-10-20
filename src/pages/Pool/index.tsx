@@ -14,6 +14,7 @@ import { from_wei, putCommaAtPrice, to_wei } from 'utils/util';
 import { crypto_list } from 'data';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
+import RemoveLiquidityModal from 'components/RemoveLiquidityModal';
 
 
 
@@ -26,7 +27,12 @@ const Pool = () => {
     const { address, isConnected } = useAccount()
     const [pairs, setPairs] = useState<ImapPairToBalance[]>([])
     const navigate = useNavigate();
+    const [modal, setModal] = useState<boolean>(false);
     const [amountOut, setAmountOut] = useState<string>("")
+
+    function handleTokenClick() {
+
+    }
 
     const { data } = useContractReads({
         contracts: [
@@ -44,8 +50,11 @@ const Pool = () => {
             const arr = [];
             for (let i = 0; i < data.length; i++) {
                 result = {
-                    // token address : balance
-                    [PAIR_ADRESSES[i]]: data[i].result
+                    // token address : { balance: tokenbalance, address: tokenaddress }
+                    [PAIR_ADRESSES[i]]: {
+                        balance: data[i].result,
+                        address: PAIR_ADRESSES[i]
+                    }
                 }
                 if (Number(from_wei(data[i].result)) > 0) {
                     // user has a balance of LP tokens
@@ -107,7 +116,7 @@ const Pool = () => {
                         </ul>
                         <ul className="pairs">
                             {pairs.map((el, i) => (
-                                <li key={i}>
+                                <li onClick={() => setModal(true)} key={i}>
                                     <span className="pair-logo">
                                         <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
                                         <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
@@ -155,6 +164,12 @@ const Pool = () => {
                     </div>
                 </div>
             </section>
+            {modal && (
+                <>
+                    <Backdrop intensity={10} close={setModal} />
+                    <RemoveLiquidityModal close={setModal} handleTokenClick={handleTokenClick} />
+                </>
+            )}
         </Container>
     )
 }

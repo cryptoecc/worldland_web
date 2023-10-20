@@ -63,7 +63,12 @@ export declare global {
   }
 
   interface ImapPairToBalance {
-    [key: `0x${string}`]: string;
+    [key: `0x${string}`]: Pair;
+  }
+
+  interface Pair {
+    balance: string;
+    address: string;
   }
 
   interface ImapPair {
