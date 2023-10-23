@@ -26,6 +26,7 @@ import { from_wei, to_wei } from "utils/util";
 import { MAPNETTOADDRESS } from "configs/contract_address_config";
 import { useWeb3Modal } from '@web3modal/react';
 import { chain_query } from "configs/contract_calls";
+import { gasLimit } from "utils/wagmi";
 
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
@@ -35,7 +36,7 @@ const AddLiquidity = () => {
     const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
     const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
-    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
+    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
     const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
     const [amountOut, setAmountOut] = useState<string>("");
@@ -155,9 +156,12 @@ const AddLiquidity = () => {
         ],
         watch: true,
         onSuccess(data: any) {
-            console.log({ amountOut: data })
             queryCurrentPrice();
             setAmountOut(data)
+            if (parseFloat(from_wei(data)) > 0) {
+                tokenAmountInputHandler(1, putCommaAtPrice(from_wei(data), 5))
+            }
+
         },
         onError(data: any) {
             console.log({ error: data })
@@ -193,7 +197,7 @@ const AddLiquidity = () => {
         address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
         functionName: FUNCTION.ADDLIQUIDITY,
-        gas: BigInt(250000),
+        gas: gasLimit,
         onSuccess(data) {
             console.log({ approvalB: data });
         },
@@ -204,12 +208,14 @@ const AddLiquidity = () => {
 
     async function handleAddLiquidity() {
         let deadline = await setDeadline(3600);
+        let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '')
+        console.log({ cleanedOutput: to_wei(cleanedOutput) })
         AddLiquidity({
             args: [
                 selectedToken0?.address,
                 selectedToken1?.address,
                 to_wei(selectedTokenAmount0),
-                to_wei(amountOut),
+                to_wei(cleanedOutput),
                 to_wei("10"),
                 to_wei("10"),
                 address,
@@ -217,6 +223,7 @@ const AddLiquidity = () => {
             ],
         });
         setSelectedTokenAmount0("");
+        setSelectedTokenAmount1("");
     }
 
     function tokenAmountInputHandler(index: number, amount: string) {
@@ -412,7 +419,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input value={amountOut ? putCommaAtPrice(from_wei(amountOut), 5) : ""} type="text" placeholder={"0"} />
+                                    <input value={selectedTokenAmount1} onChange={(e) => tokenAmountInputHandler(1, e.target.value)} type="text" placeholder={"0"} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>

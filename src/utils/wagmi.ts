@@ -61,4 +61,4 @@ export const chainImages = {
   103: 'https://lv-storage1.s3.amazonaws.com/logo_2.svg',
 };
 
-export const gasLimit = BigInt(30000000);
+export const gasLimit = BigInt(3000000);
