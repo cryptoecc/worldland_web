@@ -53,7 +53,7 @@ const Pool = () => {
                 delete data[i]['result'];
                 delete data[i]['status'];
 
-                if (Number(from_wei(data[i].balance)) > 0) {
+                if (Math.floor(parseFloat(from_wei(data[i].balance))) > 0) {
                     // user has a balance of LP tokens
                     arr.push(data[i]);
                 }
