@@ -15,6 +15,7 @@ import { crypto_list } from 'data';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
 import RemoveLiquidityModal from 'components/RemoveLiquidityModal';
+import { gasLimit } from 'utils/wagmi';
 
 
 
@@ -113,7 +114,7 @@ const Pool = () => {
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], selectedPair?.balance],
         functionName: 'approve',
-        gas: BigInt(250000),
+        gas: gasLimit,
         onSuccess(data) {
             console.log({ approvalLP: data });
         },
