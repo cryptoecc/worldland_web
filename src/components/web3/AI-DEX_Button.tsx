@@ -228,7 +228,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS],
           WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS],
         ).call();
-        addToast('가격예측 성공', {
+        addToast('AI price prediction success', {
           appearance: 'success', // 오류 메시지 스타일
           autoDismiss: true, // 자동 닫기
         });
@@ -244,6 +244,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         setTxloading(false);
       } catch (e) {
         console.error(e);
+        // addToast('AI price prediction failure', {
+        //   appearance: 'error', // 오류 메시지 스타일
+        //   autoDismiss: true, // 자동 닫기
+        // });
       }
     }
   };
