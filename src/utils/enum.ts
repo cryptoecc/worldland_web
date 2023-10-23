@@ -40,6 +40,7 @@ export enum CONTRACT_ADDRESSES {
 
 export enum FUNCTION {
   ADDLIQUIDITY = 'addLiquidity',
+  REMOVELIQUIDITY = 'removeLiquidity',
   APPROVE = 'approve',
   GETAMOUNTOUT = 'getAmountOut',
   GETAMOUNTSOUT = 'getAmountsOut',

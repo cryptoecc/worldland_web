@@ -7,8 +7,12 @@ import { AiOutlineArrowDown, AiOutlineQuestionCircle } from 'react-icons/ai';
 import { crypto_list } from 'data';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useState } from "react";
-import { useAccount } from 'wagmi';
-import { from_wei } from 'utils/util';
+import { useAccount, useContractWrite } from 'wagmi';
+import { from_wei, setDeadline, to_wei } from 'utils/util';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
+import { MAP_STR_ABI } from 'configs/abis';
+import { gasLimit } from 'utils/wagmi';
 
 
 interface IDisabled {
@@ -18,35 +22,68 @@ interface IDisabled {
 
 
 const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
+    const { address } = useAccount();
     const [value, setValue] = useState<number>(30);
     const customValues = [25, 50, 75, 100];
     const [disabled, setDisabled] = useState<IDisabled>({ approve: true, remove: true });
+
+    const { data: liquidityRemovalData, write: removeLiquidity } = useContractWrite({
+        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
+        functionName: FUNCTION.REMOVELIQUIDITY,
+        gas: gasLimit,
+        onSuccess(data) {
+            console.log({ removalLiquidity: data });
+        },
+        onError(err) {
+            console.log({ removalLiquidity: err });
+        }
+    })
 
 
     const handleChange = (event: Event, newValue: number | number[]) => {
         setValue(newValue as number);
     };
 
-    function handleRemoveLiquidity() {
-        let calcLiquidityPercentageToAmount = (Number(from_wei(selectedPair?.balance)) / 100) * value;
-        console.log({ REMOVALAMOUNT: calcLiquidityPercentageToAmount });
+    async function handleRemoveLiquidity() {
+        let calcLiquidityPercentageToAmount = ((Number(from_wei(selectedPair?.balance)) / 100) * value).toString();
+        console.log({ REMOVALAMOUNT: to_wei(calcLiquidityPercentageToAmount) });
+        let deadline = await setDeadline(3600);
+        removeLiquidity({
+            args: [
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+                to_wei(calcLiquidityPercentageToAmount),
+                to_wei('1'),
+                to_wei('1'),
+                address,
+                deadline
+            ]
+        })
     }
 
     useEffect(() => {
-        if (Number(from_wei(allowance)) < Number(from_wei(selectedPair?.balance))) {
+        if (Math.floor(parseFloat(from_wei(selectedPair?.balance as string))) === 0) {
+            // if pair balance is 0 or less
+            setDisabled(() => ({
+                approve: true,
+                remove: true,
+            }))
+
+        } else if (Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))) {
             // if allowance is less than user's pair balance
             setDisabled(() => ({
                 approve: false,
                 remove: true,
             }))
-        } else if ((Number(from_wei(allowance)) >= Number(from_wei(selectedPair?.balance)))) {
+        } else if ((Math.floor(parseFloat(from_wei(allowance))) >= Math.floor(parseFloat(from_wei(selectedPair?.balance as string))))) {
             // if allowance is more than user's pair balance
             setDisabled(() => ({
                 approve: true,
                 remove: false,
             }))
         }
-    }, [allowance, selectedPair]);
+    }, [allowance, selectedPair, liquidityRemovalData]);
 
     return (
         <Container>
