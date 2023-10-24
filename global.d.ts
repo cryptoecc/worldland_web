@@ -41,6 +41,8 @@ export declare global {
     allowance: string;
     handleApprove: () => void;
     selectedPair?: Pair;
+    amountOutA: string;
+    amountOutB: string;
   }
 
   interface BackdropProps {
@@ -69,17 +71,22 @@ export declare global {
     [key: number]: ((token: TokenProps) => void) | string;
   }
 
-  interface ImapPairToBalance {
-    [key: `0x${string}`]: Pair;
-  }
-
   interface Pair {
     balance?: string;
     address?: `0x${string}`;
+    token0?: string;
+    token1?: string;
+    AtoB?: string;
+    BtoA?: string;
   }
 
   interface ImapPair {
     result: string;
+  }
+
+  interface IBalances {
+    token0?: string;
+    token1?: string;
   }
 
   // types

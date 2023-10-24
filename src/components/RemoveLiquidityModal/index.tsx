@@ -8,7 +8,7 @@ import { crypto_list } from 'data';
 import { IoCloseSharp } from 'react-icons/io5';
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite } from 'wagmi';
-import { from_wei, setDeadline, to_wei } from 'utils/util';
+import { from_wei, putCommaAtPrice, setDeadline, to_wei } from 'utils/util';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
@@ -21,11 +21,12 @@ interface IDisabled {
 }
 
 
-const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
+const RemoveLiquidityModal = ({ close, amountOutA, amountOutB, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
     const { address } = useAccount();
     const [value, setValue] = useState<number>(30);
     const customValues = [25, 50, 75, 100];
     const [disabled, setDisabled] = useState<IDisabled>({ approve: true, remove: true });
+
 
     const { data: liquidityRemovalData, write: removeLiquidity } = useContractWrite({
         address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -46,7 +47,7 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
     };
 
     async function handleRemoveLiquidity() {
-        let calcLiquidityPercentageToAmount = ((Number(from_wei(selectedPair?.balance)) / 100) * value).toString();
+        let calcLiquidityPercentageToAmount = ((parseFloat(from_wei(selectedPair?.balance)) / 100) * value).toString();
         console.log({ REMOVALAMOUNT: to_wei(calcLiquidityPercentageToAmount) });
         let deadline = await setDeadline(3600);
         removeLiquidity({
@@ -63,14 +64,13 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
     }
 
     useEffect(() => {
-        if (Math.floor(parseFloat(from_wei(selectedPair?.balance as string))) === 0) {
-            // if pair balance is 0 or less
-            setDisabled(() => ({
-                approve: true,
-                remove: true,
-            }))
-
-        } else if (Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))) {
+        console.log({
+            ALLOWANCE: Math.floor(parseFloat(from_wei(allowance))),
+            ALLOWANCE1: selectedPair?.balance,
+            BALANCE: Math.floor(parseFloat(from_wei(selectedPair?.balance as string))),
+            BALANCE1: parseFloat(from_wei(selectedPair?.balance))
+        })
+        if (Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))) {
             // if allowance is less than user's pair balance
             setDisabled(() => ({
                 approve: false,
@@ -129,8 +129,8 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
             <section className="third-element">
                 <p className="price">Price: </p>
                 <div className="rate-wrap">
-                    <p className="token">1 DAI = 0.000234913 ETH</p>
-                    <p className="token">1 ETH = 1002.29 DAI</p>
+                    <p className="token">1 DAI = {putCommaAtPrice(from_wei(amountOutB), 5)} ETH</p>
+                    <p className="token">1 ETH = {putCommaAtPrice(from_wei(amountOutA), 5)} DAI</p>
                 </div>
             </section>
             <section className="btn-wrap">

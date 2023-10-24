@@ -58,8 +58,6 @@ const Swap = () => {
     error,
   } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
 
-  console.log({ AMOUNTOUTSWAP: amountOut });
-
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
     setModal(true);
@@ -222,6 +220,7 @@ const Swap = () => {
         appearance: 'success', // 오류 메시지 스타일
         autoDismiss: true, // 자동 닫기
       });
+      setModal(false)
     },
 
     onError(err) {
@@ -231,6 +230,7 @@ const Swap = () => {
         appearance: 'error', // 오류 메시지 스타일
         autoDismiss: true, // 자동 닫기
       });
+      setModal(false)
     },
   });
 
@@ -260,6 +260,7 @@ const Swap = () => {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
     swap({ args: [to_wei(input), output, swapPath, address, deadline] });
+    setModal(true)
   }
 
   function handleFunctionSelector() {

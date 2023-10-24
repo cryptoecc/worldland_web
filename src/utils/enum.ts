@@ -10,6 +10,7 @@ export enum ABI {
   WRAPETH = 'WRAPETH',
   LVSWAPV2_ROUTER = 'LVSWAPV2_ROUTER',
   LVSWAPV2_FACTORY = 'LVSWAPV2_FACTORY',
+  LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
 }
 
 export enum Field {
@@ -46,6 +47,8 @@ export enum FUNCTION {
   GETAMOUNTSOUT = 'getAmountsOut',
   BURN = 'BURN',
   SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',
+  TOKEN0 = 'token0',
+  TOKEN1 = 'token1',
 }
 
 export enum CHAINDS {
