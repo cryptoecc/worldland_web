@@ -43,7 +43,7 @@ const AddLiquidity = () => {
     const [currentPrice, setCurrentPrice] = useState<string>("");
     const { open } = useWeb3Modal();
     const location = useLocation;
-    const approvalAmount = '1000000';
+    const approvalAmount = '1000000000';
     const mapIndexToFunction: ImapIndexToFunction = {
         0: (obj: TokenProps) => setSelectedToken0(obj),
         1: (obj: TokenProps) => setSelectedToken1(obj),
@@ -263,7 +263,7 @@ const AddLiquidity = () => {
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))) {
             // if allowanceA is low
             handleApprovals(0);
-        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+        } else if (Number(from_wei(amountOut) ? from_wei(amountOut) : "0") > Number(from_wei(allowanceB))) {
             // if allowanceB is low
             handleApprovals(1);
 
@@ -286,6 +286,8 @@ const AddLiquidity = () => {
     }, [location])
 
     useEffect(() => {
+        console.log({ allowanceA: Number(from_wei(allowanceA)) });
+        console.log({ allowanceB: Number(from_wei(amountOut)) > Number(from_wei(allowanceB)) });
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -305,10 +307,12 @@ const AddLiquidity = () => {
             setBtnState(1);
             setLowBalanceToken(selectedToken1)
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
-            || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+            || Number(from_wei(amountOut)) > Number(from_wei(allowanceB))) {
             // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+            setDisabled(false)
             setBtnState(2);
         } else {
+            console.log({ amount0: from_wei(allowanceA) })
             // permission to add liquidity
             setBtnState(3);
             setDisabled(false)

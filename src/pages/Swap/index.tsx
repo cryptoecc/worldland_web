@@ -178,11 +178,12 @@ const Swap = () => {
     handleDebouncedAmountOut(input);
   }, [selectedToken.address, selected2Token.address]);
 
+  // gas: BigInt(3000000),
+
   const { data: _, write: swap } = useContractWrite({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
-    gas: BigInt(250000),
     onSuccess(date) {
       userInputHandler(Field.INPUT, '');
       userInputHandler(Field.OUTPUT, '');
@@ -220,7 +221,7 @@ const Swap = () => {
         appearance: 'success', // 오류 메시지 스타일
         autoDismiss: true, // 자동 닫기
       });
-      setModal(false)
+      // setModal(false)
     },
 
     onError(err) {
@@ -230,7 +231,7 @@ const Swap = () => {
         appearance: 'error', // 오류 메시지 스타일
         autoDismiss: true, // 자동 닫기
       });
-      setModal(false)
+      // setModal(false)
     },
   });
 
@@ -260,7 +261,7 @@ const Swap = () => {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
     swap({ args: [to_wei(input), output, swapPath, address, deadline] });
-    setModal(true)
+    // setModal(true)
   }
 
   function handleFunctionSelector() {

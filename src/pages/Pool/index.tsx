@@ -191,8 +191,30 @@ const Pool = () => {
                         ..._pairs[i],
                         token0: pair?.token0,
                         token1: pair?.token1,
-                        AtoB: (await chain_query(await returnAmount([pair?.token0 as string, pair?.token1 as string]))),
-                        BtoA: (await chain_query(await returnAmount([pair?.token1 as string, pair?.token0 as string])))
+                        AtoB: (await chain_query({
+                            chain: 2,
+                            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+                            abikind: ABI.LVSWAPV2_ROUTER,
+                            methodname: FUNCTION.GETAMOUNTOUT,
+                            f_args: [
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                                to_wei("1"),
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+                            ],
+                        })),
+                        BtoA: (await chain_query({
+                            chain: 2,
+                            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+                            abikind: ABI.LVSWAPV2_ROUTER,
+                            methodname: FUNCTION.GETAMOUNTOUT,
+                            f_args: [
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                                to_wei("1"),
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+                                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+                            ],
+                        }))
                     }
                 }
             }
