@@ -59,7 +59,6 @@ const Pool = () => {
                     arr.push(data[i]);
                 }
             }
-            // setPairs(arr);
             handleQueryAmountOutForToken(arr);
 
         },
@@ -167,32 +166,34 @@ const Pool = () => {
         }
     }
 
-    async function handleQueryAmountOutForToken(_pairs: Pair[]) {
-        function returnAmount(args: string[]) {
-            return {
-                chain: 2,
-                contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-                abikind: ABI.LVSWAPV2_ROUTER,
-                methodname: FUNCTION.GETAMOUNTOUT,
-                f_args: [
-                    MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-                    to_wei("1"),
-                    MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-                    MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-                    ...args
-                ],
-            }
+    async function returnAmount(args: string[]) {
+        return {
+            chain: 2,
+            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+            abikind: ABI.LVSWAPV2_ROUTER,
+            methodname: FUNCTION.GETAMOUNTOUT,
+            f_args: [
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                to_wei("1"),
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
+            ],
         }
+    }
+
+    async function handleQueryAmountOutForToken(_pairs: Pair[]) {
         try {
             let updatedPairArr: Pair[] = [];
             for (let i = 0; i < _pairs.length; i++) {
                 let pair = await handleExtractPairFromPool(_pairs[i]?.address);
-                updatedPairArr[i] = {
-                    ..._pairs[i],
-                    token0: pair?.token0,
-                    token1: pair?.token1,
-                    AtoB: (await chain_query(returnAmount([pair?.token0 as string, pair?.token1 as string]))),
-                    BtoA: (await chain_query(returnAmount([pair?.token1 as string, pair?.token0 as string])))
+                if (pair?.token0 && pair?.token1) {
+                    updatedPairArr[i] = {
+                        ..._pairs[i],
+                        token0: pair?.token0,
+                        token1: pair?.token1,
+                        AtoB: (await chain_query(await returnAmount([pair?.token0 as string, pair?.token1 as string]))),
+                        BtoA: (await chain_query(await returnAmount([pair?.token1 as string, pair?.token0 as string])))
+                    }
                 }
             }
             console.log({ updatedPairArr })
