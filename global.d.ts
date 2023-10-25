@@ -41,8 +41,6 @@ export declare global {
     allowance: string;
     handleApprove: () => void;
     selectedPair?: Pair;
-    amountOutA: string;
-    amountOutB: string;
   }
 
   interface BackdropProps {

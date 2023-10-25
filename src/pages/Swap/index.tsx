@@ -246,7 +246,6 @@ const Swap = () => {
         autoDismiss: true, // 자동 닫기
       });
     },
-
     onError(err) {
       console.log('Error: ', err);
       setLoader(false);

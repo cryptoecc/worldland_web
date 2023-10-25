@@ -21,7 +21,7 @@ interface IDisabled {
 }
 
 
-const RemoveLiquidityModal = ({ close, amountOutA, amountOutB, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
+const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
     const { address } = useAccount();
     const [value, setValue] = useState<number>(30);
     const customValues = [25, 50, 75, 100];
@@ -66,11 +66,15 @@ const RemoveLiquidityModal = ({ close, amountOutA, amountOutB, selectedPair, all
     useEffect(() => {
         console.log({
             ALLOWANCE: Math.floor(parseFloat(from_wei(allowance))),
-            ALLOWANCE1: selectedPair?.balance,
             BALANCE: Math.floor(parseFloat(from_wei(selectedPair?.balance as string))),
-            BALANCE1: parseFloat(from_wei(selectedPair?.balance))
         })
-        if (Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))) {
+        if (Math.floor(parseFloat(from_wei(selectedPair?.balance as string))) === 0) {
+            // user has 0 of LP token balance
+            setDisabled(() => ({
+                approve: true,
+                remove: true,
+            }))
+        } else if (Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))) {
             // if allowance is less than user's pair balance
             setDisabled(() => ({
                 approve: false,
@@ -129,8 +133,8 @@ const RemoveLiquidityModal = ({ close, amountOutA, amountOutB, selectedPair, all
             <section className="third-element">
                 <p className="price">Price: </p>
                 <div className="rate-wrap">
-                    <p className="token">1 DAI = {putCommaAtPrice(from_wei(amountOutB), 5)} ETH</p>
-                    <p className="token">1 ETH = {putCommaAtPrice(from_wei(amountOutA), 5)} DAI</p>
+                    <p className="token">1 DAI = {putCommaAtPrice(from_wei(selectedPair?.BtoA), 5)} ETH</p>
+                    <p className="token">1 ETH = {putCommaAtPrice(from_wei(selectedPair?.AtoB), 5)} DAI</p>
                 </div>
             </section>
             <section className="btn-wrap">
