@@ -116,14 +116,14 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
             <AiOutlineArrowDown color="#b4b4b4" size={15} style={{ cursor: "pointer" }} />
             <section className="second-element">
                 <div className="inner-wrap">
-                    <p className="price">111</p>
+                    <p className="price">{putCommaAtPrice(selectedPair?.pooledA ? selectedPair?.pooledA : 0, 5)}</p>
                     <div className="coin-info-wrap">
                         <img src={crypto_list[0].icon} alt={crypto_list[0].title} />
                         <p>{crypto_list[0].symbol}</p>
                     </div>
                 </div>
                 <div className="inner-wrap">
-                    <p className="price">0.110746</p>
+                    <p className="price">{putCommaAtPrice(selectedPair?.pooledB ? selectedPair?.pooledB : 0, 5)}</p>
                     <div className="coin-info-wrap">
                         <img src={crypto_list[1].icon} alt={crypto_list[1].title} />
                         <p>{crypto_list[1].symbol}</p>
