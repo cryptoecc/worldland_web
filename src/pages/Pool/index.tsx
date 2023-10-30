@@ -186,12 +186,6 @@ const Pool = () => {
             for (let i = 0; i < _pairs.length; i++) {
                 let pair = await handleExtractPairFromPool(_pairs[i]?.address);
                 returnReserves(_pairs[i]?.address);
-                await calcPooledUserAsset({
-                    ..._pairs[i],
-                    totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
-                    reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
-                    reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
-                })
                 updatedPairArr[i] = {
                     ..._pairs[i],
                     totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
