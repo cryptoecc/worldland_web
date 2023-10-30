@@ -3,13 +3,14 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { contractABI, contractAddress } from '../../utils/ChainLink_goerli';
 import { MAP_STR_ABI } from '../../configs/abis';
-import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/enum';
+import { ABI, CONTRACT_ADDRESSES } from '../../utils/enum';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { Spin, Space } from 'antd';
 import styled from 'styled-components';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { web3_eth } from 'configs/web3-eth';
 import { web3_wld } from 'configs/web3-wld';
+import { useToasts } from 'react-toast-notifications';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -30,6 +31,7 @@ const StyledButton = styled.button`
 `;
 
 export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
+  const { addToast } = useToasts();
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [latestRound, setLatestRound] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,15 +61,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
     return () => clearInterval(interval);
   }, [web3]);
-
-  // useEffect(() => {
-  //   getData();
-  //   const interval = setInterval(() => {
-  //     getData();
-  //   }, 35000)
-
-  //   return () => clearInterval(interval)
-  // }, [])
 
   const getData = async () => {
     //(1) 가격 가져오기
@@ -238,7 +231,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS],
           WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS],
         ).call();
-
+        addToast('AI price prediction success', {
+          appearance: 'success', // 오류 메시지 스타일
+          autoDismiss: true, // 자동 닫기
+        });
         console.log('amountsOut :', response);
         const fromwei = worldland_web3.utils.fromWei(response, 'ether');
 
@@ -251,6 +247,10 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         setTxloading(false);
       } catch (e) {
         console.error(e);
+        // addToast('AI price prediction failure', {
+        //   appearance: 'error', // 오류 메시지 스타일
+        //   autoDismiss: true, // 자동 닫기
+        // });
       }
     }
   };

@@ -3,6 +3,7 @@ import { abi as POLYGON_BRIDGE_ABI } from './contract-abi/worldland_bridge_abi';
 import { abi as ERC20_ABI } from './contract-abi/erc20_abi';
 import { abi as UNISWAPV2_ROUTER } from './contract-abi/uniswapV2Router02';
 import { abi as UNISWAPV2_PAIR } from './contract-abi/uniswapV2Pair_abi';
+import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';
 import { abi as DAI_TOKEN_ADDRESS } from './contract-abi/dai_token_abi';
 import { abi as ETH_TOKEN_ADDRESS } from './contract-abi/eth_token_abi';
@@ -25,4 +26,5 @@ export const MAP_STR_ABI = {
   WRAPETH,
   LVSWAPV2_ROUTER,
   LVSWAPV2_FACTORY,
+  LVSWAPV2_PAIR,
 };

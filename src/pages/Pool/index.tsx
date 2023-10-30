@@ -5,54 +5,58 @@ import Backdrop from 'components/Backdrop';
 import { ImDrawer2 } from "react-icons/im";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { useAccount, useContractRead, useContractReads } from 'wagmi';
+import { useAccount, useContractWrite, useContractRead, useContractReads } from 'wagmi';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { from_wei, putCommaAtPrice, to_wei } from 'utils/util';
 import { crypto_list } from 'data';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
+import RemoveLiquidityModal from 'components/RemoveLiquidityModal';
+import { gasLimit } from 'utils/wagmi';
+import { chain_query } from 'configs/contract_calls';
 
 
 
 
 interface Ipairs {
-    pairs?: ImapPairToBalance[];
+    pairs?: Pair[];
 }
 
 const Pool = () => {
-    const { address, isConnected } = useAccount()
-    const [pairs, setPairs] = useState<ImapPairToBalance[]>([])
+    const { address } = useAccount()
+    const [pairs, setPairs] = useState<Pair[]>([])
+    const [selectedPair, setSelectedPair] = useState<Pair>()
     const navigate = useNavigate();
-    const [amountOut, setAmountOut] = useState<string>("")
+    const [modal, setModal] = useState<boolean>(false);
+    const [allowanceLP, setAllowanceLP] = useState<string>('')
+
+
 
     const { data } = useContractReads({
-        contracts: [
-            {
-                address: PAIR_ADRESSES[0],
-                abi: erc20ABI,
-                functionName: 'balanceOf',
-                args: [address as any],
-            },
-        ],
+        contracts: PAIR_ADRESSES.map((el) => ({
+            address: el,
+            abi: erc20ABI,
+            functionName: 'balanceOf',
+            args: [address as any],
+        })),
         watch: true,
         onSuccess(data: any) {
-            console.log({ pairBalance: data })
-            let result;
             const arr = [];
             for (let i = 0; i < data.length; i++) {
-                result = {
-                    // token address : balance
-                    [PAIR_ADRESSES[i]]: data[i].result
-                }
-                if (Number(from_wei(data[i].result)) > 0) {
+                data[i]['address'] = PAIR_ADRESSES[i];
+                data[i]['balance'] = data[i].result;
+                delete data[i]['result'];
+                delete data[i]['status'];
+
+                if (Math.floor(parseFloat(from_wei(data[i].balance))) > 0) {
                     // user has a balance of LP tokens
-                    arr.push(result);
+                    arr.push(data[i]);
                 }
             }
-            setPairs(arr);
+            handleQueryAmountOutForToken(arr);
 
         },
         onError(data: any) {
@@ -60,25 +64,160 @@ const Pool = () => {
         }
     })
 
-    const { data: _ } = useContractRead({
-        address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-        abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-        functionName: FUNCTION.GETAMOUNTOUT,
-        args: [
-            MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-            to_wei("1"),
-            MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-            MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-        ],
+    const { data: _allowance } = useContractRead({
+        address: selectedPair?.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: 'allowance',
+        args: [address, MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER]],
         watch: true,
         onSuccess(data: any) {
-            console.log({ amountOut: data })
-            setAmountOut(data);
+            console.log({ allowanceLP: data })
+            setAllowanceLP(data.toString());
         },
         onError(data: any) {
             console.log({ error: data })
         }
     })
+
+    function handlePairClick(pair: Pair) {
+        setModal(true)
+        console.log({ pair })
+        setSelectedPair(pair);
+    }
+
+    const { write: approveLP } = useContractWrite({
+        address: selectedPair?.address,
+        abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
+        args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], selectedPair?.balance?.toString()],
+        functionName: 'approve',
+        gas: gasLimit,
+        onSuccess(data) {
+            console.log({ approvalLP: data });
+        },
+        onError(err) {
+            console.log({ approvalErrLP: err });
+        }
+    })
+
+    async function handleExtractPairFromPool(pair?: string) {
+        try {
+            let _pair: { token0: string; token1: string } = { token0: "", token1: "" };
+            // token0 query
+            _pair['token0'] = await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.TOKEN0,
+                f_args: []
+            })
+            // token1 query
+            _pair['token1'] = await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.TOKEN1,
+                f_args: []
+            })
+            return _pair;
+        } catch (err) {
+
+            console.log(err)
+        }
+    }
+
+    async function returnAmount(args: string[]) {
+        return await chain_query({
+            chain: 2,
+            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+            abikind: ABI.LVSWAPV2_ROUTER,
+            methodname: FUNCTION.GETAMOUNTOUT,
+            f_args: [
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                to_wei("1"),
+                ...args
+            ]
+        })
+    }
+
+    async function returnTotalSupply(pair?: `0x${string}`) {
+        try {
+            return await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.TOTALSUPPLY,
+                f_args: []
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function returnReserves(pair?: `0x${string}`) {
+        try {
+            let { 0: reserve0, 1: reserve1 } = await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.GETRESERVES,
+                f_args: []
+            })
+            return { reserve0, reserve1 };
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function calcPooledUserAsset(pair: Pair) {
+        try {
+            // User's Token A Balance = (User's Share of Total Liquidity / Total Liquidity) * Total Token A in the Pool
+            let pooledA = ((parseFloat(from_wei(pair?.balance)) / parseFloat(from_wei(pair?.totalSupply))) * parseFloat(from_wei(pair?.reserve0)))
+            let pooledB = ((parseFloat(from_wei(pair?.balance)) / parseFloat(from_wei(pair?.totalSupply))) * parseFloat(from_wei(pair?.reserve1)))
+            return { pooledA, pooledB }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
+
+    async function handleQueryAmountOutForToken(_pairs: Pair[]) {
+        try {
+            let updatedPairArr: Pair[] = [];
+            for (let i = 0; i < _pairs.length; i++) {
+                let pair = await handleExtractPairFromPool(_pairs[i]?.address);
+                updatedPairArr[i] = {
+                    ..._pairs[i],
+                    totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                    reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                    reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                    token0: pair?.token0,
+                    token1: pair?.token1,
+                    AtoB: (await returnAmount([pair?.token0 as string, pair?.token1 as string])),
+                    BtoA: (await returnAmount([pair?.token1 as string, pair?.token0 as string])),
+                    pooledA: (await calcPooledUserAsset({
+                        ..._pairs[i],
+                        totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                        reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                        reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                    }))?.pooledA,
+                    pooledB: (await calcPooledUserAsset({
+                        ..._pairs[i],
+                        totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                        reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                        reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                    }))?.pooledB,
+                }
+            }
+            console.log({ updatedPairArr })
+            setPairs(updatedPairArr);
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+
 
     return (
         <Container pairs={pairs}>
@@ -107,7 +246,7 @@ const Pool = () => {
                         </ul>
                         <ul className="pairs">
                             {pairs.map((el, i) => (
-                                <li key={i}>
+                                <li onClick={() => handlePairClick(el)} key={i}>
                                     <span className="pair-logo">
                                         <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
                                         <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
@@ -117,7 +256,7 @@ const Pool = () => {
                                     </span>
                                     <span className="range">
                                         <p>
-                                            {putCommaAtPrice(from_wei(amountOut), 3)} {"->"} {putCommaAtPrice(1, 3)}
+                                            {putCommaAtPrice(from_wei(el.AtoB), 5)} {"->"} {putCommaAtPrice(1, 3)}
                                         </p>
                                         <p>
                                             {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
@@ -132,7 +271,7 @@ const Pool = () => {
                                     </span>
 
                                     <p className="value-in-token">
-                                        {putCommaAtPrice(from_wei(amountOut), 3)} {crypto_list[1]['symbol']}
+                                        {putCommaAtPrice(from_wei(el.AtoB), 5)} {crypto_list[1]['symbol']}
                                     </p>
                                 </li>
                             ))}
@@ -155,6 +294,12 @@ const Pool = () => {
                     </div>
                 </div>
             </section>
+            {modal && (
+                <>
+                    <Backdrop intensity={10} close={setModal} />
+                    <RemoveLiquidityModal selectedPair={selectedPair} allowance={allowanceLP} handleApprove={approveLP} close={setModal} />
+                </>
+            )}
         </Container>
     )
 }
@@ -279,6 +424,7 @@ const Container = styled.div<Ipairs>`
                     font-weight: 600;
                     color: #c6c6c6;
                     font-size: 14px;
+                    cursor: pointer;
 
                     .pair-logo {
                         display: flex;

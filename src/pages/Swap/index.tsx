@@ -25,12 +25,14 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { crypto_list } from 'data';
 import Web3ConnectButton from 'components/web3/Web3Button';
 import { useWeb3Modal } from '@web3modal/react';
-import { debounce } from "lodash";
+import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
 import { chain_query } from 'configs/contract_calls';
+import { useToasts } from 'react-toast-notifications';
 
 const Swap = () => {
+  const { addToast } = useToasts();
   const [modal, setModal] = useState<boolean>(false);
   const { address, isConnected } = useAccount();
   const [input, setInput] = useState<string>('');
@@ -50,9 +52,11 @@ const Swap = () => {
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { data: amountOut, loading, error } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
-
-  console.log({ AMOUNTOUTSWAP: amountOut })
+  const {
+    data: amountOut,
+    loading,
+    error,
+  } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
 
   const openModalForFirstInput = () => {
     setSelectedInputField('first');
@@ -81,6 +85,10 @@ const Swap = () => {
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
       //
+      addToast('네트워크 변경 완료', {
+        appearance: 'success', // 오류 메시지 스타일
+        autoDismiss: true, // 자동 닫기
+      });
     },
   });
 
@@ -136,27 +144,27 @@ const Swap = () => {
 
   const handleDebouncedAmountOut = useCallback(
     debounce((input: string) => {
-      dispatch(fetchData({
-        amountIn: to_wei(input),
-        tokenA: selectedToken?.address,
-        tokenB: selected2Token?.address
-      }) as any);
+      dispatch(
+        fetchData({
+          amountIn: to_wei(input),
+          tokenA: selectedToken?.address,
+          tokenB: selected2Token?.address,
+        }) as any,
+      );
     }, 500), // 500ms debounce delay
-    [input, selectedToken?.address, selected2Token.address]
+    [input, selectedToken?.address, selected2Token.address],
   );
-
-
 
   function userInputHandler(field: Field, typedValue: string) {
     switch (field) {
       case Field.INPUT:
-        if (testInput(typedValue) || typedValue === "") {
+        if (testInput(typedValue) || typedValue === '') {
           setInput(typedValue);
           handleDebouncedAmountOut(typedValue);
         }
         break;
       case Field.OUTPUT:
-        if (testInput(typedValue) || typedValue === "") {
+        if (testInput(typedValue) || typedValue === '') {
           setOutput(typedValue);
         }
         break;
@@ -168,17 +176,19 @@ const Swap = () => {
   useEffect(() => {
     // consistently watches the selected tokens and if changed, updates the output value accordingly
     handleDebouncedAmountOut(input);
-  }, [selectedToken.address, selected2Token.address])
+  }, [selectedToken.address, selected2Token.address]);
+
+  // gas: BigInt(3000000),
 
   const { data: _, write: swap } = useContractWrite({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
-    onSuccess(data) {
-      console.log({ data });
+    onSuccess(date) {
       userInputHandler(Field.INPUT, '');
       userInputHandler(Field.OUTPUT, '');
     },
+
     onError(err) {
       console.log({ approvalErrB: err });
     },
@@ -201,16 +211,48 @@ const Swap = () => {
     },
   });
 
+  const swapConfirmation = useWaitForTransaction({
+    hash: _?.hash,
+    staleTime: 2_000,
+    onSuccess(data) {
+      console.log('Swap confirmation success: ', data);
+      setLoader(false);
+      addToast('Swap confirmation success', {
+        appearance: 'success', // 오류 메시지 스타일
+        autoDismiss: true, // 자동 닫기
+      });
+      // setModal(false)
+    },
+
+    onError(err) {
+      console.log('Error: ', err);
+      setLoader(false);
+      addToast('Swap confirmation failure', {
+        appearance: 'error', // 오류 메시지 스타일
+        autoDismiss: true, // 자동 닫기
+      });
+      // setModal(false)
+    },
+  });
+
   const approvalConfirmation = useWaitForTransaction({
     hash: approvalA?.hash,
     staleTime: 2_000,
     onSuccess(data) {
       console.log('Approve confirmation success: ', data);
       setLoader(false);
+      addToast('Approve confirmation success', {
+        appearance: 'success', // 오류 메시지 스타일
+        autoDismiss: true, // 자동 닫기
+      });
     },
     onError(err) {
       console.log('Error: ', err);
       setLoader(false);
+      addToast('Approve confirmation failure', {
+        appearance: 'error', // 오류 메시지 스타일
+        autoDismiss: true, // 자동 닫기
+      });
     },
   });
 
@@ -218,6 +260,7 @@ const Swap = () => {
     let deadline = await setDeadline(3600);
     const swapPath = [selectedToken.address, selected2Token.address];
     swap({ args: [to_wei(input), output, swapPath, address, deadline] });
+    // setModal(true)
   }
 
   function handleFunctionSelector() {

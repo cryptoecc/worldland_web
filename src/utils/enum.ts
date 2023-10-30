@@ -10,6 +10,7 @@ export enum ABI {
   WRAPETH = 'WRAPETH',
   LVSWAPV2_ROUTER = 'LVSWAPV2_ROUTER',
   LVSWAPV2_FACTORY = 'LVSWAPV2_FACTORY',
+  LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
 }
 
 export enum Field {
@@ -39,10 +40,17 @@ export enum CONTRACT_ADDRESSES {
 }
 
 export enum FUNCTION {
+  ADDLIQUIDITY = 'addLiquidity',
+  REMOVELIQUIDITY = 'removeLiquidity',
+  APPROVE = 'approve',
   GETAMOUNTOUT = 'getAmountOut',
   GETAMOUNTSOUT = 'getAmountsOut',
   BURN = 'BURN',
   SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',
+  TOKEN0 = 'token0',
+  TOKEN1 = 'token1',
+  TOTALSUPPLY = 'totalSupply',
+  GETRESERVES = 'getReserves',
 }
 
 export enum CHAINDS {

@@ -25,6 +25,8 @@ import { web3_wld } from "configs/web3-wld";
 import { from_wei, to_wei } from "utils/util";
 import { MAPNETTOADDRESS } from "configs/contract_address_config";
 import { useWeb3Modal } from '@web3modal/react';
+import { chain_query } from "configs/contract_calls";
+import { gasLimit } from "utils/wagmi";
 
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
@@ -34,13 +36,14 @@ const AddLiquidity = () => {
     const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
     const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
     const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
-    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('0');
+    const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
     const [disabled, setDisabled] = useState<boolean>(false);
     const [modal, setModal] = useState(false);
     const [amountOut, setAmountOut] = useState<string>("");
+    const [currentPrice, setCurrentPrice] = useState<string>("");
     const { open } = useWeb3Modal();
     const location = useLocation;
-    const approvalAmount = '1000000';
+    const approvalAmount = '1000000000';
     const mapIndexToFunction: ImapIndexToFunction = {
         0: (obj: TokenProps) => setSelectedToken0(obj),
         1: (obj: TokenProps) => setSelectedToken1(obj),
@@ -59,6 +62,31 @@ const AddLiquidity = () => {
         setSelectedTokenInputField(index);
         setModal(prev => !prev);
     }
+
+    async function queryCurrentPrice() {
+        // makes a chain query regardless of wallet connection
+        if (selectedToken0?.address === selectedToken1?.address) {
+            return;
+        }
+        let args = {
+            chain: 2,
+            contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+            abikind: ABI.LVSWAPV2_ROUTER,
+            methodname: FUNCTION.GETAMOUNTOUT,
+            f_args: [
+                MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+                to_wei('1'),
+                selectedToken0?.address,
+                selectedToken1?.address
+            ]
+        }
+        let price = await chain_query(args)
+        setCurrentPrice(price)
+    }
+
+    useEffect(() => {
+        queryCurrentPrice();
+    }, [selectedToken0?.address, selectedToken1?.address])
 
     const { data: tokenBalanceA } = useContractRead({
         address: selectedToken0?.address,
@@ -128,8 +156,12 @@ const AddLiquidity = () => {
         ],
         watch: true,
         onSuccess(data: any) {
-            console.log({ amountOut: data })
+            queryCurrentPrice();
             setAmountOut(data)
+            if (parseFloat(from_wei(data)) > 0) {
+                tokenAmountInputHandler(1, putCommaAtPrice(from_wei(data), 5))
+            }
+
         },
         onError(data: any) {
             console.log({ error: data })
@@ -141,7 +173,7 @@ const AddLiquidity = () => {
         address: selectedToken0?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-        functionName: 'approve',
+        functionName: FUNCTION.APPROVE,
         onSuccess(data) {
             console.log({ approvalA: data });
         },
@@ -153,7 +185,7 @@ const AddLiquidity = () => {
         address: selectedToken1?.address,
         abi: MAP_STR_ABI[CONTRACT_ADDRESSES.ERC20_ABI],
         args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER], to_wei(approvalAmount)],
-        functionName: 'approve',
+        functionName: FUNCTION.APPROVE,
         onSuccess(data) {
             console.log({ approvalB: data });
         },
@@ -164,7 +196,8 @@ const AddLiquidity = () => {
     const { data: _, write: AddLiquidity } = useContractWrite({
         address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
         abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-        functionName: 'addLiquidity',
+        functionName: FUNCTION.ADDLIQUIDITY,
+        gas: gasLimit,
         onSuccess(data) {
             console.log({ approvalB: data });
         },
@@ -175,19 +208,22 @@ const AddLiquidity = () => {
 
     async function handleAddLiquidity() {
         let deadline = await setDeadline(3600);
+        let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '')
+        console.log({ cleanedOutput: to_wei(cleanedOutput) })
         AddLiquidity({
             args: [
                 selectedToken0?.address,
                 selectedToken1?.address,
                 to_wei(selectedTokenAmount0),
-                to_wei(amountOut),
+                to_wei(cleanedOutput),
                 to_wei("10"),
                 to_wei("10"),
                 address,
                 deadline,
             ],
         });
-        setSelectedTokenAmount0("0");
+        setSelectedTokenAmount0("");
+        setSelectedTokenAmount1("");
     }
 
     function tokenAmountInputHandler(index: number, amount: string) {
@@ -227,7 +263,7 @@ const AddLiquidity = () => {
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))) {
             // if allowanceA is low
             handleApprovals(0);
-        } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+        } else if (Number(from_wei(amountOut) ? from_wei(amountOut) : "0") > Number(from_wei(allowanceB))) {
             // if allowanceB is low
             handleApprovals(1);
 
@@ -250,6 +286,8 @@ const AddLiquidity = () => {
     }, [location])
 
     useEffect(() => {
+        console.log({ allowanceA: Number(from_wei(allowanceA)) });
+        console.log({ allowanceB: Number(from_wei(amountOut)) > Number(from_wei(allowanceB)) });
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -269,10 +307,12 @@ const AddLiquidity = () => {
             setBtnState(1);
             setLowBalanceToken(selectedToken1)
         } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceA))
-            || Number(selectedTokenAmount0 ? selectedTokenAmount0 : "0") > Number(from_wei(allowanceB))) {
+            || Number(from_wei(amountOut)) > Number(from_wei(allowanceB))) {
             // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+            setDisabled(false)
             setBtnState(2);
         } else {
+            console.log({ amount0: from_wei(allowanceA) })
             // permission to add liquidity
             setBtnState(3);
             setDisabled(false)
@@ -353,7 +393,7 @@ const AddLiquidity = () => {
                     </section>
                     <div className="current-price-box">
                         <p>Current price:</p>
-                        <h2>{putCommaAtPrice(from_wei(amountOut), 3)}</h2>
+                        <h2>{putCommaAtPrice(from_wei(currentPrice), 5)}</h2>
                         <p>{selectedToken1.symbol} per {selectedToken0.symbol}</p>
                     </div>
                     <section className="deposit-field">
@@ -383,7 +423,7 @@ const AddLiquidity = () => {
                             </div>
                             <div className="input-wrap">
                                 <div className="inner-items">
-                                    <input value={amountOut ? putCommaAtPrice(from_wei(amountOut), 5) : ""} type="text" placeholder={"0"} />
+                                    <input value={selectedTokenAmount1} onChange={(e) => tokenAmountInputHandler(1, e.target.value)} type="text" placeholder={"0"} />
                                     <span className="token-card">
                                         {selectedToken1 ? (
                                             <>
@@ -686,6 +726,7 @@ const Container = styled.div`
                &:disabled {
                     background-color: rgb(255, 255, 255, 0.1);
                     color: #6a6a6a;
+                    cursor: not-allowed;
                 }
             }
 

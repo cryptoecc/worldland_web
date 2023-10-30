@@ -9,10 +9,8 @@ const chains = {
 
 export const chain_query = async (jargs) => {
   let { chain, contract_address, abikind, methodname, f_args } = jargs;
-  contract_address = contract_address.toLowerCase();
+  contract_address = contract_address?.toLowerCase();
   const contract = new chains[chain].eth.Contract(MAP_STR_ABI[abikind], contract_address);
-  console.log({ contract });
-  console.log({ jargs });
   return await contract.methods[methodname](...f_args).call();
 };
 

@@ -36,6 +36,13 @@ export declare global {
     handleTokenClick: React.Dispatch<React.SetStateAction<any>>;
   }
 
+  interface IRemoveLiquidity {
+    close: Function;
+    allowance: string;
+    handleApprove: () => void;
+    selectedPair?: Pair;
+  }
+
   interface BackdropProps {
     close?: Function;
     intensity: number;
@@ -62,12 +69,27 @@ export declare global {
     [key: number]: ((token: TokenProps) => void) | string;
   }
 
-  interface ImapPairToBalance {
-    [key: `0x${string}`]: string;
+  interface Pair {
+    balance?: string;
+    address?: `0x${string}`;
+    totalSupply?: string;
+    reserve0?: string;
+    reserve1?: string;
+    token0?: string;
+    token1?: string;
+    AtoB?: string;
+    BtoA?: string;
+    pooledA?: number;
+    pooledB?: number;
   }
 
   interface ImapPair {
     result: string;
+  }
+
+  interface IBalances {
+    token0?: string;
+    token1?: string;
   }
 
   // types
