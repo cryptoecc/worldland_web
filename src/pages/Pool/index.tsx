@@ -126,7 +126,7 @@ const Pool = () => {
     }
 
     async function returnAmount(args: string[]) {
-        return {
+        return await chain_query({
             chain: 2,
             contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
             abikind: ABI.LVSWAPV2_ROUTER,
@@ -136,8 +136,10 @@ const Pool = () => {
                 to_wei("1"),
                 ...args
             ]
-        }
+        })
     }
+
+
 
     async function handleQueryAmountOutForToken(_pairs: Pair[]) {
         try {
@@ -148,16 +150,19 @@ const Pool = () => {
                     ..._pairs[i],
                     token0: pair?.token0,
                     token1: pair?.token1,
-                    AtoB: (await chain_query(await returnAmount([pair?.token0 as string, pair?.token1 as string]))),
-                    BtoA: (await chain_query(await returnAmount([pair?.token1 as string, pair?.token0 as string,])))
+                    AtoB: (await returnAmount([pair?.token0 as string, pair?.token1 as string])),
+                    BtoA: (await returnAmount([pair?.token1 as string, pair?.token0 as string]))
                 }
             }
+            console.log({ updatedPairArr })
             setPairs(updatedPairArr);
 
         } catch (err) {
             console.log(err);
         }
     }
+
+
 
 
     return (

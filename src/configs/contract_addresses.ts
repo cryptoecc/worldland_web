@@ -58,7 +58,6 @@ export const WLD_ADDRESSES: ADDRESS_TYPE = {
 };
 export const PAIR_ADRESSES: `0x${string}`[] = [
   '0x0A62681874Fb07c5731696971a0bF142a71E090f', // last deployed main pair
-  '0x0E0F3119dD2e32eBE032FaC33348d2f267625237',
 ];
 
 export const SEPOLIA_ADDRESSES: ADDRESS_TYPE = {
