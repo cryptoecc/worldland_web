@@ -185,7 +185,6 @@ const Pool = () => {
             let updatedPairArr: Pair[] = [];
             for (let i = 0; i < _pairs.length; i++) {
                 let pair = await handleExtractPairFromPool(_pairs[i]?.address);
-                returnReserves(_pairs[i]?.address);
                 updatedPairArr[i] = {
                     ..._pairs[i],
                     totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
