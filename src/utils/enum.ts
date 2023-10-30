@@ -49,6 +49,8 @@ export enum FUNCTION {
   SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',
   TOKEN0 = 'token0',
   TOKEN1 = 'token1',
+  TOTALSUPPLY = 'totalSupply',
+  GETRESERVES = 'getReserves',
 }
 
 export enum CHAINDS {

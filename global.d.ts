@@ -72,10 +72,15 @@ export declare global {
   interface Pair {
     balance?: string;
     address?: `0x${string}`;
+    totalSupply?: string;
+    reserve0?: string;
+    reserve1?: string;
     token0?: string;
     token1?: string;
     AtoB?: string;
     BtoA?: string;
+    pooledA?: number;
+    pooledB?: number;
   }
 
   interface ImapPair {

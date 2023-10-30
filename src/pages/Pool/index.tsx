@@ -139,6 +139,45 @@ const Pool = () => {
         })
     }
 
+    async function returnTotalSupply(pair?: `0x${string}`) {
+        try {
+            return await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.TOTALSUPPLY,
+                f_args: []
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    async function returnReserves(pair?: `0x${string}`) {
+        try {
+            let { 0: reserve0, 1: reserve1 } = await chain_query({
+                chain: 2,
+                contract_address: pair,
+                abikind: ABI.LVSWAPV2_PAIR,
+                methodname: FUNCTION.GETRESERVES,
+                f_args: []
+            })
+            return { reserve0, reserve1 };
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function calcPooledUserAsset(pair: Pair) {
+        try {
+            // User's Token A Balance = (User's Share of Total Liquidity / Total Liquidity) * Total Token A in the Pool
+            let pooledA = ((parseFloat(from_wei(pair?.balance)) / parseFloat(from_wei(pair?.totalSupply))) * parseFloat(from_wei(pair?.reserve0)))
+            let pooledB = ((parseFloat(from_wei(pair?.balance)) / parseFloat(from_wei(pair?.totalSupply))) * parseFloat(from_wei(pair?.reserve1)))
+            return { pooledA, pooledB }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
 
 
     async function handleQueryAmountOutForToken(_pairs: Pair[]) {
@@ -146,12 +185,34 @@ const Pool = () => {
             let updatedPairArr: Pair[] = [];
             for (let i = 0; i < _pairs.length; i++) {
                 let pair = await handleExtractPairFromPool(_pairs[i]?.address);
+                returnReserves(_pairs[i]?.address);
+                await calcPooledUserAsset({
+                    ..._pairs[i],
+                    totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                    reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                    reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                })
                 updatedPairArr[i] = {
                     ..._pairs[i],
+                    totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                    reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                    reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
                     token0: pair?.token0,
                     token1: pair?.token1,
                     AtoB: (await returnAmount([pair?.token0 as string, pair?.token1 as string])),
-                    BtoA: (await returnAmount([pair?.token1 as string, pair?.token0 as string]))
+                    BtoA: (await returnAmount([pair?.token1 as string, pair?.token0 as string])),
+                    pooledA: (await calcPooledUserAsset({
+                        ..._pairs[i],
+                        totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                        reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                        reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                    }))?.pooledA,
+                    pooledB: (await calcPooledUserAsset({
+                        ..._pairs[i],
+                        totalSupply: (await returnTotalSupply(_pairs[i]?.address)),
+                        reserve0: ((await returnReserves(_pairs[i]?.address))?.reserve0),
+                        reserve1: ((await returnReserves(_pairs[i]?.address))?.reserve1),
+                    }))?.pooledB,
                 }
             }
             console.log({ updatedPairArr })
