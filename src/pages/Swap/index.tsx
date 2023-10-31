@@ -82,8 +82,6 @@ const Swap = () => {
 
   const { chain } = useNetwork();
 
-  console.log({ chain })
-
 
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
@@ -369,6 +367,7 @@ const Swap = () => {
       setDisabled(false);
     }
   }, [
+    chain?.id,
     input,
     allowanceA,
     amountOut,
