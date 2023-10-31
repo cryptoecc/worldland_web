@@ -339,6 +339,7 @@ const AddLiquidity = () => {
             setDisabled(false)
         }
     }, [
+        chain?.id,
         selectedTokenAmount0,
         allowanceA,
         allowanceB,
