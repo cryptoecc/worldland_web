@@ -96,12 +96,6 @@ const MainMenu = () => {
                   <SpaceLink href="http://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
-                  <SpaceLink href="/swap">
-                    <Strong>Swap</Strong>
-                  </SpaceLink>
-                  <SpaceLink href="/pool">
-                    <Strong>Pool</Strong>
-                  </SpaceLink>
                   <SpaceLink href="http://3.34.198.64/" target="_blank">
                     <Strong>My AI</Strong>
                   </SpaceLink>
@@ -125,6 +119,27 @@ const MainMenu = () => {
                   </SpaceLink>
                   <SpaceLink href="https://github.com/cryptoecc/ETH-ECC" target="_blank" rel="noopener noreferrer">
                     <Strong>GitHub</Strong>
+                  </SpaceLink>
+                </div>
+              </div>
+            </Network>
+          </Dropdown>
+        </MenuItem>
+        <MenuItem
+          isSelected={activeMenu === 'AI-DEX' ? true : undefined}
+          data-isactive={activeMenu === 'AI-DEX'}
+          onClick={() => handleMenuClick('AI-DEX')}
+        >
+          AI-Dex
+          <Dropdown data-isvisible={activeMenu === 'AI-DEX'}>
+            <Network>
+              <div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <SpaceLink href="/swap">
+                    <Strong>Swap</Strong>
+                  </SpaceLink>
+                  <SpaceLink href="/pool">
+                    <Strong>Pool</Strong>
                   </SpaceLink>
                 </div>
               </div>
@@ -166,10 +181,12 @@ const MainMenu = () => {
             </div>
           </CommunityDropdown>
         </MenuItem>
+        <MenuItem data-isactive={activeMenu === 'Contact'} onClick={() => handleMenuClick('Contact')}>
+          <Link to={'/contact'}>
+            <Learn>Contact</Learn>
+          </Link>
+        </MenuItem>
       </MenuItemWrapper>
-      {/* <Contack data-isactive={activeMenu === 'Contact'} onClick={() => Eventpath()}>
-        Event
-      </Contack> */}
     </Menu>
   );
 };

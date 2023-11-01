@@ -31,6 +31,7 @@ const MenuItem = styled.div<{ isSelected?: boolean }>`
   align-items: center;
   font-size: 18px;
   margin-right: 30px;
+  white-space: nowrap;
   color: ${(props) => (props.isSelected ? 'white' : '#848895')};
   cursor: pointer;
 

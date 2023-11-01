@@ -1,6 +1,6 @@
 const breakpoints: { [index: string]: number } = {
   mobile: 480,
-  tablet: 768,
+  tablet: 1024,
 };
 
 const minQuery: { [index: string]: string } = {};
