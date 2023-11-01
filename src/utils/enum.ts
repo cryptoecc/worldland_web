@@ -54,8 +54,8 @@ export enum FUNCTION {
 }
 
 export enum CHAINDS {
-  WORLDLAND_SEOUL = 'WORLDLAND_SEOUL',
-  WORLDLAND_GWANGJU = 'WORLDLAND_GWANGJU',
+  WORLDLAND = 'worldland',
+  WORLDLAND_GWANGJU = 'worldland_gwangju',
 }
 
 export enum TOKEN {

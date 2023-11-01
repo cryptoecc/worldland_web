@@ -18,7 +18,7 @@ import {
     useWaitForTransaction,
     useContractRead,
 } from 'wagmi';
-import { ABI, CONTRACT_ADDRESSES, FUNCTION, TOKEN } from "utils/enum";
+import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, TOKEN } from "utils/enum";
 import { handleAddLiquidityBtnState, putCommaAtPrice, setDeadline } from "utils/util";
 import { MAP_STR_ABI } from "configs/abis";
 import { web3_wld } from "configs/web3-wld";
@@ -27,9 +27,12 @@ import { MAPNETTOADDRESS } from "configs/contract_address_config";
 import { useWeb3Modal } from '@web3modal/react';
 import { chain_query } from "configs/contract_calls";
 import { gasLimit } from "utils/wagmi";
+import { useToasts } from 'react-toast-notifications';
+import { chainIds } from "configs/services/chainIds";
 
 const AddLiquidity = () => {
     const { address, isConnected } = useAccount()
+    const { addToast } = useToasts();
     const [btnState, setBtnState] = useState<number>(1)
     const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps>(crypto_list[0]);
     const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
@@ -245,6 +248,9 @@ const AddLiquidity = () => {
             // metamask is not connected
             open();
             return;
+        } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+            // wrong network
+            switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
         } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
             // empty field
             return;
@@ -280,6 +286,17 @@ const AddLiquidity = () => {
 
     const { chain } = useNetwork();
 
+    const { chains, switchNetwork } = useSwitchNetwork({
+        onSuccess(data) {
+            //
+            console.log({ data })
+            addToast('네트워크 변경 완료', {
+                appearance: 'success', // 오류 메시지 스타일
+                autoDismiss: true, // 자동 닫기
+            });
+        },
+    });
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -292,6 +309,10 @@ const AddLiquidity = () => {
             // metamask is not connected
             setDisabled(false);
             setBtnState(4);
+        } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+            // wrong network
+            setDisabled(false);
+            setBtnState(7);
         } else if (selectedTokenAmount0 === "0" || selectedTokenAmount0 === "") {
             // empty field
             setDisabled(true);
@@ -318,6 +339,7 @@ const AddLiquidity = () => {
             setDisabled(false)
         }
     }, [
+        chain?.id,
         selectedTokenAmount0,
         allowanceA,
         allowanceB,

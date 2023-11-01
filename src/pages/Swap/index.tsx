@@ -82,9 +82,11 @@ const Swap = () => {
 
   const { chain } = useNetwork();
 
+
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
       //
+      console.log({ data })
       addToast('네트워크 변경 완료', {
         appearance: 'success', // 오류 메시지 스타일
         autoDismiss: true, // 자동 닫기
@@ -104,8 +106,8 @@ const Swap = () => {
         // });
         return;
       }
-      if (chain?.id !== chainIds[CHAINDS.WORLDLAND_SEOUL]) {
-        switchNetwork?.(chainIds[CHAINDS.WORLDLAND_SEOUL]);
+      if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+        switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
       }
 
       if (input === '') {
@@ -268,6 +270,9 @@ const Swap = () => {
       // metamask is not connected
       open();
       return;
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+      // wrong network
+      switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
     } else if (input === '0' || input === '') {
       // empty field
       return;
@@ -338,6 +343,10 @@ const Swap = () => {
       // metamask is not connected
       setDisabled(false);
       setBtnState(4);
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+      // wrong network
+      setDisabled(false);
+      setBtnState(7);
     } else if (input === '0' || input === '') {
       // empty field
       setDisabled(true);
@@ -357,7 +366,17 @@ const Swap = () => {
       setBtnState(6);
       setDisabled(false);
     }
-  }, [input, allowanceA, amountOut, isConnected, selectedToken, selected2Token, tokenBalanceA, tokenBalanceB]);
+  }, [
+    chain?.id,
+    input,
+    allowanceA,
+    amountOut,
+    isConnected,
+    selectedToken,
+    selected2Token,
+    tokenBalanceA,
+    tokenBalanceB
+  ]);
 
   return (
     <Container>
