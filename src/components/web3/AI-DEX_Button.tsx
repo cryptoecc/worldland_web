@@ -44,7 +44,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
   // 렌더링 시 chainlink에서 가격 가져오기
   useEffect(() => {
-    getData();
+    //getData();
+    getDataViaAPI();
     let sepolia_web3 = web3_eth; //testnet
     setWeb3(sepolia_web3);
 
@@ -56,82 +57,107 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       }
     }
     const interval = setInterval(() => {
-      getData();
+      //getData();
+      getDataViaAPI();
     }, 60000);
 
     return () => clearInterval(interval);
   }, [web3]);
 
-  const getData = async () => {
-    //(1) 가격 가져오기
-    if (web3) {
-      const contract = new web3.eth.Contract(contractABI, contractAddress);
-      try {
-        //latestRound 호출
+  // const getData = async () => {
+  //   //(1) 가격 가져오기
+  //   if (web3) {
+  //     const contract = new web3.eth.Contract(contractABI, contractAddress);
+  //     try {
+  //       //latestRound 호출
 
-        const roundIDList: string[] = [];
-        console.log('여기');
-        const result: any = await contract.methods.latestRound().call();
-        console.log('1 :', result);
-        const roundID = new BigNumber(result);
-        console.log('2 :', roundID);
-        const roundID_str = roundID.toString();
-        console.log('latestRound :', roundID_str);
+  //       const roundIDList: string[] = [];
+  //       console.log('여기');
+  //       const result: any = await contract.methods.latestRound().call();
+  //       console.log('1 :', result);
+  //       const roundID = new BigNumber(result);
+  //       console.log('2 :', roundID);
+  //       const roundID_str = roundID.toString();
+  //       console.log('latestRound :', roundID_str);
 
-        setLatestRound(roundID_str);
+  //       setLatestRound(roundID_str);
 
-        //가장 최근 기준으로 과거 9개의 roundId 삽입
-        for (let i = 9; i >= 1; i--) {
-          const roundIDMinus = roundID.minus(i);
-          console.log({ roundIDMinus });
-          roundIDList.push(roundIDMinus.toString());
-        }
-        roundIDList.push(roundID_str);
+  //       //가장 최근 기준으로 과거 9개의 roundId 삽입
+  //       for (let i = 9; i >= 1; i--) {
+  //         const roundIDMinus = roundID.minus(i);
+  //         console.log({ roundIDMinus });
+  //         roundIDList.push(roundIDMinus.toString());
+  //       }
+  //       roundIDList.push(roundID_str);
 
-        //getAnswer 호출
-        const answer = new BigNumber(await (contract.methods.getAnswer as any)(roundID_str).call());
-        const BIG_TEN = new BigNumber(10);
-        const answer_Big = answer.dividedBy(BIG_TEN.pow(8)).toFixed(2); // 10^8로 나누고, 소수점 두 자리까지
-        const answer_str = answer_Big.toString();
-        console.log('언제냐 getAnswer :', answer_str);
-        //setAnswer(answer_str);
+  //       //getAnswer 호출
+  //       const answer = new BigNumber(await (contract.methods.getAnswer as any)(roundID_str).call());
+  //       const BIG_TEN = new BigNumber(10);
+  //       const answer_Big = answer.dividedBy(BIG_TEN.pow(8)).toFixed(2); // 10^8로 나누고, 소수점 두 자리까지
+  //       const answer_str = answer_Big.toString();
+  //       console.log('언제냐 getAnswer :', answer_str);
+  //       //setAnswer(answer_str);
 
-        //getTimestamp 호출
-        const timestamp = new BigNumber(await (contract.methods.getTimestamp as any)(roundID_str).call());
+  //       //getTimestamp 호출
+  //       const timestamp = new BigNumber(await (contract.methods.getTimestamp as any)(roundID_str).call());
 
-        const date = new Date(timestamp.toNumber() * 1000); //1000곱해서 밀리초로 변환
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
+  //       const date = new Date(timestamp.toNumber() * 1000); //1000곱해서 밀리초로 변환
+  //       const year = date.getFullYear();
+  //       const month = String(date.getMonth() + 1).padStart(2, '0');
+  //       const day = String(date.getDate()).padStart(2, '0');
+  //       const hours = String(date.getHours()).padStart(2, '0');
+  //       const minutes = String(date.getMinutes()).padStart(2, '0');
+  //       const seconds = String(date.getSeconds()).padStart(2, '0');
 
-        const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
+  //       const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
 
-        console.log('getTimestamp :', formattedDate);
-        console.log('roundlist', roundIDList);
-        //setTimestamp(formattedDate);
+  //       console.log('getTimestamp :', formattedDate);
+  //       console.log('roundlist', roundIDList);
+  //       //setTimestamp(formattedDate);
 
-        //10개의 roundId에 대한 가격 데이터
-        const tempPriceList: string[] = [];
-        for (let i = 0; i < roundIDList.length; i++) {
-          try {
-            const price = new BigNumber(await (contract.methods.getAnswer as any)(roundIDList[i]).call());
-            const price_Big = price.dividedBy(BIG_TEN.pow(8)).toFixed(2);
-            const price_str = price_Big.toString();
-            tempPriceList.push(price_str);
-          } catch (error) {
-            console.error(`getAnswer 호출 중 오류 발생한 roundID ${roundIDList[i]}:`, error);
-          }
-        }
-        console.log('templist다', tempPriceList);
-        fetchData(tempPriceList);
+  //       //10개의 roundId에 대한 가격 데이터
+  //       const tempPriceList: string[] = [];
+  //       for (let i = 0; i < roundIDList.length; i++) {
+  //         try {
+  //           const price = new BigNumber(await (contract.methods.getAnswer as any)(roundIDList[i]).call());
+  //           const price_Big = price.dividedBy(BIG_TEN.pow(8)).toFixed(2);
+  //           const price_str = price_Big.toString();
+  //           tempPriceList.push(price_str);
+  //         } catch (error) {
+  //           console.error(`getAnswer 호출 중 오류 발생한 roundID ${roundIDList[i]}:`, error);
+  //         }
+  //       }
+  //       console.log('templist다', tempPriceList);
+  //       fetchData(tempPriceList);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error('호출 중 오류 발생:', error);
+  //     }
+  //   }
+  // };
+
+  //(2023.11.01 가격 가져오는 로직 변경 : 스마트 컨트랙트 사용 X -> API로 가장 최근 가격 가져오기)
+  const getDataViaAPI = async () => {
+    fetch('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=USD', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const rawApiPrice = data.RAW.ETH.USD.PRICE;
+        const apiPrice = parseFloat(rawApiPrice).toFixed(2);
+
+        console.log(data);
+        console.log(`api로 가져온 price: ${apiPrice}`);
+
+        fetchData(Array(10).fill(apiPrice));
         setLoading(false);
-      } catch (error) {
-        console.error('호출 중 오류 발생:', error);
-      }
-    }
+      })
+      .catch((error) => {
+        console.error('api로 가격 가져오는데 실패 : ', error);
+      });
   };
 
   //(2) 예측모델로 가격 정보 보내고, 예측값 가져오기
@@ -255,7 +281,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
   //가격 조회+예측모델로 전송+예측값 받아오기 한 번에 실행
   const handleOneClick = async () => {
     if (!loading) {
-      getData();
+      //getData();
+      getDataViaAPI();
     } else {
       console.log('error');
     }
