@@ -7,7 +7,7 @@ import { maxQuery } from 'utils/breakpoints';
 const Menu = styled.div`
   display: flex;
   width: 100%;
-  max-width: 366px;
+  max-width: 550px;
   justify-content: space-between;
   height: 25px;
   align-items: center;

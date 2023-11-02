@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
 import styled from 'styled-components';
 import { theme } from 'style/theme';
+import { maxQuery } from 'utils/breakpoints';
 import Web3 from 'web3';
 import { useConnect, useAccount } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
@@ -31,6 +32,10 @@ const StyledButton = styled.button`
     transition:
       background 0.3s,
       border 0.3s;
+  }
+
+  ${maxQuery.tablet} {
+    /* margin-left: 400px; */
   }
 `;
 
