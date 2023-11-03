@@ -21,7 +21,7 @@ const InputTab = () => {
 
     try {
       console.log(formData);
-      await axios.post('https:/be.worldland.foundation', formData);
+      await axios.post('https:/be.worldland', formData);
 
       alert('Message sent successfully!');
     } catch (error) {
