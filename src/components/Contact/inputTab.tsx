@@ -28,22 +28,12 @@ const InputTab = () => {
           'Content-Type': 'application/json', // 요청 헤더 설정 (필요에 따라 변경)
         },
         body: JSON.stringify(formData), // 요청 본문 설정
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json(); // 응답 JSON 파싱
-        })
-        .then((data) => {
-          // 성공한 경우 데이터 처리
-          console.log(data);
-        })
-        .catch((error) => {
-          // 오류 처리
-          console.error('There was a problem with the fetch operation:', error);
-        });
-
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // 응답 JSON 파싱
+      });
       alert('Message sent successfully!');
     } catch (error) {
       console.error('Error sending message', error);
