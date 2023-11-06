@@ -16,4 +16,5 @@ export const PATH = {
   TESTPAGE: '/testpage',
   ADD: '/pool/add-liquidity',
   CONTACT: '/contact',
+  CHART: '/chart',
 };
