@@ -11,6 +11,7 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { web3_eth } from 'configs/web3-eth';
 import { web3_wld } from 'configs/web3-wld';
 import { useToasts } from 'react-toast-notifications';
+import { to_wei } from 'utils/util';
 
 interface Props {
   onAccountConnected: (account: string) => void;
@@ -165,7 +166,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       if (data) {
         console.log('123');
         const tempPredList = data.prediction;
-        console.log(tempPredList);
+        const predlist = tempPredList.map((el: any) => to_wei(el))
+        console.log(predlist);
 
         await sendTransaction(tempPredList);
 

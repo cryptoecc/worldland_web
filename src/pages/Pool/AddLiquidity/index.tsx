@@ -212,7 +212,6 @@ const AddLiquidity = () => {
     async function handleAddLiquidity() {
         let deadline = await setDeadline(3600);
         let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '')
-        console.log({ cleanedOutput: to_wei(cleanedOutput) })
         AddLiquidity({
             args: [
                 selectedToken0?.address,
