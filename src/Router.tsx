@@ -17,6 +17,8 @@ import Index from 'pages/Index';
 import Pool from 'pages/Pool';
 import AddLiquidity from 'pages/Pool/AddLiquidity';
 import TestPage from 'pages/TestPage';
+import Contact from 'pages/Contact';
+import Chart from 'pages/Chart';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -45,6 +47,8 @@ const Router = () => {
         { path: `${PATH.POOL}`, element: <Pool /> },
         { path: `${PATH.TESTPAGE}`, element: <TestPage /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
+        { path: `${PATH.CONTACT}`, element: <Contact /> },
+        { path: `${PATH.CHART}`, element: <Chart /> },
       ],
     },
   ]);

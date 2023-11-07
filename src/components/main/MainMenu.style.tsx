@@ -7,7 +7,7 @@ import { maxQuery } from 'utils/breakpoints';
 const Menu = styled.div`
   display: flex;
   width: 100%;
-  max-width: 366px;
+  max-width: 550px;
   justify-content: space-between;
   height: 25px;
   align-items: center;
@@ -31,6 +31,7 @@ const MenuItem = styled.div<{ isSelected?: boolean }>`
   align-items: center;
   font-size: 18px;
   margin-right: 30px;
+  white-space: nowrap;
   color: ${(props) => (props.isSelected ? 'white' : '#848895')};
   cursor: pointer;
 

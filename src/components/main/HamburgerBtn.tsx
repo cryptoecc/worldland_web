@@ -219,11 +219,6 @@ const HamburgerBtn = () => {
             </Dropdown>
           )}
         </Li>
-        {/* <Li>
-          <Button isSelected={menuState.contactUs ? true : undefined} onClick={() => Eventpath()}>
-            Event
-          </Button>
-        </Li> */}
       </MenuList>
     </HamburgerBtnWrapper>
   );
