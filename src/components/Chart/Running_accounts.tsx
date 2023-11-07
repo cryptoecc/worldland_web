@@ -22,7 +22,7 @@ function BarCharts() {
     const array: MinerFreq[] = [];
     const minerSet = a ? new Set<string>() : null;
 
-    for (let i = 0; i < 300; i++) {
+    for (let i = 0; i < 500; i++) {
       const blockNumber = a ? Number(a) - i : 0;
       const data = await web3?.eth?.getBlock(blockNumber);
       const minerAddress = data.miner;

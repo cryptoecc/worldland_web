@@ -1,5 +1,5 @@
 import eth_logo from 'assets/static/coin-logo/eth-logo.png';
-import aave_logo from 'assets/static/coin-logo/aave-logo.png';
+import wlc_logo from 'assets/static/coin-logo/wlc-logo.svg';
 import dai_logo from 'assets/static/coin-logo/dai-logo.png';
 import usdc_logo from 'assets/static/coin-logo/usdc-logo.png';
 import wETH_logo from 'assets/static/coin-logo/wETH-logo.png';
@@ -22,16 +22,20 @@ export const crypto_list = [
     amount: '0',
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
   },
-  // {
-  //   symbol: 'WETH',
-  //   title: 'Wrapped Ether',
-  //   icon: wETH_logo,
-  // },
-  // {
-  //   symbol: 'AAVE',
-  //   title: 'Aave',
-  //   icon: aave_logo,
-  // },
+  {
+    symbol: 'WETH',
+    title: 'Wrapped Ether',
+    icon: wETH_logo,
+    amount: '0',
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
+  },
+  {
+    symbol: 'WLC',
+    title: 'WLC',
+    icon: wlc_logo,
+    amount: '0',
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS],
+  },
   // {
   //   symbol: 'USDC',
   //   title: 'USDC',
