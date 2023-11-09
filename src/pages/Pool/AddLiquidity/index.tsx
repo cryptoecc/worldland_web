@@ -92,6 +92,19 @@ const AddLiquidity = () => {
     queryCurrentPrice();
   }, [selectedToken0?.address, selectedToken1?.address]);
 
+  const { data: coinBalanceA } = useBalance({
+    address,
+    // abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    // functionName: 'balanceOf',
+    // args: [address],
+    // watch: true,
+    onSuccess(data: any) {
+      console.log({ coinBalanceA: data });
+    },
+    onError(data: any) {
+      console.log({ error: data });
+    },
+  });
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken0?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -105,6 +118,7 @@ const AddLiquidity = () => {
       console.log({ error: data });
     },
   });
+
   const { data: tokenBalanceB } = useContractRead({
     address: selectedToken1?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],

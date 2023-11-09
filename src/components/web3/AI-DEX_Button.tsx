@@ -71,20 +71,20 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         //latestRound 호출
 
         const roundIDList: string[] = [];
-        console.log('여기');
+        // console.log('여기');
         const result: any = await contract.methods.latestRound().call();
-        console.log('1 :', result);
+        // console.log('1 :', result);
         const roundID = new BigNumber(result);
-        console.log('2 :', roundID);
+        // console.log('2 :', roundID);
         const roundID_str = roundID.toString();
-        console.log('latestRound :', roundID_str);
+        // console.log('latestRound :', roundID_str);
 
         setLatestRound(roundID_str);
 
         //가장 최근 기준으로 과거 9개의 roundId 삽입
         for (let i = 9; i >= 1; i--) {
           const roundIDMinus = roundID.minus(i);
-          console.log({ roundIDMinus });
+          // console.log({ roundIDMinus });
           roundIDList.push(roundIDMinus.toString());
         }
         roundIDList.push(roundID_str);
@@ -94,7 +94,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         const BIG_TEN = new BigNumber(10);
         const answer_Big = answer.dividedBy(BIG_TEN.pow(8)).toFixed(2); // 10^8로 나누고, 소수점 두 자리까지
         const answer_str = answer_Big.toString();
-        console.log('언제냐 getAnswer :', answer_str);
+        // console.log('언제냐 getAnswer :', answer_str);
         //setAnswer(answer_str);
 
         //getTimestamp 호출
@@ -110,8 +110,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
 
         const formattedDate = `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds}`;
 
-        console.log('getTimestamp :', formattedDate);
-        console.log('roundlist', roundIDList);
+        // console.log('getTimestamp :', formattedDate);
+        // console.log('roundlist', roundIDList);
         //setTimestamp(formattedDate);
 
         //10개의 roundId에 대한 가격 데이터
@@ -126,7 +126,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
             console.error(`getAnswer 호출 중 오류 발생한 roundID ${roundIDList[i]}:`, error);
           }
         }
-        console.log('templist다', tempPriceList);
+        // console.log('templist다', tempPriceList);
         fetchData(tempPriceList);
         setLoading(false);
       } catch (error) {
@@ -141,7 +141,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
     setTxloading(true);
 
     //Django 서버의 PredictView URL
-    console.log(priceList);
+    // console.log(priceList);
 
     // let url = 'http://13.125.45.171:8000/predict/?';
     // let url = 'https://api.worldland.foundation/?';
@@ -156,18 +156,18 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       });
     }
 
-    console.log(url);
+    // console.log(url);
     //fetch로 GET요청
     try {
       const response = await fetch(url);
-      console.log(response);
+      // console.log(response);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (data) {
-        console.log('123');
+        // console.log('123');
         const tempPredList = data.prediction;
-        const predlist = tempPredList.map((el: any) => to_wei(el))
-        console.log(predlist);
+        const predlist = tempPredList.map((el: any) => to_wei(el));
+        // console.log(predlist);
 
         await sendTransaction(tempPredList);
 
@@ -187,7 +187,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
       );
       const accounts = await worldland_web3.eth.getAccounts();
-      console.log('계정 :', accounts);
+      // console.log('계정 :', accounts);
 
       const privateKey = process.env.REACT_APP_PRIVATE_KEY;
 
@@ -202,7 +202,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         PredictedPrice.push(worldland_web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
       let nonce = await worldland_web3.eth.getTransactionCount(account);
-      console.log({ nonce });
+      // console.log({ nonce });
       const txObject = {
         from: account,
         to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -222,7 +222,7 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         }
 
         let amountIn = worldland_web3.utils.toWei(1, 'ether');
-        console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
+        // console.log('@address error? ', MAP_STR_ABI[ABI.UNISWAPV2_ROUTER], WLD_ADDRESSES[CONTRACT_ADDRESSES.ROUTER]);
 
         const response = await (contract.methods.getAmountOut as any)(
           MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
@@ -234,11 +234,11 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
           appearance: 'success', // 오류 메시지 스타일
           autoDismiss: true, // 자동 닫기
         });
-        console.log('amountsOut :', response);
+        // console.log('amountsOut :', response);
         const fromwei = worldland_web3.utils.fromWei(response, 'ether');
 
         const amount = Number(fromwei).toFixed(7);
-        console.log('fromwei : ', amount);
+        // console.log('fromwei : ', amount);
 
         // setPredList(fromwei);
         setPredPrice(tempPredList[0]);
@@ -246,10 +246,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         setTxloading(false);
       } catch (e) {
         console.error(e);
-        // addToast('AI price prediction failure', {
-        //   appearance: 'error', // 오류 메시지 스타일
-        //   autoDismiss: true, // 자동 닫기
-        // });
       }
     }
   };
@@ -283,15 +279,6 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         ) : (
           <div></div>
         )}
-        {/* 
-        {amountOut !== '' ? (
-          <div>
-            AmountOut
-            {amountOut === '' ? '' : <p>{amountOut}</p>}
-          </div>
-        ) : (
-          <div></div>
-        )} */}
       </StyledButton>
     </div>
   );

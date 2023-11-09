@@ -79,18 +79,11 @@ const Swap = () => {
     }
     setModal(false);
   };
-
   const { chain } = useNetwork();
-
 
   const { chains, switchNetwork } = useSwitchNetwork({
     onSuccess(data) {
-      //
-      console.log({ data })
-      addToast('네트워크 변경 완료', {
-        appearance: 'success', // 오류 메시지 스타일
-        autoDismiss: true, // 자동 닫기
-      });
+      console.log({ data });
     },
   });
 
@@ -134,16 +127,6 @@ const Swap = () => {
     },
   });
 
-  const sendTransaction = async () => {
-    try {
-      write({
-        args: [to_wei(input)],
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleDebouncedAmountOut = useCallback(
     debounce((input: string) => {
       dispatch(
@@ -179,8 +162,6 @@ const Swap = () => {
     // consistently watches the selected tokens and if changed, updates the output value accordingly
     handleDebouncedAmountOut(input);
   }, [selectedToken.address, selected2Token.address]);
-
-  // gas: BigInt(3000000),
 
   const { data: _, write: swap } = useContractWrite({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -265,6 +246,14 @@ const Swap = () => {
     // setModal(true)
   }
 
+  async function handleSwapWLC() {
+    let deadline = await setDeadline(3600);
+    const swapPath = [selectedToken.address, selected2Token.address];
+    console.log('@swapPath', swapPath);
+    swap({ args: [to_wei(input), output, swapPath, address, deadline] });
+    // setModal(true)
+  }
+
   function handleFunctionSelector() {
     if (!isConnected) {
       // metamask is not connected
@@ -282,6 +271,8 @@ const Swap = () => {
     } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
       // if allowanceA is low
       approveA();
+    } else if (selectedToken.icon === 'WLC' || 'WETH') {
+      handleSwapWLC();
     } else {
       // permission to add liquidity
       handleSwap();
@@ -375,7 +366,7 @@ const Swap = () => {
     selectedToken,
     selected2Token,
     tokenBalanceA,
-    tokenBalanceB
+    tokenBalanceB,
   ]);
 
   return (
