@@ -363,23 +363,23 @@ const AddLiquidity = () => {
       // empty field
       setDisabled(true);
       setBtnState(0);
-      // } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
-      //   // balance A is not enough
-      //   setDisabled(true);
-      //   setBtnState(1);
-      //   setLowBalanceToken(selectedToken0);
-      // } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
-      //   // balance B is not enough
-      //   setDisabled(true);
-      //   setBtnState(1);
-      //   setLowBalanceToken(selectedToken1);
-      // } else if (
-      //   Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
-      //   Number(from_wei(amountOut)) > Number(from_wei(allowanceB))
-      // ) {
-      //   // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-      //   setDisabled(false);
-      //   setBtnState(2);
+    } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
+      // balance A is not enough
+      setDisabled(true);
+      setBtnState(1);
+      setLowBalanceToken(selectedToken0);
+    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+      // balance B is not enough
+      setDisabled(true);
+      setBtnState(1);
+      setLowBalanceToken(selectedToken1);
+    } else if (
+      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
+      Number(from_wei(amountOut)) > Number(from_wei(allowanceB))
+    ) {
+      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+      setDisabled(false);
+      setBtnState(2);
     } else {
       console.log({ amount0: from_wei(allowanceA) });
       // permission to add liquidity

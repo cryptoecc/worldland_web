@@ -87,6 +87,20 @@ const Swap = () => {
     },
   });
 
+  const { data: coinBalanceA } = useBalance({
+    address,
+    // abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    // functionName: 'balanceOf',
+    // args: [address],
+    // watch: true,
+    onSuccess(data: any) {
+      console.log({ coinBalanceA: data });
+    },
+    onError(data: any) {
+      console.log({ error: data });
+    },
+  });
+
   const { write } = useContractWrite({
     chainId: chain?.id,
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS_BRIDGE],
@@ -271,7 +285,7 @@ const Swap = () => {
     } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
       // if allowanceA is low
       approveA();
-    } else if (selectedToken.icon === 'WLC' || 'WETH') {
+    } else if (selectedToken.icon === 'WLC') {
       handleSwapWLC();
     } else {
       // permission to add liquidity
