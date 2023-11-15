@@ -1,23 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "types": ["react", "react-dom", "react-leaflet"],
-    "typeRoots": ["./node_modules/@types"],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "noEmit": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
     "jsx": "react-jsx",
     "baseUrl": "src"
   },
-  "include": ["src", "types/assets", "global.d.ts"]
+  "include": ["src", "types/assets", "global.d.ts"],
+  "exclude": ["node_modules"]
 }
