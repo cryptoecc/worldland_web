@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
+import axios from 'axios';
 
 const data = [
   { day: '', Miner_Nodes: 44 },
@@ -13,11 +14,30 @@ const data = [
 ];
 
 const MainAreaChart = () => {
+  const [nodeCount, setNodeCount] = useState();
+
+  useEffect(() => {
+    const getNodeCount = async () => {
+      try {
+        const request = await axios.get('https://be.worldland.foundation/api/node/count');
+        console.log(request.data);
+
+        setNodeCount(request.data);
+      } catch (error) {
+        console.error('데이터 가져오기 오류', error);
+      }
+    };
+
+    getNodeCount();
+  }, []);
+
+  // console.log(response);
+
   return (
     <ChartContainer>
-      <CustomAreaChart width={1200} height={300} data={data}>
-        <XAxis dataKey="day" />
-        <YAxis dataKey="Miner_Nodes" />
+      <CustomAreaChart width={1200} height={300} data={nodeCount}>
+        <XAxis dataKey="date" />
+        <YAxis dataKey="node_count" />
         <CartesianGrid stroke="none" />
         <Tooltip />
         <Legend />
@@ -29,7 +49,7 @@ const MainAreaChart = () => {
         </defs>
         <Area
           type="monotone"
-          dataKey="Miner_Nodes"
+          dataKey="node_count"
           stroke="gray"
           strokeWidth={3.5}
           fill="url(#areaColor)"

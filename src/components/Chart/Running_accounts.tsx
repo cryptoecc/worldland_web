@@ -51,6 +51,7 @@ function BarCharts() {
 
   useEffect(() => {
     AddressInfo();
+    console.log('asdsa', uniqueAccountCount);
   }, []);
 
   console.log(`@barchart`, block_data);
