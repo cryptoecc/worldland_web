@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "esnext",
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "module": "ESNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
     "moduleResolution": "node",
-    "noImplicitAny": true,
-    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": "src"
   },
-  "include": ["src", "types/assets", "global.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["src", "types/assets", "global.d.ts"]
 }

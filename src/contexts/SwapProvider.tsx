@@ -58,7 +58,7 @@ const SwapProvider = ({ children }: PropsWithChildren) => {
       }}
     >
       {children}
-      {isOpen && <SelectList type={type} listType="tokenList" />}
+      {isOpen && <SelectList type={type ?? 'input'} listType="tokenList" />}
     </SwapContext.Provider>
   );
 };

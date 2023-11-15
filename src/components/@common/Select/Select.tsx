@@ -31,7 +31,7 @@ const Select = ({
     if (type === 'output') return output;
   };
 
-  const child = Children.only<ReactElement<Partial<SelectProps>>>(children);
+  const child = Children.only<ReactElement<Partial<SelectProps>>>(children as ReactElement);
 
   const handleOpen = (type: Type) => {
     if (type === null) return;
@@ -45,8 +45,8 @@ const Select = ({
         <S.SelectContainer gap={gap}>
           <S.SelectWrapper onClick={() => handleOpen(type)}>
             <S.Select>
-              {createElement(getState(type).networkIcon)}
-              {getState(type).token}
+              {createElement(getState(type)?.networkIcon || input.networkIcon)}
+              {getState(type)?.token}
             </S.Select>
             <DownArrowIcon />
           </S.SelectWrapper>

@@ -45,7 +45,7 @@ const SelectList = ({ type, listType }: SelectListProps) => {
 
   useEffect(() => {
     const newList = getItems(searchValue);
-    setList(newList);
+    setList(newList ?? selectList);
   }, [searchValue]);
 
   return (
