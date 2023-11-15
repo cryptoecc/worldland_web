@@ -197,12 +197,14 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
       const token0 = WLD_ADDRESSES[CONTRACT_ADDRESSES.ETH_TOKEN_ADDRESS]; // eth token address
       const token1 = WLD_ADDRESSES[CONTRACT_ADDRESSES.DAI_TOKEN_ADDRESS];
       const BlockNumber = await worldland_web3.eth.getBlockNumber();
+      console.log(BlockNumber);
       let PredictedPrice = [];
       for (let i = 0; i < 10; i++) {
         PredictedPrice.push(worldland_web3.utils.toWei(Number([tempPredList[i]]), 'ether'));
       }
       let nonce = await worldland_web3.eth.getTransactionCount(account);
-      // console.log({ nonce });
+      console.log('pred', PredictedPrice);
+      console.log('asd', { nonce });
       const txObject = {
         from: account,
         to: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -211,6 +213,8 @@ export const AiDexButton: FC<Props> = ({ onAccountConnected }) => {
         gas: 3000000,
         nonce: nonce,
       };
+
+      console.log('됨', txObject);
 
       try {
         if (privateKey) {
