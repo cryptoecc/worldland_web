@@ -9,3 +9,5 @@ declare global {
     ethereum: any;
   }
 }
+
+declare module '*.mp4';

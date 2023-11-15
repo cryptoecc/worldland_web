@@ -21,7 +21,7 @@ const SelectInput = forwardRef(({ type, ...props }: SelectInputProps, ref: Forwa
 
   useEffect(() => {
     input.changeSelect({ ...input, value });
-  }, [input, value]);
+  }, [value]);
 
   return (
     <S.InputWrapper {...props}>
