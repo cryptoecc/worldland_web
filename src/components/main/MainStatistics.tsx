@@ -40,7 +40,7 @@ function MainStatistics() {
       //   // await web3.eth.getBlock(latestBlockNumber),
       // ]);
       const latestBlockNumber = await web3.eth.getBlockNumber();
-      console.log('@블록번호', latestBlockNumber);
+      // console.log('@블록번호', latestBlockNumber);
       // const response = listBlock.data.result.length;
       // setTotalWalletCount(response);
       setTotalBlocks(Number(latestBlockNumber));
