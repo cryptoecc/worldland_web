@@ -23,6 +23,7 @@ const Select = ({
   text,
   children,
   type,
+  listType = 'tokenList',
 }: PropsWithChildren<SelectProps> & HTMLAttributes<HTMLDivElement>) => {
   const { input, output, openHandler } = useSwapContext();
 
@@ -39,18 +40,18 @@ const Select = ({
   };
 
   return (
-    <S.Layout maxWidth={maxWidth} borderRadius={borderRadius}>
+    <S.Layout maxWidth={maxWidth} borderRadius={borderRadius} text={text}>
       <S.Label>{text}</S.Label>
       <S.Container text={text}>
         <S.SelectContainer gap={gap}>
-          <S.SelectWrapper onClick={() => handleOpen(type)}>
-            <S.Select>
+          <S.SelectWrapper onClick={() => handleOpen(type)} text={text}>
+            <S.Select text={text}>
               {createElement(getState(type)?.networkIcon || input.networkIcon)}
               {getState(type)?.token}
             </S.Select>
             <DownArrowIcon />
           </S.SelectWrapper>
-          {cloneElement(child, { type, ...child.props })}
+          {listType === 'tokenList' && cloneElement(child, { type, ...child.props })}
         </S.SelectContainer>
       </S.Container>
     </S.Layout>
