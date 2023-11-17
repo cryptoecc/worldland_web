@@ -1,26 +1,30 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { SelectType, Type } from 'types/select';
-import { initialSwapSelect, swapSelectList } from 'constants/select';
+import { bridgeSelectList, initialBridgeSelect } from 'constants/select';
 
 import SelectList from 'components/@common/Select/SelectList';
+import { WETHIcon } from 'assets';
 
-interface SwapContextType extends Pick<SelectType, 'isOpen' | 'openHandler'> {
+interface BridgeContextType extends Pick<SelectType, 'isOpen' | 'openHandler'> {
   input: SelectType;
   output: SelectType;
 }
 
-export const SwapContext = createContext<SwapContextType>({
-  input: initialSwapSelect,
-  output: initialSwapSelect,
+const BridgeContext = createContext<BridgeContextType>({
+  input: initialBridgeSelect,
+  output: initialBridgeSelect,
   isOpen: false,
   openHandler: () => {},
 });
 
-const SwapProvider = ({ children }: PropsWithChildren) => {
-  const [inputSelect, setInputSelect] = useState<SelectType>(initialSwapSelect);
+const BridgeProvider = ({ children }: PropsWithChildren) => {
+  const [inputSelect, setInputSelect] = useState<SelectType>(initialBridgeSelect);
   const [outputSelect, setOutputSelect] = useState<SelectType>({
-    ...initialSwapSelect,
+    ...initialBridgeSelect,
     type: 'output',
+    token: 'WETH',
+    network: 'Worldland',
+    networkIcon: WETHIcon,
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [type, setType] = useState<Type | null>(null);
@@ -39,17 +43,16 @@ const SwapProvider = ({ children }: PropsWithChildren) => {
       if (activeType === null) return;
       setType(activeType);
       setIsOpen(!isOpen);
-      console.log('openHandler', 'isOpen');
     },
     [isOpen, setIsOpen, setType],
   );
 
   useEffect(() => {
     if (type !== null) return changeSelect({ type, isOpen });
-  }, [type, isOpen, changeSelect]);
+  }, [type, isOpen]);
 
   return (
-    <SwapContext.Provider
+    <BridgeContext.Provider
       value={{
         input: { ...inputSelect, changeSelect },
         output: { ...outputSelect, changeSelect },
@@ -58,18 +61,18 @@ const SwapProvider = ({ children }: PropsWithChildren) => {
       }}
     >
       {children}
-      {isOpen && <SelectList type={type ?? 'input'} selectList={swapSelectList} />}
-    </SwapContext.Provider>
+      {isOpen && <SelectList type={type ?? 'input'} selectList={bridgeSelectList} />}
+    </BridgeContext.Provider>
   );
 };
 
-export default SwapProvider;
+export default BridgeProvider;
 
-export const useSwapContext = () => {
-  const context = useContext(SwapContext);
+export const useBridgeContext = () => {
+  const context = useContext(BridgeContext);
 
   if (context === null) {
-    throw new Error('SwapProvider error');
+    throw new Error('BridgeProvider error');
   }
 
   return context;

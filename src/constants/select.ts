@@ -1,28 +1,61 @@
-import { DAIIcon, DAITokenIcon, ETHTokenIcon, EthereumIcon } from 'assets';
+import { DAIIcon, DAIListIcon, ETHIcon, ETHListIcon, WETHIcon } from 'assets';
 import { ListItemType, SelectType } from 'types/select';
 
-export const selectList: ListItemType[] = [
+export const swapSelectList: ListItemType[] = [
   {
     token: 'ETH',
-    tokenIcon: ETHTokenIcon,
+    listIcon: ETHListIcon,
     network: 'Ethereum',
-    networkIcon: EthereumIcon,
+    tokenIcon: ETHIcon,
   },
   {
     token: 'DAI',
-    tokenIcon: DAITokenIcon,
+    listIcon: DAIListIcon,
     network: 'DAI',
-    networkIcon: DAIIcon,
+    tokenIcon: DAIIcon,
+  },
+];
+
+export const bridgeSelectList: ListItemType[] = [
+  {
+    token: 'ETH',
+    tokenIcon: ETHIcon,
+    network: 'Ethereum',
+    networkIcon: ETHIcon,
+    listIcon: ETHListIcon,
+  },
+  {
+    token: 'WETH',
+    tokenIcon: ETHIcon,
+    network: 'Worldland',
+    networkIcon: WETHIcon,
+    listIcon: DAIListIcon,
   },
 ];
 
 export const initialSwapSelect: SelectType = {
   type: 'input',
+  provider: 'Swap',
   listType: 'tokenList',
   token: 'ETH',
-  tokenIcon: ETHTokenIcon,
+  listIcon: ETHListIcon,
   network: 'Ethereum',
-  networkIcon: EthereumIcon,
+  tokenIcon: ETHIcon,
+  isOpen: false,
+  value: '',
+  openHandler: () => {},
+  changeSelect: () => {},
+} as const;
+
+export const initialBridgeSelect: SelectType = {
+  type: 'input',
+  provider: 'Bridge',
+  listType: 'tokenList',
+  token: 'ETH',
+  tokenIcon: ETHIcon,
+  network: 'Ethereum',
+  networkIcon: ETHIcon,
+  listIcon: ETHListIcon,
   isOpen: false,
   value: '',
   openHandler: () => {},

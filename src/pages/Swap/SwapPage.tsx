@@ -12,9 +12,9 @@ const SwapPage = () => {
         <S.Title>Swap</S.Title>
         <SwapProvider>
           <S.SwapWrapper>
-            <Swap type="input" text="From" listType="tokenList" />
+            <Swap type="input" text="From" listType="tokenList" provider="Swap" />
             <ExchangeIcon />
-            <Swap type="output" text="To" listType="tokenList" />
+            <Swap type="output" text="To" listType="tokenList" provider="Swap" />
           </S.SwapWrapper>
         </SwapProvider>
         <S.Button type="button">Connect Wallet</S.Button>

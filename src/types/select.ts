@@ -1,33 +1,33 @@
-import { DAIIcon, DAITokenIcon, ETHTokenIcon, EthereumIcon } from 'assets';
+import { DAIIcon, DAIListIcon, ETHIcon, ETHListIcon, WETHIcon, WETHListIcon } from 'assets';
 
 export type Type = 'input' | 'output';
 
+export type Provider = 'Swap' | 'Bridge';
+
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'ETH' | 'DAI';
+type Token = 'ETH' | 'DAI' | 'WETH';
 
-type TokenIcon = typeof ETHTokenIcon | typeof DAITokenIcon;
+type TokenIcon = typeof ETHIcon | typeof DAIIcon | typeof WETHIcon;
 
-type Network = 'Ethereum' | 'DAI';
+type Network = 'Ethereum' | 'DAI' | 'Worldland';
 
-type NetworkIcon = typeof EthereumIcon | typeof DAIIcon;
-
-export interface SelectType {
-  type: Type;
-  listType: SelectListType;
-  token: Token;
-  tokenIcon: TokenIcon;
-  network: Network;
-  networkIcon: NetworkIcon;
-  value?: string;
-  isOpen: boolean;
-  openHandler: (activeType: Type) => void;
-  changeSelect: (select: SelectType, listType?: SelectListType) => void;
-}
+type ListIcon = typeof ETHListIcon | typeof DAIListIcon | typeof WETHListIcon;
 
 export interface ListItemType {
   token: Token;
   tokenIcon: TokenIcon;
   network: Network;
-  networkIcon: NetworkIcon;
+  networkIcon?: TokenIcon;
+  listIcon: ListIcon;
+}
+
+export interface SelectType extends ListItemType {
+  type: Type;
+  provider: Provider;
+  listType: SelectListType;
+  value?: string;
+  isOpen: boolean;
+  openHandler: (activeType: Type) => void;
+  changeSelect: (select: SelectType, listType?: SelectListType) => void;
 }
