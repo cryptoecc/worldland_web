@@ -14,11 +14,13 @@ export { Gg56Icon } from './main/Partner/Gg56Icon';
 export { AicaIcon } from './main/Partner/AicaIcon';
 export { GistIcon } from './main/Partner/GistIcon';
 
-// Swap
+// Select
 export { DownArrowIcon } from './select/DownArrowIcon';
-export { DAIIcon } from './select/DAIIcon';
-export { DAITokenIcon } from './select/DAITokenIcon';
-export { EthereumIcon } from './select/EthereumIcon';
-export { ETHTokenIcon } from './select/ETHTokenIcon';
 export { SearchIcon } from './select/SearchIcon';
 export { ExchangeIcon } from './select/ExchangeIcon';
+export { ETHIcon } from './select/ETHIcon';
+export { ETHListIcon } from './select/ETHListIcon';
+export { DAIIcon } from './select/DAIIcon';
+export { DAIListIcon } from './select/DAIListIcon';
+export { WETHIcon } from './select/WETHIcon';
+export { WETHListIcon } from './select/WETHListIcon';
