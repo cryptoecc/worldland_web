@@ -1,6 +1,6 @@
 import * as S from './index.style';
 
-import Bridge from 'components/Bridge/Bridge';
+import Bridge from 'components/bridge/Bridge';
 import BridgeProvider from 'contexts/BridgeProvider';
 import Layout from 'components/@common/Layout/Layout';
 
