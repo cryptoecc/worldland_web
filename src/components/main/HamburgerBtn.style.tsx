@@ -27,7 +27,7 @@ const HamburgerBtnWrapper = styled.nav`
 const MenuList = styled.ul<MenuListProps>`
   display: none;
   font-family: 'Inter';
-  
+
   ${maxQuery.tablet} {
     display: ${(props) => (props.isopen === 'true' ? 'block' : 'none')};
     font-size: 1.1rem;
@@ -72,12 +72,15 @@ const Button = styled.button<{ isSelected?: boolean }>`
   }
 
   .learn {
+    width: 100%;
+    display: flex;
     text-decoration: none;
     color: #848895;
     transition: color 0.3s ease-in-out;
 
     &:hover {
       color: ${theme.colors.white};
+      ${(props) => (props.isSelected ? 'white' : '#848895')}
     }
   }
 
@@ -99,6 +102,34 @@ const Button = styled.button<{ isSelected?: boolean }>`
 
     .icon {
       margin-right: 0;
+    }
+  }
+`;
+
+const ButtonLearn = styled.button`
+  // Button 스타일
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 1.3rem 20px;
+  /* margin-left: 15px; */
+  /* border: none; */
+  font-weight: 800;
+  font-size: 15px;
+  transition: color 0.3s ease-in-out;
+  &:hover {
+    color: #848895;
+  }
+
+  .learn {
+    width: 100%;
+    display: flex;
+    text-decoration: none;
+    color: #848895;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: ${theme.colors.white};
     }
   }
 `;
@@ -195,4 +226,4 @@ const HamburgerOutIcon = styled(AiOutlineClose)`
   }
 `;
 
-export { MenuList, Li, Button, Dropdown, HamburgerIcon, HamburgerOutIcon, HamburgerBtnWrapper };
+export { MenuList, Li, Button, Dropdown, HamburgerIcon, HamburgerOutIcon, HamburgerBtnWrapper, ButtonLearn };

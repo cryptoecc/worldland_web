@@ -9,6 +9,7 @@ import {
   HamburgerIcon,
   HamburgerOutIcon,
   HamburgerBtnWrapper,
+  ButtonLearn,
 } from './HamburgerBtn.style';
 import { CloseIcon, MenuIcon } from 'assets';
 import { theme } from 'style/theme';
@@ -22,6 +23,7 @@ const HamburgerBtn = () => {
     learn: false,
     user: false,
     developer: false,
+    aidex: false,
     community: false,
     contactUs: false,
   });
@@ -32,12 +34,13 @@ const HamburgerBtn = () => {
     setHamburgerOpen(!isHamburgerOpen);
   };
 
-  const toggleSubMenu = (menuName: 'learn' | 'user' | 'developer' | 'community' | 'contactUs') => {
+  const toggleSubMenu = (menuName: 'learn' | 'user' | 'developer' | 'aidex' | 'community' | 'contactUs') => {
     setMenuState((prevState) => ({
       ...prevState,
       learn: menuName === 'learn' ? !prevState.learn : false,
       user: menuName === 'user' ? !prevState.user : false,
       developer: menuName === 'developer' ? !prevState.developer : false,
+      aidex: menuName === 'aidex' ? !prevState.aidex : false,
       community: menuName === 'community' ? !prevState.community : false,
       contactUs: menuName === 'contactUs' ? !prevState.contactUs : false,
     }));
@@ -102,11 +105,11 @@ const HamburgerBtn = () => {
           <Button onClick={() => open()}>Connect</Button>
         </Li>
         <Li>
-          <Button isSelected={menuState.learn ? true : undefined} onClick={() => toggleSubMenu('learn')}>
-            <Link className="learn" to="/learn">
+          <ButtonLearn onClick={() => toggleSubMenu('learn')}>
+            <Link className="learn" to="/learn" onClick={() => toggleHamburgerMenu()}>
               Learn
             </Link>
-          </Button>
+          </ButtonLearn>
         </Li>
         <Li>
           <Button isSelected={menuState.user ? true : undefined} onClick={() => toggleSubMenu('user')}>
@@ -150,9 +153,6 @@ const HamburgerBtn = () => {
                 <a href="http://scan.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
                   Scan
                 </a>
-                <a href="/swap" className="user">
-                  Swap
-                </a>
               </div>
             </Dropdown>
           )}
@@ -176,6 +176,24 @@ const HamburgerBtn = () => {
                 <a href="https://github.com/cryptoecc" className="user" target="_blank" rel="noopener noreferrer">
                   GitHub
                 </a>
+              </div>
+            </Dropdown>
+          )}
+        </Li>
+        <Li>
+          <Button isSelected={menuState.aidex ? true : undefined} onClick={() => toggleSubMenu('aidex')}>
+            AI-DEX
+            {menuState.aidex ? <BsChevronUp className="icon" /> : <BsChevronDown className="icon" />}
+          </Button>
+          {menuState.aidex && (
+            <Dropdown>
+              <div className="user-menu">
+                <Link className="user" to="/swap" onClick={() => toggleHamburgerMenu()}>
+                  Swap
+                </Link>
+                <Link className="user" to="/pool" onClick={() => toggleHamburgerMenu()}>
+                  Pool
+                </Link>
               </div>
             </Dropdown>
           )}
