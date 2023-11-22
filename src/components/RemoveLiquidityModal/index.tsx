@@ -4,9 +4,9 @@ import Slider from '@mui/material/Slider';
 import { styled } from 'styled-components';
 import { CgClose } from 'react-icons/cg';
 import { AiOutlineArrowDown, AiOutlineQuestionCircle } from 'react-icons/ai';
-import { crypto_list } from 'data';
+import { selectList } from 'constants/select';
 import { IoCloseSharp } from 'react-icons/io5';
-import { useEffect, useState } from "react";
+import { createElement, useEffect, useState } from "react";
 import { useAccount, useContractWrite } from 'wagmi';
 import { from_wei, putCommaAtPrice, setDeadline, to_wei } from 'utils/util';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
@@ -50,17 +50,17 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
         let calcLiquidityPercentageToAmount = ((parseFloat(from_wei(selectedPair?.balance)) / 100) * value).toString();
         console.log({ REMOVALAMOUNT: to_wei(calcLiquidityPercentageToAmount) });
         let deadline = await setDeadline(3600);
-        removeLiquidity({
-            args: [
-                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENA],
-                MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-                to_wei(calcLiquidityPercentageToAmount),
-                to_wei('1'),
-                to_wei('1'),
-                address,
-                deadline
-            ]
-        })
+        // removeLiquidity({
+        //     args: [
+        //         MAPNETTOADDRESS[CONTRACT_ADDRESSES.],
+        //         MAPNETTOADDRESS[CONTRACT_ADDRESSES.],
+        //         to_wei(calcLiquidityPercentageToAmount),
+        //         to_wei('1'),
+        //         to_wei('1'),
+        //         address,
+        //         deadline
+        //     ]
+        // })
     }
 
     useEffect(() => {
@@ -118,15 +118,15 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
                 <div className="inner-wrap">
                     <p className="price">{putCommaAtPrice(selectedPair?.pooledA ? selectedPair?.pooledA : 0, 5)}</p>
                     <div className="coin-info-wrap">
-                        <img src={crypto_list[0].icon} alt={crypto_list[0].title} />
-                        <p>{crypto_list[0].symbol}</p>
+                        {createElement(selectList[0].tokenIcon)}
+                        <p>{selectList[0].token}</p>
                     </div>
                 </div>
                 <div className="inner-wrap">
                     <p className="price">{putCommaAtPrice(selectedPair?.pooledB ? selectedPair?.pooledB : 0, 5)}</p>
                     <div className="coin-info-wrap">
-                        <img src={crypto_list[1].icon} alt={crypto_list[1].title} />
-                        <p>{crypto_list[1].symbol}</p>
+                        {createElement(selectList[0].tokenIcon)}
+                        <p>{selectList[1].token}</p>
                     </div>
                 </div>
             </section>

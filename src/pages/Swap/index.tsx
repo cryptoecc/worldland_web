@@ -22,7 +22,7 @@ import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
 import Web3 from 'web3';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
-import { crypto_list } from 'data';
+import { selectList } from 'constants/select';
 import Web3ConnectButton from 'components/web3/Web3Button';
 import { useWeb3Modal } from '@web3modal/react';
 import { debounce } from 'lodash';
@@ -30,6 +30,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
 import { chain_query } from 'configs/contract_calls';
 import { useToasts } from 'react-toast-notifications';
+import { ListItemType } from 'types/select';
 
 const Swap = () => {
   const { addToast } = useToasts();
@@ -41,14 +42,14 @@ const Swap = () => {
   const { open, close } = useWeb3Modal();
 
   // Swap Token 선택
-  const [selectedToken, setSelectedToken] = useState<TokenProps>(crypto_list[0]);
-  const [selected2Token, setSelected2Token] = useState<TokenProps>(crypto_list[1]);
+  const [selectedToken, setSelectedToken] = useState<ListItemType>(selectList[0]);
+  const [selected2Token, setSelected2Token] = useState<ListItemType>(selectList[1]);
   const [selectedInputField, setSelectedInputField] = useState('first');
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [btnState, setBtnState] = useState<number>(1);
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<TokenProps>(crypto_list[0]);
+  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(selectList[0]);
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -101,46 +102,6 @@ const Swap = () => {
     },
   });
 
-  const { write } = useContractWrite({
-    chainId: chain?.id,
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.WRAPPEDETH_ADDRESS_BRIDGE],
-    abi: MAP_STR_ABI[ABI.WRAPETH],
-    functionName: FUNCTION.BURN,
-    onMutate({ args }) {
-      if (!isConnected) {
-        // handleOpenNotification({
-        //     status: "Please connect your wallet!",
-        // });
-        return;
-      }
-      if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
-        switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
-      }
-
-      if (input === '') {
-        return;
-      }
-
-      //   setLoader(true);
-      //   handleOpenNotification({
-      //     status: "Sending transaction...",
-      //   });
-    },
-    onSuccess({ hash }) {
-      //   handleOpenNotification({
-      //     status: "Awaiting the transaction...",
-      //   });
-      setCurrentTxHash(hash);
-    },
-    onError(error: any) {
-      alert(error);
-      console.log(error);
-      //   handleOpenNotification({
-      //     status: error?.shortMessage,
-      //   });
-    },
-  });
-
   const handleDebouncedAmountOut = useCallback(
     debounce((input: string) => {
       dispatch(
@@ -177,11 +138,11 @@ const Swap = () => {
     handleDebouncedAmountOut(input);
   }, [selectedToken.address, selected2Token.address]);
 
-  const { data: _, write: swap } = useContractWrite({
+  const { data: swapTxData, write: swap } = useContractWrite({
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
-    onSuccess(date) {
+    onSuccess() {
       userInputHandler(Field.INPUT, '');
       userInputHandler(Field.OUTPUT, '');
     },
@@ -208,8 +169,8 @@ const Swap = () => {
     },
   });
 
-  const swapConfirmation = useWaitForTransaction({
-    hash: _?.hash,
+  useWaitForTransaction({
+    hash: swapTxData?.hash,
     staleTime: 2_000,
     onSuccess(data) {
       console.log('Swap confirmation success: ', data);
@@ -232,7 +193,7 @@ const Swap = () => {
     },
   });
 
-  const approvalConfirmation = useWaitForTransaction({
+  useWaitForTransaction({
     hash: approvalA?.hash,
     staleTime: 2_000,
     onSuccess(data) {
@@ -285,8 +246,6 @@ const Swap = () => {
     } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
       // if allowanceA is low
       approveA();
-    } else if (selectedToken.icon === 'WLC') {
-      handleSwapWLC();
     } else {
       // permission to add liquidity
       handleSwap();
@@ -363,7 +322,7 @@ const Swap = () => {
       setBtnState(1);
       setSpotlightToken(selectedToken);
     } else if (Number(input ? input : '0') > Number(from_wei(allowanceA))) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+      // checks the lv-router02 contract allowance on user's token input and decides if the contract needs an approval of user on their tokens
       setDisabled(false);
       setBtnState(2);
     } else {

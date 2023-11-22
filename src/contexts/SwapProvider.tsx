@@ -13,7 +13,7 @@ export const SwapContext = createContext<SwapContextType>({
   input: initialSwapSelect,
   output: initialSwapSelect,
   isOpen: false,
-  openHandler: () => {},
+  openHandler: () => { },
 });
 
 const SwapProvider = ({ children }: PropsWithChildren) => {
@@ -46,7 +46,7 @@ const SwapProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (type !== null) return changeSelect({ type, isOpen });
-  }, [type, isOpen, changeSelect]);
+  }, [type, isOpen]);
 
   return (
     <SwapContext.Provider

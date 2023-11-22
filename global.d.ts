@@ -1,3 +1,5 @@
+import { ListItemType } from 'types/select';
+
 export declare global {
   interface Window {
     ethereum: ExternalProvider | JsonRpcFetchFunc;
@@ -14,7 +16,7 @@ export declare global {
     selected2Token: any;
     openModalForFirstInput: any;
     openModalForSecondInput: any;
-    spotlightToken: TokenProps;
+    spotlightToken: ListItemType;
     btnState: number;
     disabled: boolean;
     funcExec: () => void;
@@ -25,7 +27,7 @@ export declare global {
     input: string;
     output: string;
     setInputHandler: (field: Field, value: string) => void;
-    spotlightToken: TokenProps;
+    spotlightToken: ListItemType;
     btnState: number;
     disabled: boolean;
     funcExec: () => void;
@@ -48,25 +50,17 @@ export declare global {
     intensity: number;
   }
 
-  interface TokenProps {
-    symbol: string;
-    title: string;
-    icon: string;
-    amount: string;
-    address: `0x${string}`;
-  }
-
   interface selectedCrypto {}
 
   interface ImapIndexToFunction {
-    [key: number]: (obj: TokenProps) => void;
+    [key: number]: (obj: ListItemType) => void;
   }
   interface ImapIndexToInput {
     [key: number]: (amount: string) => void;
   }
 
   interface ImapMessageToObject {
-    [key: number]: ((token: TokenProps) => void) | string;
+    [key: number]: ((token: ListItemType) => void) | string;
   }
 
   interface Pair {

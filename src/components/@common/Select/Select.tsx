@@ -1,6 +1,6 @@
 import * as S from './Select.style';
 
-import { Children, HTMLAttributes, PropsWithChildren, ReactElement, cloneElement, createElement } from 'react';
+import { ChangeEvent, Children, Dispatch, HTMLAttributes, PropsWithChildren, ReactElement, SetStateAction, cloneElement, createElement } from 'react';
 import { SelectListType, Type } from 'types/select';
 
 import { DownArrowIcon } from 'assets';
@@ -14,6 +14,9 @@ export interface SelectProps {
   children?: ReactElement;
   type: Type;
   listType: SelectListType;
+  input?: string;
+  output?: string;
+  eventHandler?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Select = ({

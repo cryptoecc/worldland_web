@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createElement } from 'react';
 import styled from 'styled-components';
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
@@ -6,7 +6,7 @@ import Backdrop from 'components/Backdrop';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { IoMdSettings } from 'react-icons/io';
 import { BiChevronDown } from 'react-icons/bi';
-import { crypto_list } from 'data';
+import { selectList } from 'constants/select';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TokenModal from 'components/TokenModal';
 import {
@@ -30,14 +30,15 @@ import { gasLimit } from 'utils/wagmi';
 import { useToasts } from 'react-toast-notifications';
 import { chainIds } from 'configs/services/chainIds';
 import { parseEther } from 'viem';
+import { ListItemType } from 'types/select';
 
 const AddLiquidity = () => {
   const { address, isConnected } = useAccount();
   const { addToast } = useToasts();
   const [btnState, setBtnState] = useState<number>(1);
-  const [lowBalanceToken, setLowBalanceToken] = useState<TokenProps>(crypto_list[0]);
-  const [selectedToken0, setSelectedToken0] = useState<TokenProps>(crypto_list[0]);
-  const [selectedToken1, setSelectedToken1] = useState<TokenProps>(crypto_list[1]);
+  const [lowBalanceToken, setLowBalanceToken] = useState<ListItemType>(selectList[0]);
+  const [selectedToken0, setSelectedToken0] = useState<ListItemType>(selectList[0]);
+  const [selectedToken1, setSelectedToken1] = useState<ListItemType>(selectList[1]);
   const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
   const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
   const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
@@ -49,8 +50,8 @@ const AddLiquidity = () => {
   const location = useLocation;
   const approvalAmount = '1000000000';
   const mapIndexToFunction: ImapIndexToFunction = {
-    0: (obj: TokenProps) => setSelectedToken0(obj),
-    1: (obj: TokenProps) => setSelectedToken1(obj),
+    0: (obj: ListItemType) => setSelectedToken0(obj),
+    1: (obj: ListItemType) => setSelectedToken1(obj),
   };
   const mapIndexToInput: ImapIndexToInput = {
     0: (amount: string) => setSelectedTokenAmount0(amount),
@@ -58,7 +59,7 @@ const AddLiquidity = () => {
   };
 
   const navigate = useNavigate();
-  const handleTokenClick = (params: TokenProps) => {
+  const handleTokenClick = (params: ListItemType) => {
     mapIndexToFunction[selectedTokenInputField](params);
     setModal(false);
   };
@@ -320,7 +321,6 @@ const AddLiquidity = () => {
     } else if (Number(from_wei(amountOut) ? from_wei(amountOut) : '0') > Number(from_wei(allowanceB))) {
       // if allowanceB is low
       handleApprovals(1);
-    } else if (selectedToken0.symbol === 'WLC' && selectedToken1.symbol === 'WETH') {
     } else {
       // permission to add liquidity
       handleAddLiquidity();
@@ -425,13 +425,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken0 ? (
                   <>
-                    <img src={selectedToken0.icon} alt={selectedToken0.icon} />
-                    <p>{selectedToken0.symbol}</p>
+                    {createElement(selectList[0].tokenIcon)}
+                    <p>{selectedToken0.token}</p>
                   </>
                 ) : (
                   <>
-                    <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                    <p>{crypto_list[0]['symbol']}</p>
+                    {createElement(selectList[1].tokenIcon)}
+                    <p>{selectList[1].token}</p>
                   </>
                 )}
               </span>
@@ -441,13 +441,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken1 ? (
                   <>
-                    <img src={selectedToken1.icon} alt={selectedToken1.icon} />
-                    <p>{selectedToken1.symbol}</p>
+                    {createElement(selectList[1].tokenIcon)}
+                    <p>{selectedToken1.token}</p>
                   </>
                 ) : (
                   <>
-                    <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
-                    <p>{crypto_list[1]['symbol']}</p>
+                    {createElement(selectList[1].tokenIcon)}
+                    <p>{selectList[1].token}</p>
                   </>
                 )}
               </span>
@@ -465,7 +465,7 @@ const AddLiquidity = () => {
             <p>Current price:</p>
             <h2>{putCommaAtPrice(from_wei(currentPrice), 5)}</h2>
             <p>
-              {selectedToken1.symbol} per {selectedToken0.symbol}
+              {selectedToken1.token} per {selectedToken0.token}
             </p>
           </div>
           <section className="deposit-field">
@@ -482,13 +482,13 @@ const AddLiquidity = () => {
                   <span className="token-card">
                     {selectedToken0 ? (
                       <>
-                        <img src={selectedToken0.icon} alt={selectedToken0.icon} />
-                        <p>{selectedToken0.symbol}</p>
+                        {createElement(selectList[0].tokenIcon)}
+                        <p>{selectedToken0.token}</p>
                       </>
                     ) : (
                       <>
-                        <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                        <p>{crypto_list[0]['symbol']}</p>
+                        {createElement(selectList[0].tokenIcon)}
+                        <p>{selectList[0].token}</p>
                       </>
                     )}
                   </span>
@@ -511,13 +511,13 @@ const AddLiquidity = () => {
                   <span className="token-card">
                     {selectedToken1 ? (
                       <>
-                        <img src={selectedToken1.icon} alt={selectedToken1.icon} />
-                        <p>{selectedToken1.symbol}</p>
+                        {createElement(selectList[1].tokenIcon)}
+                        <p>{selectedToken1.token}</p>
                       </>
                     ) : (
                       <>
-                        <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
-                        <p>{crypto_list[1]['symbol']}</p>
+                        {createElement(selectList[1].tokenIcon)}
+                        <p>{selectList[1].token}</p>
                       </>
                     )}
                   </span>

@@ -5,9 +5,7 @@ import { abi as UNISWAPV2_ROUTER } from './contract-abi/uniswapV2Router02';
 import { abi as UNISWAPV2_PAIR } from './contract-abi/uniswapV2Pair_abi';
 import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';
-import { abi as DAI_TOKEN_ADDRESS } from './contract-abi/dai_token_abi';
-import { abi as ETH_TOKEN_ADDRESS } from './contract-abi/eth_token_abi';
-import { abi as WRAPETH } from './contract-abi/wrappedeth_abi';
+import { abi as WRAPPEDETH_ABI } from './contract-abi/wrappedeth_abi';
 
 //lv-swap abi
 
@@ -21,9 +19,7 @@ export const MAP_STR_ABI = {
   UNISWAPV2_ROUTER,
   UNISWAPV2_PAIR,
   UNISWAPV2_FACTORY,
-  ETH_TOKEN_ADDRESS,
-  DAI_TOKEN_ADDRESS,
-  WRAPETH,
+  WRAPPEDETH_ABI,
   LVSWAPV2_ROUTER,
   LVSWAPV2_FACTORY,
   LVSWAPV2_PAIR,

@@ -9,9 +9,9 @@ import { useAccount, useContractWrite, useContractRead, useContractReads } from 
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { useEffect, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { from_wei, putCommaAtPrice, to_wei } from 'utils/util';
-import { crypto_list } from 'data';
+import { selectList } from 'constants/select';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
 import RemoveLiquidityModal from 'components/RemoveLiquidityModal';
@@ -248,10 +248,10 @@ const Pool = () => {
                             {pairs.map((el, i) => (
                                 <li onClick={() => handlePairClick(el)} key={i}>
                                     <span className="pair-logo">
-                                        <img className="image move" src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                                        <img className="image" src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
+                                        {createElement(selectList[0].tokenIcon)}
+                                        {createElement(selectList[1].tokenIcon)}
                                         <p className="pair-name">
-                                            {crypto_list[0]['symbol']}/{crypto_list[1]['symbol']}
+                                            {selectList[0].token}/{selectList[1].token}
                                         </p>
                                     </span>
                                     <span className="range">
@@ -259,7 +259,7 @@ const Pool = () => {
                                             {putCommaAtPrice(from_wei(el.AtoB), 5)} {"->"} {putCommaAtPrice(1, 3)}
                                         </p>
                                         <p>
-                                            {crypto_list[1]['symbol']} per {crypto_list[0]['symbol']}
+                                            {selectList[1].token} per {selectList[0].token}
                                         </p>
                                     </span>
                                     <p className="value-in-usd">
@@ -271,7 +271,7 @@ const Pool = () => {
                                     </span>
 
                                     <p className="value-in-token">
-                                        {putCommaAtPrice(from_wei(el.AtoB), 5)} {crypto_list[1]['symbol']}
+                                        {putCommaAtPrice(from_wei(el.AtoB), 5)} {selectList[1].token}
                                     </p>
                                 </li>
                             ))}

@@ -1,15 +1,16 @@
 import { styled } from 'styled-components';
 import { CgClose } from 'react-icons/cg';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { crypto_list } from 'data';
-import { useEffect, useState } from 'react';
+import { selectList } from 'constants/select';
+import { createElement, useEffect, useState } from 'react';
+import { ListItemType } from 'types/select';
 
 
 
 const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
   //   const [selectedToken, setSelectedToken] = useState(null);
 
-  const handleTokenClicks = (token: TokenProps) => {
+  const handleTokenClicks = (token: ListItemType) => {
     handleTokenClick(token);
     close(false);
   };
@@ -26,21 +27,21 @@ const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
         <input type="text" placeholder="Search name or paste address" />
       </div>
       <ul className="often-selected-crypto">
-        {crypto_list.map((el, i) => (
+        {selectList.map((el, i) => (
           <li key={i} onClick={() => handleTokenClicks(el)}>
-            <img src={el.icon} alt={el.title} />
-            {el.symbol}
+            {createElement(selectList[0].tokenIcon)}
+            {el.token}
           </li>
         ))}
       </ul>
       <ul className="crypto-select-list">
-        {crypto_list.map((el, i) => (
+        {selectList.map((el, i) => (
           <li key={i} onClick={() => handleTokenClicks(el)}>
             <div className="list-item">
-              <img src={el.icon} alt={el.title} />
+              {createElement(selectList[0].tokenIcon)}
               <div className="title-wrap">
-                <p className="title">{el.title}</p>
-                <p className="symbol">{el.symbol}</p>
+                <p className="title">{el.token}</p>
+                <p className="symbol">{el.token}</p>
               </div>
             </div>
             <p className="balance">0</p>

@@ -16,9 +16,9 @@ import Governance from 'components/learn/Post/Governance';
 import Index from 'pages/Index';
 import Pool from 'pages/Pool';
 import AddLiquidity from 'pages/Pool/AddLiquidity';
-import TestPage from 'pages/TestPage';
 import Contact from 'pages/Contact';
 import Chart from 'pages/Chart';
+import SwapPage from './pages/Swap/SwapPage';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -43,9 +43,9 @@ const Router = () => {
             { path: `${PATH.LEARN_GOVERNANCE}`, element: <Governance /> },
           ],
         },
-        { path: `${PATH.SWAP}`, element: <Swap /> },
+        { path: `${PATH.SWAP_LEGACY}`, element: <Swap /> },
+        { path: `${PATH.SWAP}`, element: <SwapPage /> },
         { path: `${PATH.POOL}`, element: <Pool /> },
-        { path: `${PATH.TESTPAGE}`, element: <TestPage /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.CHART}`, element: <Chart /> },

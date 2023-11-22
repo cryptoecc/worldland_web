@@ -1,27 +1,30 @@
 import * as S from './SelectInput.style';
 
-import { ChangeEvent, ForwardedRef, HTMLAttributes, forwardRef, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, ForwardedRef, HTMLAttributes, forwardRef, useEffect, useState } from 'react';
 
 import { SelectProps } from './Select';
 import { Type } from 'types/select';
 import { useSwapContext } from 'contexts/SwapProvider';
+import { from_wei, putCommaAtPrice } from 'utils/util';
 
 export type SelectInputProps = {
   type: Type;
+  _input?: string;
+  _output?: string;
+  handleValue?: (e: ChangeEvent<HTMLInputElement>) => void;
 } & Partial<SelectProps> &
   HTMLAttributes<HTMLInputElement>;
 
-const SelectInput = forwardRef(({ type, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
+const SelectInput = forwardRef(({ type, _input, _output, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
   const { input, output } = useSwapContext();
-  const [value, setValue] = useState<string>('');
-
-  const handleValue = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
 
   useEffect(() => {
-    input.changeSelect({ ...input, value });
-  }, [value]);
+    input.changeSelect({ ...input, value: _input });
+  }, [_input]);
+
+  useEffect(() => {
+    output.changeSelect({ ...output, value: _output });
+  }, [_output]);
 
   return (
     <S.InputWrapper {...props}>
@@ -33,7 +36,7 @@ const SelectInput = forwardRef(({ type, ...props }: SelectInputProps, ref: Forwa
         placeholder="0.0000"
         type={type}
         readOnly={type === 'output'}
-        value={value}
+        value={type === 'input' ? _input : putCommaAtPrice(from_wei(_output), 5)}
         onChange={handleValue}
       />
       {type === 'input' && <S.MaxBtn>Max</S.MaxBtn>}

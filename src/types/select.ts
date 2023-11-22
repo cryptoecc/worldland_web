@@ -1,22 +1,23 @@
-import { DAIIcon, DAITokenIcon, ETHTokenIcon, EthereumIcon } from 'assets';
+import { DAITokenIcon, DAIIcon, ETHTokenIcon, EthereumIcon } from 'assets';
 
 export type Type = 'input' | 'output';
 
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'ETH' | 'DAI';
+type Token = 'WETH' | 'USDC' | 'DAI';
 
-type TokenIcon = typeof ETHTokenIcon | typeof DAITokenIcon;
+type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
 
-type Network = 'Ethereum' | 'DAI';
+type Network = 'Wrapped ETH' | 'USDC' | 'DAI';
 
-type NetworkIcon = typeof EthereumIcon | typeof DAIIcon;
+type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 
 export interface SelectType {
   type: Type;
   listType: SelectListType;
   token: Token;
   tokenIcon: TokenIcon;
+  address: `0x${string}`;
   network: Network;
   networkIcon: NetworkIcon;
   value?: string;
@@ -30,4 +31,5 @@ export interface ListItemType {
   tokenIcon: TokenIcon;
   network: Network;
   networkIcon: NetworkIcon;
+  address: `0x${string}`;
 }

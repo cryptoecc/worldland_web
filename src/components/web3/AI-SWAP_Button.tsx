@@ -7,15 +7,6 @@ import { ABI, CONTRACT_ADDRESSES, FUNCTION, Field } from 'utils/enum';
 import { to_wei, setDeadline, handleSwapBtnState } from 'utils/util';
 import { Spin, Space } from 'antd';
 // import Web3 from 'web3';
-import {
-  useAccount,
-  useNetwork,
-  useSwitchNetwork,
-  useBalance,
-  useContractWrite,
-  useWaitForTransaction,
-  useContractRead,
-} from 'wagmi';
 
 const Button = styled.button`
   width: 100%;

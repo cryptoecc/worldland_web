@@ -2,13 +2,12 @@ import styled from 'styled-components';
 import { IoMdSettings } from 'react-icons/io';
 import { BiChevronDown } from 'react-icons/bi';
 import { BsFillArrowDownSquareFill } from 'react-icons/bs';
-import { crypto_list } from 'data';
+import { selectList } from 'constants/select';
 import { Field } from '../../utils/enum';
 import Web3Button from 'components/web3/Web3Button';
-import { AiDexButton } from 'components/web3/AI-DEX_Button';
-import { useEffect, useState } from 'react';
 import { AiSwapButton } from 'components/web3/AI-SWAP_Button';
 import { from_wei, putCommaAtPrice } from 'utils/util';
+import { createElement } from 'react';
 
 const SwapInputTab = ({
   loader,
@@ -31,16 +30,6 @@ const SwapInputTab = ({
       <ul>
         <li>Swap</li>
         <li>Buy</li>
-        <li>
-          <AiDexButton
-            onAccountConnected={function (account: string): void {
-              throw new Error('Function not implemented.');
-            }}
-          />
-        </li>
-        <li className="last-index">
-          <IoMdSettings color="#53596E" size={25} />
-        </li>
       </ul>
 
       <div className="input-wrap">
@@ -58,8 +47,8 @@ const SwapInputTab = ({
                 </>
               ) : (
                 <>
-                  <img src={crypto_list[0]['icon']} alt={crypto_list[0]['title']} />
-                  <p>{crypto_list[0]['symbol']}</p>
+                  {createElement(selectList[0].tokenIcon)}
+                  <p>{selectList[0].token}</p>
                 </>
               )}
             </>
@@ -81,8 +70,8 @@ const SwapInputTab = ({
                 </>
               ) : (
                 <>1
-                  <img src={crypto_list[1]['icon']} alt={crypto_list[1]['title']} />
-                  <p>{crypto_list[1]['symbol']}</p>
+                  {createElement(selectList[0].tokenIcon)}
+                  <p>{selectList[1].token}</p>
                 </>
               )}
             </>
@@ -126,8 +115,8 @@ const Container = styled.div`
 
   ul {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     width: 100%;
     gap: 10px;
     padding: 5px 10px;
@@ -252,17 +241,4 @@ const Container = styled.div`
     }
   }
 `;
-const Button = styled.button`
-  width: 100%;
-  color: #4e7be2;
-  background-color: #1e3062;
-  padding: 15px;
-  font-size: 20px;
-  border-radius: 15px;
-  font-weight: 600;
-  cursor: pointer;
 
-  &:hover {
-    background-color: #1c2232;
-  }
-`;
