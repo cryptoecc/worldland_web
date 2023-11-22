@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { maxQuery } from 'utils/breakpoints';
 
 const InputTab = () => {
   const [formData, setFormData] = useState({
@@ -136,6 +137,11 @@ const InputDiv = styled.div`
   display: flex;
   padding: 10px;
   flex-direction: column;
+
+  ${maxQuery.tablet} {
+    padding: 10px 150px;
+    margin-left: 20px;
+  }
 `;
 
 const Input = styled.input`
@@ -158,14 +164,14 @@ const Textarea = styled.textarea`
   font-weight: 600;
   font-family: 'Nunito Sans', sans-serif;
   border: 1px solid #2e374f;
+
+  ${maxQuery.tablet} {
+    width: 450px;
+  }
 `;
 
 const Submit = styled.button`
-  /* display: flex;
-  justify-content: center;
-  align-self: flex-end; */
   color: #4e7be2;
-  /* width: 100%; */
   margin-left: 360px;
   width: 250px;
   font-weight: 600;
