@@ -16,8 +16,8 @@ export type SelectInputProps = {
 } & Partial<SelectProps> &
   HTMLAttributes<HTMLInputElement>;
 
-const SelectInput = forwardRef(({ type, _input, _output, provider, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
-  const { input, output } = useContextType(provider ?? 'Bridge');
+const SwapSelectInput = forwardRef(({ type, _input, _output, provider, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
+  const { input, output } = useContextType(provider ?? 'Swap');
 
   useEffect(() => {
     input.changeSelect({ ...input, value: _input });
@@ -45,4 +45,4 @@ const SelectInput = forwardRef(({ type, _input, _output, provider, handleValue, 
   );
 });
 
-export default SelectInput;
+export default SwapSelectInput;

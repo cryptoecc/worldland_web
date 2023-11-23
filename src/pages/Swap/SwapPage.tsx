@@ -4,7 +4,6 @@ import SwapProvider from 'contexts/SwapProvider';
 import SwapWrap from './SwapWrap';
 
 const SwapPage = () => {
-
   return (
     <Layout>
       <S.Container>

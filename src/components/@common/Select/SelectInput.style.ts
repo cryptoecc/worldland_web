@@ -1,4 +1,4 @@
-import { SelectInputProps } from './SelectInput';
+import { SelectInputProps } from './SwapSelectInput';
 import { styled } from 'styled-components';
 import { theme } from 'style/theme';
 

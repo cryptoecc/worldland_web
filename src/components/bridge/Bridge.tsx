@@ -3,16 +3,14 @@ import * as S from './Bridge.style';
 import Select, { SelectProps } from '../@common/Select/Select';
 
 import { Fragment } from 'react';
-import SelectInput from '../@common/Select/SelectInput';
-import { useBridgeContext } from 'contexts/BridgeProvider';
+import BridgeSelectInput from '../@common/Select/BridgeSelectInput';
 
-const Bridge = ({ type, text, provider }: Pick<SelectProps, 'type' | 'text' | 'provider'>) => {
-  const { input, output } = useBridgeContext();
+const Bridge = ({ type, text, input, provider, eventHandler }: Pick<SelectProps, 'type' | 'text' | 'provider' | 'input' | 'eventHandler'>) => {
 
   return (
     <S.Layout>
       <Select type={type} text={text} listType="tokenList" borderRadius="0.75rem 0 0 0.75rem">
-        <SelectInput type={type} provider={provider ?? 'Bridge'} />
+        <BridgeSelectInput _input={input} type={type} eventHandler={eventHandler} provider={provider ?? 'Bridge'} />
       </Select>
       <Select
         type={type}
