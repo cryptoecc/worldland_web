@@ -1,10 +1,9 @@
 import * as S from './Select.style';
 
 import { ChangeEvent, Children, Dispatch, HTMLAttributes, PropsWithChildren, ReactElement, SetStateAction, cloneElement, createElement } from 'react';
-import { SelectListType, Type } from 'types/select';
+import { Provider, SelectListType, Type } from 'types/select';
 
-import { DownArrowIcon } from 'assets';
-import { useSwapContext } from 'contexts/SwapProvider';
+import { useContextType } from 'hooks/useContextType';
 
 export interface SelectProps {
   maxWidth?: string;
@@ -17,6 +16,7 @@ export interface SelectProps {
   input?: string;
   output?: string;
   eventHandler?: (e: ChangeEvent<HTMLInputElement>) => void;
+  provider?: Provider;
 }
 
 const Select = ({
@@ -26,8 +26,10 @@ const Select = ({
   text,
   children,
   type,
+  listType = 'tokenList',
+  provider,
 }: PropsWithChildren<SelectProps> & HTMLAttributes<HTMLDivElement>) => {
-  const { input, output, openHandler } = useSwapContext();
+  const { input, output, openHandler } = useContextType(provider ?? 'Bridge');
 
   const getState = (type: Type) => {
     if (type === 'input') return input;
@@ -36,24 +38,29 @@ const Select = ({
 
   const child = Children.only<ReactElement<Partial<SelectProps>>>(children as ReactElement);
 
-  const handleOpen = (type: Type) => {
-    if (type === null) return;
+  const handleOpen = (type: Type, listType: SelectListType) => {
+    if (type === null || listType === 'networkList') return;
     openHandler(type);
   };
 
+  const icon =
+    listType === 'networkList'
+      ? getState(type)?.networkIcon || input.tokenIcon
+      : getState(type)?.tokenIcon || input.tokenIcon;
+
   return (
-    <S.Layout maxWidth={maxWidth} borderRadius={borderRadius}>
+    <S.Layout width={maxWidth} radius={borderRadius} list={listType}>
       <S.Label>{text}</S.Label>
-      <S.Container text={text}>
+      <S.Container>
         <S.SelectContainer gap={gap}>
-          <S.SelectWrapper onClick={() => handleOpen(type)}>
-            <S.Select>
-              {createElement(getState(type)?.networkIcon || input.networkIcon)}
+          <S.SelectWrapper onClick={() => handleOpen(type, listType)} list={listType}>
+            <S.Select list={listType}>
+              {createElement(icon)}
               {getState(type)?.token}
             </S.Select>
-            <DownArrowIcon />
+            <S.Icon list={listType} />
           </S.SelectWrapper>
-          {cloneElement(child, { type, ...child.props })}
+          {listType === 'tokenList' && cloneElement(child, { type, ...child.props })}
         </S.SelectContainer>
       </S.Container>
     </S.Layout>

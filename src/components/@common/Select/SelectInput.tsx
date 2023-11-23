@@ -3,20 +3,21 @@ import * as S from './SelectInput.style';
 import { ChangeEvent, Dispatch, SetStateAction, ForwardedRef, HTMLAttributes, forwardRef, useEffect, useState } from 'react';
 
 import { SelectProps } from './Select';
-import { Type } from 'types/select';
-import { useSwapContext } from 'contexts/SwapProvider';
+import { Provider, Type } from 'types/select';
+import { useContextType } from 'hooks/useContextType';
 import { from_wei, putCommaAtPrice } from 'utils/util';
 
 export type SelectInputProps = {
   type: Type;
   _input?: string;
   _output?: string;
+  provider: Provider;
   handleValue?: (e: ChangeEvent<HTMLInputElement>) => void;
 } & Partial<SelectProps> &
   HTMLAttributes<HTMLInputElement>;
 
-const SelectInput = forwardRef(({ type, _input, _output, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
-  const { input, output } = useSwapContext();
+const SelectInput = forwardRef(({ type, _input, _output, provider, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
+  const { input, output } = useContextType(provider ?? 'Bridge');
 
   useEffect(() => {
     input.changeSelect({ ...input, value: _input });

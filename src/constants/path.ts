@@ -13,6 +13,7 @@ export const PATH = {
   LEARN_FAQ: '/learn/faq',
   SWAP: '/swap',
   SWAP_LEGACY: '/swap--legacy',
+  BRIDGE: '/bridge',
   POOL: '/pool',
   TESTPAGE: '/testpage',
   ADD: '/pool/add-liquidity',

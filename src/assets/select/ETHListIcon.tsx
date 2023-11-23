@@ -1,6 +1,6 @@
 import { theme } from 'style/theme';
 
-export const ETHTokenIcon = ({ ...props }) => {
+export const ETHListIcon = ({ ...props }) => {
   return (
     <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <rect width="32" height="32" rx="16" fill={theme.colors.white15} fillOpacity="0.976471" />

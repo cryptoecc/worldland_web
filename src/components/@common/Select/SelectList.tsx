@@ -1,19 +1,20 @@
 import * as S from './SelectList.style';
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import { ListItemType, SelectType, Type } from 'types/select';
+import { ListItemType, Provider, SelectType, Type } from 'types/select';
 
 import SelectListItem from './SelectListItem';
 import SelectSearch from './SelectSearch';
-import { selectList } from 'constants/select';
-import { useSwapContext } from 'contexts/SwapProvider';
+import { useContextType } from 'hooks/useContextType';
 
-interface SelectListProps extends Pick<SelectType, 'listType'> {
+interface SelectListProps {
   type: Type;
+  selectList: ListItemType[];
+  provider?: Provider;
 }
 
-const SelectList = ({ type, listType }: SelectListProps) => {
-  const { input, output, isOpen, openHandler } = useSwapContext();
+const SelectList = ({ type, selectList, provider }: SelectListProps) => {
+  const { input, output, isOpen, openHandler } = useContextType(provider ?? 'Bridge');
   const [searchValue, setSearchValue] = useState<string>('');
   const [list, setList] = useState<ListItemType[]>(selectList);
 
@@ -44,8 +45,8 @@ const SelectList = ({ type, listType }: SelectListProps) => {
   };
 
   useEffect(() => {
-    const newList = getItems(searchValue);
-    setList(newList ?? selectList);
+    const newSearchList = getItems(searchValue);
+    setList(newSearchList ?? selectList);
   }, [searchValue]);
 
   return (
@@ -60,6 +61,7 @@ const SelectList = ({ type, listType }: SelectListProps) => {
             tokenIcon={item.tokenIcon}
             network={item.network}
             networkIcon={item.networkIcon}
+            listIcon={item.listIcon}
             onClick={() => handleSelect(item)}
           />
         ))}

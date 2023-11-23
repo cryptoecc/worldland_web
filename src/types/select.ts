@@ -1,18 +1,31 @@
-import { DAITokenIcon, DAIIcon, ETHTokenIcon, EthereumIcon } from 'assets';
+import { DAIIcon, DAIListIcon, ETHIcon, ETHListIcon, WETHIcon, WETHListIcon } from 'assets';
 
 export type Type = 'input' | 'output';
 
+export type Provider = 'Swap' | 'Bridge';
+
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'WETH' | 'USDC' | 'DAI';
+type Token = 'ETH' | 'WETH' | 'WLC' | 'WWLC' | 'USDC' | 'DAI';
 
-type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
+type TokenIcon = typeof ETHIcon | typeof DAIIcon | typeof WETHIcon;
 
-type Network = 'Wrapped ETH' | 'USDC' | 'DAI';
+type Network = 'Ethereum' | 'Worldland';
 
-type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
+type NetworkIcon = typeof ETHIcon | typeof WETHIcon;
 
-export interface SelectType {
+export interface SwapSelectType {
+  type: Type;
+  listType: SelectListType;
+  token: Token;
+  tokenIcon: TokenIcon;
+  address: `0x${string}`;
+  value?: string;
+  isOpen: boolean;
+  openHandler: (activeType: Type) => void;
+  changeSelect: (select: SwapSelectType, listType?: SelectListType) => void;
+}
+export interface BridgeSelectType {
   type: Type;
   listType: SelectListType;
   token: Token;
@@ -23,13 +36,41 @@ export interface SelectType {
   value?: string;
   isOpen: boolean;
   openHandler: (activeType: Type) => void;
-  changeSelect: (select: SelectType, listType?: SelectListType) => void;
+  changeSelect: (select: BridgeSelectType, listType?: SelectListType) => void;
 }
 
-export interface ListItemType {
+type ListIcon = typeof ETHListIcon | typeof DAIListIcon | typeof WETHListIcon;
+
+export interface SwapListItemType {
+  token: Token;
+  tokenIcon: TokenIcon;
+  address: `0x${string}`;
+  listIcon: ListIcon;
+}
+export interface BridgeListItemType {
   token: Token;
   tokenIcon: TokenIcon;
   network: Network;
   networkIcon: NetworkIcon;
   address: `0x${string}`;
+  listIcon: ListIcon;
+}
+
+export interface SwapSelectType extends SwapListItemType {
+  type: Type;
+  provider: Provider;
+  listType: SelectListType;
+  value?: string;
+  isOpen: boolean;
+  openHandler: (activeType: Type) => void;
+  changeSelect: (select: SwapSelectType, listType?: SelectListType) => void;
+}
+export interface BridgeSelectType extends BridgeListItemType {
+  type: Type;
+  provider: Provider;
+  listType: SelectListType;
+  value?: string;
+  isOpen: boolean;
+  openHandler: (activeType: Type) => void;
+  changeSelect: (select: BridgeSelectType, listType?: SelectListType) => void;
 }

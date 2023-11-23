@@ -1,0 +1,7 @@
+import { styled } from 'styled-components';
+
+export const Layout = styled.section`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+`;

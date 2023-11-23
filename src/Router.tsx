@@ -19,6 +19,7 @@ import AddLiquidity from 'pages/Pool/AddLiquidity';
 import Contact from 'pages/Contact';
 import Chart from 'pages/Chart';
 import SwapPage from './pages/Swap/SwapPage';
+import BridgePage from 'pages/Bridge';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -45,6 +46,8 @@ const Router = () => {
         },
         { path: `${PATH.SWAP_LEGACY}`, element: <Swap /> },
         { path: `${PATH.SWAP}`, element: <SwapPage /> },
+        { path: `${PATH.SWAP}`, element: <Swap /> },
+        { path: `${PATH.BRIDGE}`, element: <BridgePage /> },
         { path: `${PATH.POOL}`, element: <Pool /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
