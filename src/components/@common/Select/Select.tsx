@@ -45,8 +45,8 @@ const Select = ({
 
   const icon =
     listType === 'networkList'
-      ? getState(type)?.networkIcon || input.tokenIcon
-      : getState(type)?.tokenIcon || input.tokenIcon;
+      ? input.tokenIcon
+      : input.tokenIcon;
 
   return (
     <S.Layout width={maxWidth} radius={borderRadius} list={listType}>

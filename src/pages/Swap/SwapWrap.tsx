@@ -28,7 +28,7 @@ import { useWeb3Modal } from '@web3modal/react';
 import { useToasts } from 'react-toast-notifications';
 import { parseEther } from 'viem';
 import { initialSwapSelect } from 'constants/select';
-import { ListItemType } from 'types/select';
+import { SwapListItemType } from 'types/select';
 
 
 const SwapWrap = () => {
@@ -47,7 +47,7 @@ const SwapWrap = () => {
     const approvalAmount = '1000000';
     const [disabled, setDisabled] = useState<boolean>(false);
     const [loader, setLoader] = useState<boolean>(false);
-    const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect);
+    const [spotlightToken, setSpotlightToken] = useState<SwapListItemType>(initialSwapSelect);
 
     function inputHandler(e: ChangeEvent<HTMLInputElement>) {
         let typedValue = e.target.value;

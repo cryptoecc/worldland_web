@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { IoMdSettings } from 'react-icons/io';
 import { BiChevronDown } from 'react-icons/bi';
 import { BsFillArrowDownSquareFill } from 'react-icons/bs';
-import { selectList } from 'constants/select';
+import { swapSelectList } from 'constants/select';
 import { Field } from '../../utils/enum';
 import Web3Button from 'components/web3/Web3Button';
 import { AiSwapButton } from 'components/web3/AI-SWAP_Button';
@@ -47,8 +47,8 @@ const SwapInputTab = ({
                 </>
               ) : (
                 <>
-                  {createElement(selectList[0].tokenIcon)}
-                  <p>{selectList[0].token}</p>
+                  {createElement(swapSelectList[0].tokenIcon)}
+                  <p>{swapSelectList[0].token}</p>
                 </>
               )}
             </>
@@ -70,8 +70,8 @@ const SwapInputTab = ({
                 </>
               ) : (
                 <>1
-                  {createElement(selectList[0].tokenIcon)}
-                  <p>{selectList[1].token}</p>
+                  {createElement(swapSelectList[0].tokenIcon)}
+                  <p>{swapSelectList[1].token}</p>
                 </>
               )}
             </>

@@ -4,7 +4,7 @@ import Slider from '@mui/material/Slider';
 import { styled } from 'styled-components';
 import { CgClose } from 'react-icons/cg';
 import { AiOutlineArrowDown, AiOutlineQuestionCircle } from 'react-icons/ai';
-import { selectList } from 'constants/select';
+import { swapSelectList } from 'constants/select';
 import { IoCloseSharp } from 'react-icons/io5';
 import { createElement, useEffect, useState } from "react";
 import { useAccount, useContractWrite } from 'wagmi';
@@ -118,15 +118,15 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
                 <div className="inner-wrap">
                     <p className="price">{putCommaAtPrice(selectedPair?.pooledA ? selectedPair?.pooledA : 0, 5)}</p>
                     <div className="coin-info-wrap">
-                        {createElement(selectList[0].tokenIcon)}
-                        <p>{selectList[0].token}</p>
+                        {createElement(swapSelectList[0].tokenIcon)}
+                        <p>{swapSelectList[0].token}</p>
                     </div>
                 </div>
                 <div className="inner-wrap">
                     <p className="price">{putCommaAtPrice(selectedPair?.pooledB ? selectedPair?.pooledB : 0, 5)}</p>
                     <div className="coin-info-wrap">
-                        {createElement(selectList[0].tokenIcon)}
-                        <p>{selectList[1].token}</p>
+                        {createElement(swapSelectList[0].tokenIcon)}
+                        <p>{swapSelectList[1].token}</p>
                     </div>
                 </div>
             </section>

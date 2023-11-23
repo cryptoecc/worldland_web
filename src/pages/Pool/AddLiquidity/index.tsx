@@ -6,7 +6,7 @@ import Backdrop from 'components/Backdrop';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { IoMdSettings } from 'react-icons/io';
 import { BiChevronDown } from 'react-icons/bi';
-import { selectList } from 'constants/select';
+import { swapSelectList } from 'constants/select';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TokenModal from 'components/TokenModal';
 import {
@@ -36,9 +36,9 @@ const AddLiquidity = () => {
   const { address, isConnected } = useAccount();
   const { addToast } = useToasts();
   const [btnState, setBtnState] = useState<number>(1);
-  const [lowBalanceToken, setLowBalanceToken] = useState<ListItemType>(selectList[0]);
-  const [selectedToken0, setSelectedToken0] = useState<ListItemType>(selectList[0]);
-  const [selectedToken1, setSelectedToken1] = useState<ListItemType>(selectList[1]);
+  const [lowBalanceToken, setLowBalanceToken] = useState<ListItemType>(swapSelectList[0]);
+  const [selectedToken0, setSelectedToken0] = useState<ListItemType>(swapSelectList[0]);
+  const [selectedToken1, setSelectedToken1] = useState<ListItemType>(swapSelectList[1]);
   const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
   const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
   const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
@@ -425,13 +425,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken0 ? (
                   <>
-                    {createElement(selectList[0].tokenIcon)}
+                    {createElement(swapSelectList[0].tokenIcon)}
                     <p>{selectedToken0.token}</p>
                   </>
                 ) : (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
-                    <p>{selectList[1].token}</p>
+                    {createElement(swapSelectList[1].tokenIcon)}
+                    <p>{swapSelectList[1].token}</p>
                   </>
                 )}
               </span>
@@ -441,13 +441,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken1 ? (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
+                    {createElement(swapSelectList[1].tokenIcon)}
                     <p>{selectedToken1.token}</p>
                   </>
                 ) : (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
-                    <p>{selectList[1].token}</p>
+                    {createElement(swapSelectList[1].tokenIcon)}
+                    <p>{swapSelectList[1].token}</p>
                   </>
                 )}
               </span>
@@ -482,13 +482,13 @@ const AddLiquidity = () => {
                   <span className="token-card">
                     {selectedToken0 ? (
                       <>
-                        {createElement(selectList[0].tokenIcon)}
+                        {createElement(swapSelectList[0].tokenIcon)}
                         <p>{selectedToken0.token}</p>
                       </>
                     ) : (
                       <>
-                        {createElement(selectList[0].tokenIcon)}
-                        <p>{selectList[0].token}</p>
+                        {createElement(swapSelectList[0].tokenIcon)}
+                        <p>{swapSelectList[0].token}</p>
                       </>
                     )}
                   </span>
@@ -511,13 +511,13 @@ const AddLiquidity = () => {
                   <span className="token-card">
                     {selectedToken1 ? (
                       <>
-                        {createElement(selectList[1].tokenIcon)}
+                        {createElement(swapSelectList[1].tokenIcon)}
                         <p>{selectedToken1.token}</p>
                       </>
                     ) : (
                       <>
-                        {createElement(selectList[1].tokenIcon)}
-                        <p>{selectList[1].token}</p>
+                        {createElement(swapSelectList[1].tokenIcon)}
+                        <p>{swapSelectList[1].token}</p>
                       </>
                     )}
                   </span>

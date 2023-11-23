@@ -22,7 +22,7 @@ import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
 import Web3 from 'web3';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
-import { selectList } from 'constants/select';
+import { swapSelectList } from 'constants/select';
 import Web3ConnectButton from 'components/web3/Web3Button';
 import { useWeb3Modal } from '@web3modal/react';
 import { debounce } from 'lodash';
@@ -30,7 +30,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
 import { chain_query } from 'configs/contract_calls';
 import { useToasts } from 'react-toast-notifications';
-import { ListItemType } from 'types/select';
 
 const Swap = () => {
   const { addToast } = useToasts();
@@ -42,14 +41,14 @@ const Swap = () => {
   const { open, close } = useWeb3Modal();
 
   // Swap Token 선택
-  const [selectedToken, setSelectedToken] = useState<ListItemType>(selectList[0]);
-  const [selected2Token, setSelected2Token] = useState<ListItemType>(selectList[1]);
+  const [selectedToken, setSelectedToken] = useState<ListItemType>(swapSelectList[0]);
+  const [selected2Token, setSelected2Token] = useState<ListItemType>(swapSelectList[1]);
   const [selectedInputField, setSelectedInputField] = useState('first');
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [btnState, setBtnState] = useState<number>(1);
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(selectList[0]);
+  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(swapSelectList[0]);
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();

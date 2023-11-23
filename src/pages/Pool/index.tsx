@@ -11,7 +11,7 @@ import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
 import { createElement, useEffect, useState } from 'react';
 import { from_wei, putCommaAtPrice, to_wei } from 'utils/util';
-import { selectList } from 'constants/select';
+import { swapSelectList } from 'constants/select';
 import { PAIR_ADRESSES } from 'configs/contract_addresses';
 import { erc20ABI } from 'wagmi';
 import RemoveLiquidityModal from 'components/RemoveLiquidityModal';
@@ -248,10 +248,10 @@ const Pool = () => {
                             {pairs.map((el, i) => (
                                 <li onClick={() => handlePairClick(el)} key={i}>
                                     <span className="pair-logo">
-                                        {createElement(selectList[0].tokenIcon)}
-                                        {createElement(selectList[1].tokenIcon)}
+                                        {createElement(swapSelectList[0].tokenIcon)}
+                                        {createElement(swapSelectList[1].tokenIcon)}
                                         <p className="pair-name">
-                                            {selectList[0].token}/{selectList[1].token}
+                                            {swapSelectList[0].token}/{swapSelectList[1].token}
                                         </p>
                                     </span>
                                     <span className="range">
@@ -259,7 +259,7 @@ const Pool = () => {
                                             {putCommaAtPrice(from_wei(el.AtoB), 5)} {"->"} {putCommaAtPrice(1, 3)}
                                         </p>
                                         <p>
-                                            {selectList[1].token} per {selectList[0].token}
+                                            {swapSelectList[1].token} per {swapSelectList[0].token}
                                         </p>
                                     </span>
                                     <p className="value-in-usd">
@@ -271,7 +271,7 @@ const Pool = () => {
                                     </span>
 
                                     <p className="value-in-token">
-                                        {putCommaAtPrice(from_wei(el.AtoB), 5)} {selectList[1].token}
+                                        {putCommaAtPrice(from_wei(el.AtoB), 5)} {swapSelectList[1].token}
                                     </p>
                                 </li>
                             ))}
