@@ -3,6 +3,7 @@ import Layout from 'components/@common/Layout/Layout';
 import { useState, ChangeEvent, createElement } from "react";
 import { WldChainIcon } from "assets/static/chain-assets/WldChainIcon";
 import { EthChainIcon, } from "assets/static/chain-assets/EthChainIcon";
+import { EthTokenIcon, } from "assets/static/token-assets/EthTokenIcon";
 import { DownArrowIcon } from "assets";
 import BridgeModeToggleIcon from "assets/static/chain-assets/BridgeModeToggleIcon";
 
@@ -33,7 +34,7 @@ const Bridge = () => {
                     <S.InputWrapper>
                         <S.TokenWrap>
                             <S.SubTokenWrap>
-                                {createElement(EthChainIcon)}
+                                {createElement(EthTokenIcon)}
                                 <S.B>
                                     ETH
                                 </S.B>
