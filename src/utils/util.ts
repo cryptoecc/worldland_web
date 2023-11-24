@@ -1,7 +1,7 @@
 import { web3_wld as web3 } from 'configs/web3-wld';
 import { mapMessageToObject } from 'data';
 import { Web3 } from 'web3';
-import { ListItemType } from 'types/select';
+import { SwapListItemType } from 'types/select';
 export const from_wei = (val?: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '');
 export const to_wei = (val?: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '');
 
@@ -41,13 +41,13 @@ export async function setDeadline(expiry: number) {
   return latestTimeStamp + BigInt(blockGenerationTime) + BigInt(expiry);
 }
 
-export function handleAddLiquidityBtnState(state: number, token?: ListItemType | null) {
+export function handleAddLiquidityBtnState(state: number, token?: SwapListItemType | null) {
   if (state === 1) {
     return mapMessageToObject[state](token);
   }
   return mapMessageToObject[state];
 }
-export function handleSwapBtnState(state: number, token?: ListItemType | null) {
+export function handleSwapBtnState(state: number, token?: SwapListItemType | null) {
   if (state === 1 || state === 5) {
     return mapMessageToObject[state](token);
   }

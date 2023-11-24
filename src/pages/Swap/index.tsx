@@ -30,6 +30,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from 'store/actions';
 import { chain_query } from 'configs/contract_calls';
 import { useToasts } from 'react-toast-notifications';
+import { SwapListItemType } from 'types/select';
+
+
 
 const Swap = () => {
   const { addToast } = useToasts();
@@ -41,14 +44,14 @@ const Swap = () => {
   const { open, close } = useWeb3Modal();
 
   // Swap Token 선택
-  const [selectedToken, setSelectedToken] = useState<ListItemType>(swapSelectList[0]);
-  const [selected2Token, setSelected2Token] = useState<ListItemType>(swapSelectList[1]);
+  const [selectedToken, setSelectedToken] = useState<SwapListItemType>(swapSelectList[0]);
+  const [selected2Token, setSelected2Token] = useState<SwapListItemType>(swapSelectList[1]);
   const [selectedInputField, setSelectedInputField] = useState('first');
   const [web3, setWeb3] = useState<Web3 | null>(null);
   const [btnState, setBtnState] = useState<number>(1);
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(swapSelectList[0]);
+  const [spotlightToken, setSpotlightToken] = useState<SwapListItemType>(swapSelectList[0]);
   // const [amountOut, setAmountOut] = useState<string>('');
   const [loader, setLoader] = useState<boolean>(false);
   const dispatch = useDispatch();

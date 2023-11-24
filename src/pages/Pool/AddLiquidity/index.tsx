@@ -30,15 +30,15 @@ import { gasLimit } from 'utils/wagmi';
 import { useToasts } from 'react-toast-notifications';
 import { chainIds } from 'configs/services/chainIds';
 import { parseEther } from 'viem';
-import { ListItemType } from 'types/select';
+import { BridgeListItemType } from 'types/select';
 
 const AddLiquidity = () => {
   const { address, isConnected } = useAccount();
   const { addToast } = useToasts();
   const [btnState, setBtnState] = useState<number>(1);
-  const [lowBalanceToken, setLowBalanceToken] = useState<ListItemType>(swapSelectList[0]);
-  const [selectedToken0, setSelectedToken0] = useState<ListItemType>(swapSelectList[0]);
-  const [selectedToken1, setSelectedToken1] = useState<ListItemType>(swapSelectList[1]);
+  const [lowBalanceToken, setLowBalanceToken] = useState<BridgeListItemType>(swapSelectList[0]);
+  const [selectedToken0, setSelectedToken0] = useState<BridgeListItemType>(swapSelectList[0]);
+  const [selectedToken1, setSelectedToken1] = useState<BridgeListItemType>(swapSelectList[1]);
   const [selectedTokenInputField, setSelectedTokenInputField] = useState<number>(0);
   const [selectedTokenAmount0, setSelectedTokenAmount0] = useState<string>('');
   const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
@@ -50,8 +50,8 @@ const AddLiquidity = () => {
   const location = useLocation;
   const approvalAmount = '1000000000';
   const mapIndexToFunction: ImapIndexToFunction = {
-    0: (obj: ListItemType) => setSelectedToken0(obj),
-    1: (obj: ListItemType) => setSelectedToken1(obj),
+    0: (obj: BridgeListItemType) => setSelectedToken0(obj),
+    1: (obj: BridgeListItemType) => setSelectedToken1(obj),
   };
   const mapIndexToInput: ImapIndexToInput = {
     0: (amount: string) => setSelectedTokenAmount0(amount),
@@ -59,7 +59,7 @@ const AddLiquidity = () => {
   };
 
   const navigate = useNavigate();
-  const handleTokenClick = (params: ListItemType) => {
+  const handleTokenClick = (params: BridgeListItemType) => {
     mapIndexToFunction[selectedTokenInputField](params);
     setModal(false);
   };

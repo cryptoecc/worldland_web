@@ -31,8 +31,8 @@ export interface BridgeSelectType {
   token: Token;
   tokenIcon: TokenIcon;
   address: `0x${string}`;
-  network: Network;
-  networkIcon: NetworkIcon;
+  network?: Network;
+  networkIcon?: NetworkIcon;
   value?: string;
   isOpen: boolean;
   openHandler: (activeType: Type) => void;
@@ -50,8 +50,8 @@ export interface SwapListItemType {
 export interface BridgeListItemType {
   token: Token;
   tokenIcon: TokenIcon;
-  network: Network;
-  networkIcon: NetworkIcon;
+  network?: Network;
+  networkIcon?: NetworkIcon;
   address: `0x${string}`;
   listIcon: ListIcon;
 }
