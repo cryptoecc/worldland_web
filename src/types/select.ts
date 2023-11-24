@@ -4,11 +4,11 @@ export type Type = 'input' | 'output';
 
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'WETH' | 'USDC' | 'DAI';
+type Token = 'ETH' | 'WETH' | 'USDC' | 'WLC' | 'WWLC' | 'DAI';
 
 type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
 
-type Network = 'Wrapped ETH' | 'USDC' | 'DAI';
+type Network = 'Ethereum' | 'Worldland';
 
 type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 

@@ -1,22 +1,55 @@
 import { ListItemType, SelectType } from 'types/select';
 import { CONTRACT_ADDRESSES } from 'utils/enum';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
-import { DAITokenIcon, DAIIcon, ETHTokenIcon, EthereumIcon } from 'assets';
+import { DAITokenIcon, DAIIcon, ETHTokenIcon, EthereumIcon, WldChainIcon } from 'assets';
 
 export const selectList: ListItemType[] = [
   {
     token: 'WETH',
     tokenIcon: ETHTokenIcon,
-    network: 'Wrapped ETH',
+    network: 'Worldland',
     networkIcon: EthereumIcon,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   },
   {
     token: 'DAI',
     tokenIcon: DAITokenIcon,
-    network: 'DAI',
+    network: 'Worldland',
     networkIcon: DAIIcon,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.DAI_ADDRESS],
+  },
+];
+
+export const bridgeSelectList: ListItemType[] = [
+  // Ethereum
+  {
+    token: 'ETH',
+    tokenIcon: ETHTokenIcon,
+    network: 'Ethereum',
+    networkIcon: EthereumIcon,
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ETH_ADDRESS],
+  },
+  {
+    token: 'WWLC',
+    tokenIcon: ETHTokenIcon,
+    network: 'Worldland',
+    networkIcon: EthereumIcon,
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS],
+  },
+  // Worldland
+  {
+    token: 'WLC',
+    tokenIcon: WldChainIcon,
+    network: 'Worldland',
+    networkIcon: WldChainIcon,
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS],
+  },
+  {
+    token: 'WETH',
+    tokenIcon: WldChainIcon,
+    network: 'Worldland',
+    networkIcon: WldChainIcon,
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   },
 ];
 
@@ -25,7 +58,7 @@ export const initialSwapSelect: SelectType = {
   listType: 'tokenList',
   token: 'WETH',
   tokenIcon: ETHTokenIcon,
-  network: 'Wrapped ETH',
+  network: 'Ethereum',
   networkIcon: EthereumIcon,
   address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   isOpen: false,

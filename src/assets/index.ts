@@ -22,3 +22,4 @@ export { EthereumIcon } from './select/EthereumIcon';
 export { ETHTokenIcon } from './select/ETHTokenIcon';
 export { SearchIcon } from './select/SearchIcon';
 export { ExchangeIcon } from './select/ExchangeIcon';
+export { WldChainIcon } from '../assets/static/chain-assets/WldChainIcon';
