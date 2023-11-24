@@ -20,5 +20,5 @@ export const WLD_ADDRESSES: ADDRESS_TYPE = {
 };
 
 export const PAIR_ADRESSES: `0x${string}`[] = [
-  '0x0A62681874Fb07c5731696971a0bF142a71E090f', // last deployed main pair
+  '0x60170077AebB1d1f3D88BeA225B06139A9B5cb19', // last deployed main pair : WETH / DAI
 ];
