@@ -1,6 +1,6 @@
 import * as S from './Bridge.style';
 
-import Select, { SelectProps } from '../@common/Select/Select';
+import BridgeSelect, { SelectProps } from '../@common/Select/BridgeSelect';
 
 import { Fragment } from 'react';
 import BridgeSelectInput from '../@common/Select/BridgeSelectInput';
@@ -9,10 +9,10 @@ const Bridge = ({ type, text, input, provider, eventHandler }: Pick<SelectProps,
 
   return (
     <S.Layout>
-      <Select type={type} text={text} listType="tokenList" borderRadius="0.75rem 0 0 0.75rem">
+      <BridgeSelect type={type} text={text} listType="tokenList" borderRadius="0.75rem 0 0 0.75rem">
         <BridgeSelectInput _input={input} type={type} eventHandler={eventHandler} provider={provider ?? 'Bridge'} />
-      </Select>
-      <Select
+      </BridgeSelect>
+      <BridgeSelect
         type={type}
         text="Network"
         provider={provider}
@@ -21,7 +21,7 @@ const Bridge = ({ type, text, input, provider, eventHandler }: Pick<SelectProps,
         borderRadius=" 0 0.75rem 0.75rem 0"
       >
         <Fragment />
-      </Select>
+      </BridgeSelect>
     </S.Layout>
   );
 };

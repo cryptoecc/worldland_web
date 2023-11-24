@@ -16,8 +16,8 @@ const BridgeWrap = () => {
     }
     return (
         <S.BridgeWrapper>
-            <Bridge type="input" input={_input} text="From" eventHandler={inputHandler} />
-            <Bridge type="output" text="To" />
+            <Bridge type="input" input={_input} text="From" eventHandler={inputHandler} provider="Bridge" />
+            <Bridge type="output" text="To" provider="Bridge" />
         </S.BridgeWrapper>
     )
 }

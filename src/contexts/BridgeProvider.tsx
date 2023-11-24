@@ -26,7 +26,7 @@ const BridgeProvider = ({ children }: PropsWithChildren) => {
     network: 'Worldland',
     networkIcon: WETHIcon,
   });
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [type, setType] = useState<Type | null>(null);
 
   const changeSelect = useCallback(
@@ -41,7 +41,6 @@ const BridgeProvider = ({ children }: PropsWithChildren) => {
   const openHandler = useCallback(
     (activeType: Type) => {
       if (activeType === null) return;
-      console.log({ CALLED: "HEY" })
       setType(activeType);
       setIsOpen(!isOpen);
     },

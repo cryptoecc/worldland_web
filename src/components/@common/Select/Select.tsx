@@ -26,7 +26,7 @@ const Select = ({
   text,
   children,
   type,
-  listType = 'tokenList',
+  listType,
   provider,
 }: PropsWithChildren<SelectProps> & HTMLAttributes<HTMLDivElement>) => {
   const { input, output, openHandler } = useContextType(provider ?? 'Bridge');
@@ -60,7 +60,7 @@ const Select = ({
             </S.Select>
             <S.Icon list={listType} />
           </S.SelectWrapper>
-          {listType === 'tokenList' && cloneElement(child, { type, ...child.props })}
+          {/* {listType === 'tokenList' && cloneElement(child, { type, ...child.props })} */}
         </S.SelectContainer>
       </S.Container>
     </S.Layout>
