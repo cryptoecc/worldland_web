@@ -18,13 +18,6 @@ export const selectList: ListItemType[] = [
     networkIcon: DAIIcon,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.DAI_ADDRESS],
   },
-  // {
-  //   token: 'USDC',
-  //   tokenIcon: ETHTokenIcon,
-  //   network: 'USDC',
-  //   networkIcon: EthereumIcon,
-  //   address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.TOKENB],
-  // },
 ];
 
 export const initialSwapSelect: SelectType = {

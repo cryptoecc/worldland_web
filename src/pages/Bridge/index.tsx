@@ -14,6 +14,7 @@ const Bridge = () => {
     async function handleEvent(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value);
     }
+
     return (
         <Layout>
             <S.Container>
