@@ -39,7 +39,7 @@ export const Button = styled.button`
   justify-content: center;
   color: ${theme.colors.white10};
   background-color: ${theme.colors.red};
-  padding: 0.7rem 0;
+  padding: 0.9rem 0;
   border: none;
   border-radius: 0.75rem;
   font-weight: 700;
@@ -134,6 +134,7 @@ export const TokenWrap = styled.div`
   max-width: 5.7rem;
   width: 100%;
   position: relative;
+  cursor: pointer;
 
   span {
     position: absolute;

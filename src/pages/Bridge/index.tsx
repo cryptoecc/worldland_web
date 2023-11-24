@@ -72,6 +72,9 @@ const Bridge = () => {
                         </S.B>
                     </S.Chain>
                 </S.ParentWrap>
+                <S.Button>
+                    Bridge
+                </S.Button>
             </S.Container>
         </Layout>
     )
