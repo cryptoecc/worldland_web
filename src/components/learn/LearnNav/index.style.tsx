@@ -71,7 +71,7 @@ const Nav = styled.nav<ContainerProps>`
 const Menu = styled(Link)<{ active: string }>`
   ${(props) => {
     const { active, theme } = props;
-    const color = active === 'true' ? theme.colors.white : theme.colors.white900;
+    const color = active === 'true' ? theme.colors.white : theme.colors.white90;
     const textUnderline = active === 'true' ? 'underline' : '';
 
     return `
@@ -85,7 +85,7 @@ const Menu = styled(Link)<{ active: string }>`
 const SubMenu = styled(Link)<{ active: string }>`
   ${(props) => {
     const { active, theme } = props;
-    const color = active === 'true' ? theme.colors.white : theme.colors.white800;
+    const color = active === 'true' ? theme.colors.white : theme.colors.white80;
     const textUnderline = active === 'true' ? 'underline' : '';
 
     return `

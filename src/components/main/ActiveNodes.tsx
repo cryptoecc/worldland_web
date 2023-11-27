@@ -4,15 +4,6 @@ import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
 
-const data = [
-  { day: '', Miner_Nodes: 44 },
-  { day: '', Miner_Nodes: 42 },
-  { day: '', Miner_Nodes: 39 },
-  { day: '', Miner_Nodes: 40 },
-  { day: '', Miner_Nodes: 38 },
-  { day: '', Miner_Nodes: 41 },
-];
-
 const MainAreaChart = () => {
   const [nodeCount, setNodeCount] = useState();
 

@@ -39,7 +39,7 @@ const IconWrap = styled.div`
   flex-wrap: wrap;
 
   svg {
-    color: ${theme.colors.white800};
+    color: ${theme.colors.white80};
     height: 28px;
   }
 
