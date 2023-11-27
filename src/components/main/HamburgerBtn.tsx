@@ -52,46 +52,46 @@ const HamburgerBtn = () => {
 
   const NetworkButton = styled.a``;
 
-  const AddNetworkButton = () => {
-    const addNetwork = async () => {
-      if (window.ethereum && window.ethereum.request) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_addEthereumChain',
-            params: [
-              {
-                chainId: '0x67', // Polygon의 체인 ID
-                chainName: 'Seoul Mainnet',
-                nativeCurrency: {
-                  name: 'WLC',
-                  symbol: 'WLC',
-                  decimals: 18,
-                },
-                rpcUrls: ['https://seoul.worldland.foundation/'],
-              },
-            ],
-          });
-          console.log('Successfully added Worldland network to MetaMask.');
-        } catch (error) {
-          console.error('Failed to add Worldland network to MetaMask:', error);
-          // 사용자가 요청을 거부한 경우나, 다른 이유로 요청이 실패한 경우를 처리합니다.
-        }
-      } else {
-        console.log('Metamask is not installed');
-        // 메타마스크가 설치되어 있지 않은 경우를 처리합니다.
-      }
-    };
+  // const AddNetworkButton = () => {
+  //   const addNetwork = async () => {
+  //     if (window.ethereum && window.ethereum.request) {
+  //       try {
+  //         await window.ethereum.request({
+  //           method: 'wallet_addEthereumChain',
+  //           params: [
+  //             {
+  //               chainId: '0x67', // Polygon의 체인 ID
+  //               chainName: 'Seoul Mainnet',
+  //               nativeCurrency: {
+  //                 name: 'WLC',
+  //                 symbol: 'WLC',
+  //                 decimals: 18,
+  //               },
+  //               rpcUrls: ['https://seoul.worldland.foundation/'],
+  //             },
+  //           ],
+  //         });
+  //         console.log('Successfully added Worldland network to MetaMask.');
+  //       } catch (error) {
+  //         console.error('Failed to add Worldland network to MetaMask:', error);
+  //         // 사용자가 요청을 거부한 경우나, 다른 이유로 요청이 실패한 경우를 처리합니다.
+  //       }
+  //     } else {
+  //       console.log('Metamask is not installed');
+  //       // 메타마스크가 설치되어 있지 않은 경우를 처리합니다.
+  //     }
+  //   };
 
-    return (
-      <NetworkButton onClick={addNetwork} className="user">
-        Add to Wallet
-      </NetworkButton>
-    );
-  };
+  //   return (
+  //     <NetworkButton onClick={addNetwork} className="user">
+  //       Add to Wallet
+  //     </NetworkButton>
+  //   );
+  // };
 
-  const Eventpath = () => {
-    window.open('https://open.kakao.com/o/gK0OM0zf', '_blank');
-  };
+  // const Eventpath = () => {
+  //   window.open('https://open.kakao.com/o/gK0OM0zf', '_blank');
+  // };
 
   return (
     <HamburgerBtnWrapper>
@@ -101,9 +101,6 @@ const HamburgerBtn = () => {
         <MenuIcon onClick={toggleHamburgerMenu} style={{ color: `${theme.colors.white}` }} />
       )}
       <MenuList isopen={isHamburgerOpen ? 'true' : 'false'}>
-        <Li>
-          <Button onClick={() => open()}>Connect</Button>
-        </Li>
         <Li>
           <ButtonLearn onClick={() => toggleSubMenu('learn')}>
             <Link className="learn" to="/learn" onClick={() => toggleHamburgerMenu()}>
@@ -143,14 +140,17 @@ const HamburgerBtn = () => {
                 >
                   Node Operator
                 </a>
-                <AddNetworkButton />
+                {/* <AddNetworkButton /> */}
+                <div className="user" onClick={() => open()}>
+                  Add to Wallet
+                </div>
                 <div className="user" onClick={() => handleLinkClick('서비스 준비중입니다.')}>
                   Bridge
                 </div>
               </div>
               <div className="divider"></div>
               <div className="user-menu">
-                <a href="http://scan.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
+                <a href="https://scan.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
                   Scan
                 </a>
               </div>

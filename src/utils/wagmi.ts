@@ -14,8 +14,8 @@ export const worldland = {
     default: { http: ['https://seoul.worldland.foundation/'] },
   },
   blockExplorers: {
-    etherscan: { name: 'WLscan', url: 'http://scan.worldland.foundation' },
-    default: { name: 'WLscan', url: 'http://scan.worldland.foundation' },
+    etherscan: { name: 'WLscan', url: 'https://scan.worldland.foundation' },
+    default: { name: 'WLscan', url: 'https://scan.worldland.foundation' },
   },
 } as const satisfies Chain;
 

@@ -93,7 +93,7 @@ const MainMenu = () => {
                   <SpaceLink onClick={() => handleLinkClick('서비스 준비중입니다.')}>
                     <Strong>Bridge</Strong>
                   </SpaceLink>
-                  <SpaceLink href="http://scan.worldland.foundation/" target="_blank">
+                  <SpaceLink href="https://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
                   <SpaceLink href="http://3.34.198.64/" target="_blank">
