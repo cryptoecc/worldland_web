@@ -46,11 +46,12 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
     let calcLiquidityPercentageToAmount = ((parseFloat(from_wei(selectedPair?.balance)) / 100) * value).toString();
     console.log({ REMOVALAMOUNT: to_wei(calcLiquidityPercentageToAmount) });
     let deadline = await setDeadline(3600);
-
+    console.log('@selected', selectedPair?.token0);
+    console.log('@selected', selectedPair?.token1);
     removeLiquidity({
       args: [
-        MAPNETTOADDRESS.WETH_ADDRESS,
-        MAPNETTOADDRESS.DAI_ADDRESS,
+        selectedPair?.token0,
+        selectedPair?.token1,
         to_wei(calcLiquidityPercentageToAmount),
         to_wei('1'),
         to_wei('1'),
