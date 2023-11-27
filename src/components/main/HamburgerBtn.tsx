@@ -207,7 +207,7 @@ const HamburgerBtn = () => {
             <Dropdown>
               <div className="user-menu">
                 <a
-                  href="https://dao.worldland.space/#/worldlandtest.eth"
+                  href="https://demo.snapshot.org/#/worldlandtest.eth#/worldlandtest.eth"
                   className="user"
                   target="_blank"
                   rel="noopener noreferrer"
