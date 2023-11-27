@@ -1,6 +1,7 @@
+import { Menu, Nav, SubMenu } from './index.style';
+
 import { learnMenus } from 'constants/learnMenus';
 import { useLocation } from 'react-router-dom';
-import { Menu, Nav, SubMenu } from './index.style';
 
 const LearnNav = ({ menus = learnMenus }) => {
   const excludedValues = ['About WorldLand', 'Technology'];
