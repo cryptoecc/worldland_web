@@ -48,7 +48,7 @@ const AddNetworkButton = () => {
     <>
       <SpaceLink>
         <Strong>
-          <NetworkButton onClick={() => open()}>Addasd to Wallet</NetworkButton>
+          <NetworkButton onClick={() => open()}>Add to Wallet</NetworkButton>
         </Strong>
       </SpaceLink>
     </>
