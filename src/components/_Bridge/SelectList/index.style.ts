@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 import { theme } from 'style/theme';
 
-export const Container = styled.div<{ modal: boolean }>`
-  display: ${({ modal }) => (modal ? 'flex' : 'none')};
+export const Container = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? 'flex' : 'none')};
   position: absolute;
   width: 100%;
   height: 100%;

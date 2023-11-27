@@ -31,5 +31,6 @@ export interface ListItemType {
   tokenIcon: TokenIcon;
   network: Network;
   networkIcon: NetworkIcon;
+  networkId?: number;
   address: `0x${string}`;
 }

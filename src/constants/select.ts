@@ -9,6 +9,7 @@ export const selectList: ListItemType[] = [
     tokenIcon: ETHTokenIcon,
     network: 'Worldland',
     networkIcon: EthereumIcon,
+    networkId: 103,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   },
   {
@@ -16,6 +17,7 @@ export const selectList: ListItemType[] = [
     tokenIcon: DAITokenIcon,
     network: 'Worldland',
     networkIcon: DAIIcon,
+    networkId: 103,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.DAI_ADDRESS],
   },
 ];
@@ -27,13 +29,15 @@ export const bridgeSelectList: ListItemType[] = [
     tokenIcon: ETHTokenIcon,
     network: 'Ethereum',
     networkIcon: EthereumIcon,
+    networkId: 1,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ETH_ADDRESS],
   },
   {
     token: 'WWLC',
     tokenIcon: ETHTokenIcon,
-    network: 'Worldland',
+    network: 'Ethereum',
     networkIcon: EthereumIcon,
+    networkId: 1,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS],
   },
   // Worldland
@@ -42,6 +46,7 @@ export const bridgeSelectList: ListItemType[] = [
     tokenIcon: WldChainIcon,
     network: 'Worldland',
     networkIcon: WldChainIcon,
+    networkId: 103,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS],
   },
   {
@@ -49,6 +54,7 @@ export const bridgeSelectList: ListItemType[] = [
     tokenIcon: WldChainIcon,
     network: 'Worldland',
     networkIcon: WldChainIcon,
+    networkId: 103,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   },
 ];
@@ -66,3 +72,12 @@ export const initialSwapSelect: SelectType = {
   openHandler: () => {},
   changeSelect: () => {},
 } as const;
+
+export const initialBridgeSelect: ListItemType = {
+  token: 'ETH',
+  tokenIcon: ETHTokenIcon,
+  network: 'Ethereum',
+  networkIcon: EthereumIcon,
+  networkId: 1,
+  address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ETH_ADDRESS],
+};

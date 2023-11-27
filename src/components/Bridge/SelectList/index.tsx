@@ -1,55 +1,52 @@
 import * as S from './index.style';
-
-import { ChangeEvent, useEffect, useState } from 'react';
-import { ListItemType, SelectType, Type } from 'types/select';
-
-import SelectListItem from './SelectListItem';
+import { useNetwork } from 'wagmi';
+import { ChangeEvent, useEffect, useState, SetStateAction, Dispatch } from 'react';
+import { ListItemType } from "types/select";
+import { bridgeSelectList } from "constants/select";
 import SelectSearch from './SelectSearch';
-import { selectList } from 'constants/select';
-import { useSwapContext } from 'contexts/SwapProvider';
+import SelectListItem from './SelectListItem';
 
-interface SelectListProps extends Pick<SelectType, 'listType'> {
-    type: Type;
+interface SelectListProps {
+    modal: boolean;
+    handler: Dispatch<SetStateAction<boolean>>;
+    inputSelect: ListItemType;
+    setInputSelect: Dispatch<SetStateAction<ListItemType>>
 }
 
-const SelectList = ({ type, listType }: SelectListProps) => {
-    const { input, output, isOpen, openHandler } = useSwapContext();
+const SelectList = ({ modal, handler, inputSelect, setInputSelect }: SelectListProps) => {
+    const { chain } = useNetwork();
+    const filteredList = bridgeSelectList.filter((el) => el.networkId === chain?.id);
+    const [list, setList] = useState<ListItemType[]>(filteredList);
     const [searchValue, setSearchValue] = useState<string>('');
-    const [list, setList] = useState<ListItemType[]>(selectList);
 
-    const handleSelect = (item: Partial<SelectType>) => {
-        if (type === 'input') {
-            input.changeSelect({ ...input, ...item });
+    function handleSelect(item: ListItemType) {
+        setInputSelect(item);
+        handler((prev: boolean) => !prev);
+    }
+
+    const getItems = (search: string) => {
+        if (search === '') return filteredList;
+        if (search !== '') {
+            const lowerCaseSearch = search.toLowerCase();
+            const _filteredList = filteredList.filter(
+                (value) =>
+                    value.token.toLowerCase().includes(lowerCaseSearch) || value.network.toLowerCase().includes(lowerCaseSearch),
+            );
+            return _filteredList.length > 0 ? _filteredList : filteredList;
         }
-        if (type === 'output') {
-            output.changeSelect({ ...output, ...item });
-        }
-        openHandler(type);
     };
 
     const handleSearchValue = (e: ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value);
     };
 
-    const getItems = (search: string) => {
-        if (search === '') return selectList;
-        if (search !== '') {
-            const lowerCaseSearch = search.toLowerCase();
-            const filteredList = selectList.filter(
-                (value) =>
-                    value.token.toLowerCase().includes(lowerCaseSearch) || value.network.toLowerCase().includes(lowerCaseSearch),
-            );
-            return filteredList.length > 0 ? filteredList : selectList;
-        }
-    };
-
     useEffect(() => {
         const newList = getItems(searchValue);
-        setList(newList ?? selectList);
+        setList(newList ?? filteredList);
     }, [searchValue]);
 
     return (
-        <S.Container isOpen={isOpen}>
+        <S.Container modal={modal}>
             <S.Title>Select token to transfer</S.Title>
             <SelectSearch value={searchValue} onChange={handleSearchValue} />
             <S.ItemWrapper>
@@ -65,7 +62,9 @@ const SelectList = ({ type, listType }: SelectListProps) => {
                 ))}
             </S.ItemWrapper>
         </S.Container>
-    );
-};
+    )
+}
 
-export default SelectList;
+export default SelectList
+
+

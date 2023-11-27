@@ -131,14 +131,13 @@ export const TokenWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 5.7rem;
+  max-width: 6rem;
   width: 100%;
   position: relative;
   cursor: pointer;
 
   span {
     position: absolute;
-    top: -1.1rem;
     right: -1rem;
     height: 3.3rem;
     width: 1px;
@@ -169,4 +168,5 @@ export const ToggleIconWrap = styled.div`
   background-color: ${theme.colors.white};
   border: 1px solid ${theme.colors.white80};
   border-radius: 50%;
+  cursor: pointer;
 `;
