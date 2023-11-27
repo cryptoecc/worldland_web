@@ -96,7 +96,7 @@ const MainMenu = () => {
                   <SpaceLink href="https://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
-                  <SpaceLink href="http://3.34.198.64/" target="_blank">
+                  <SpaceLink href="https://ai.worldland.foundation/" target="_blank">
                     <Strong>My AI</Strong>
                   </SpaceLink>
                 </div>
