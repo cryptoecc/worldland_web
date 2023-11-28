@@ -10,6 +10,7 @@ export enum ABI {
   LVSWAPV2_ROUTER = 'LVSWAPV2_ROUTER',
   LVSWAPV2_FACTORY = 'LVSWAPV2_FACTORY',
   LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
+  BRIDGEBASE_ABI = 'BRIDGEBASE_ABI',
 }
 
 export enum Field {
@@ -36,6 +37,7 @@ export enum CONTRACT_ADDRESSES {
   LP_TOKEN_ADDRESS = 'LP_TOKEN_ADDRESS',
   DAI_ADDRESS = 'DAI_ADDRESS',
   ERC20_ABI = 'ERC20_ABI',
+  BRIDGE = 'BRIDGE',
 }
 
 export enum FUNCTION {
@@ -52,6 +54,8 @@ export enum FUNCTION {
   TOKEN1 = 'token1',
   TOTALSUPPLY = 'totalSupply',
   GETRESERVES = 'getReserves',
+  LOCKETH = 'lockETH',
+  BURNWETH = 'burnWETH',
 }
 
 export enum CHAINDS {

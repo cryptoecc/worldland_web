@@ -1,7 +1,11 @@
 import { styled } from 'styled-components';
 import { theme } from 'style/theme';
 
-export const Container = styled.div<{ modal: boolean }>`
+type Iprops = {
+  modal: boolean;
+};
+
+export const Container = styled.div<Iprops>`
   display: ${({ modal }) => (modal ? 'flex' : 'none')};
   position: absolute;
   width: 100%;

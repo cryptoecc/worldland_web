@@ -12,6 +12,8 @@ type Network = 'Ethereum' | 'Worldland';
 
 type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 
+type FunctionType = 'lockETH' | 'burnWETH' | 'lockToken' | 'burnToken';
+
 export interface SelectType {
   type: Type;
   listType: SelectListType;
@@ -33,4 +35,6 @@ export interface ListItemType {
   networkIcon: NetworkIcon;
   networkId?: number;
   address: `0x${string}`;
+  funcType?: FunctionType;
+  balance?: string;
 }

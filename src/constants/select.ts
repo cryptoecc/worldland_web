@@ -22,15 +22,16 @@ export const selectList: ListItemType[] = [
   },
 ];
 
-export const bridgeSelectList: ListItemType[] = [
-  // Ethereum
+export const bridgeSelectListETH: ListItemType[] = [
   {
     token: 'ETH',
     tokenIcon: ETHTokenIcon,
     network: 'Ethereum',
     networkIcon: EthereumIcon,
     networkId: 1,
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ETH_ADDRESS],
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS],
+    funcType: 'lockETH',
+    balance: '0',
   },
   {
     token: 'WWLC',
@@ -39,15 +40,20 @@ export const bridgeSelectList: ListItemType[] = [
     networkIcon: EthereumIcon,
     networkId: 1,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS],
+    funcType: 'burnWETH',
+    balance: '0',
   },
-  // Worldland
+];
+export const bridgeSelectListWLD: ListItemType[] = [
   {
     token: 'WLC',
     tokenIcon: WldChainIcon,
     network: 'Worldland',
     networkIcon: WldChainIcon,
     networkId: 103,
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS],
+    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
+    funcType: 'lockETH',
+    balance: '0',
   },
   {
     token: 'WETH',
@@ -56,6 +62,8 @@ export const bridgeSelectList: ListItemType[] = [
     networkIcon: WldChainIcon,
     networkId: 103,
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
+    funcType: 'burnWETH',
+    balance: '0',
   },
 ];
 

@@ -2,7 +2,7 @@ import * as S from './SwapPage.style';
 import { ExchangeIcon } from 'assets';
 import Swap from 'components/swap/Swap';
 import { useSwapContext } from 'contexts/SwapProvider';
-import { handleSwapBtnState } from 'utils/util';
+import { handleBtnState } from 'utils/util';
 
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -308,7 +308,7 @@ const SwapWrap = () => {
             <Swap type="input" text="From" listType="tokenList" input={_input} eventHandler={inputHandler} />
             <ExchangeIcon />
             <Swap type="output" text="To" listType="tokenList" output={amountOut} />
-            <S.Button disabled={disabled} onClick={handleFunctionSelector} type="button">{handleSwapBtnState(btnState, spotlightToken)}</S.Button>
+            <S.Button disabled={disabled} onClick={handleFunctionSelector} type="button">{handleBtnState(btnState, spotlightToken)}</S.Button>
         </S.SwapWrapper>
     );
 };

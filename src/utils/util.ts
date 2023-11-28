@@ -47,8 +47,8 @@ export function handleAddLiquidityBtnState(state: number, token?: ListItemType |
   }
   return mapMessageToObject[state];
 }
-export function handleSwapBtnState(state: number, token?: ListItemType | null) {
-  if (state === 1 || state === 5) {
+export function handleBtnState(state: number, token?: ListItemType | null) {
+  if (state === 1 || state === 5 || state === 8) {
     return mapMessageToObject[state](token);
   }
   return mapMessageToObject[state];

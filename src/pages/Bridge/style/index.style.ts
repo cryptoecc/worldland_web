@@ -138,6 +138,7 @@ export const TokenWrap = styled.div`
 
   span {
     position: absolute;
+    top: -18px;
     right: -1rem;
     height: 3.3rem;
     width: 1px;

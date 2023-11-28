@@ -6,6 +6,7 @@ import { abi as UNISWAPV2_PAIR } from './contract-abi/uniswapV2Pair_abi';
 import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';
 import { abi as WRAPPEDETH_ABI } from './contract-abi/wrappedeth_abi';
+import { abi as BRIDGEBASE_ABI } from './contract-abi/bridgebase_abi';
 
 //lv-swap abi
 
@@ -23,4 +24,5 @@ export const MAP_STR_ABI = {
   LVSWAPV2_ROUTER,
   LVSWAPV2_FACTORY,
   LVSWAPV2_PAIR,
+  BRIDGEBASE_ABI,
 };
