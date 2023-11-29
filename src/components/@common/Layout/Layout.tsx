@@ -1,9 +1,10 @@
 import * as S from './Layout.style';
-
+import { useRef } from "react"
 import { MainVideo } from 'assets/static/videos/MainVideo';
 import { PropsWithChildren } from 'react';
 
 const Layout = ({ children }: PropsWithChildren) => {
+
   return (
     <S.Container>
       <S.Video controls loop autoPlay muted>

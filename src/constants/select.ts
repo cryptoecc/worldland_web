@@ -11,6 +11,7 @@ export const FundTypes: { COIN: FundType; TOKEN: FundType } = {
 
 export const selectList: ListItemType[] = [
   {
+    id: 0,
     token: 'WETH',
     tokenIcon: ETHTokenIcon,
     network: 'Worldland',
@@ -19,6 +20,7 @@ export const selectList: ListItemType[] = [
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
   },
   {
+    id: 1,
     token: 'DAI',
     tokenIcon: DAITokenIcon,
     network: 'Worldland',
@@ -32,9 +34,10 @@ export const selectList: ListItemType[] = [
 
 export const bridgeSelectListETH: ListItemType[] = [
   {
+    id: 0,
     token: 'ETH',
     tokenIcon: ETHTokenIcon,
-    network: 'Ethereum',
+    network: 'Sepolia',
     networkIcon: EthereumIcon,
     networkId: NETWORKS.CHAIN_1,
     address: MAPNETTOADDRESS_CHAIN1[CONTRACT_ADDRESSES.WWLC_ADDRESS],
@@ -43,9 +46,10 @@ export const bridgeSelectListETH: ListItemType[] = [
     balance: '0',
   },
   {
+    id: 1,
     token: 'WWLC',
     tokenIcon: ETHTokenIcon,
-    network: 'Ethereum',
+    network: 'Sepolia',
     networkIcon: EthereumIcon,
     networkId: NETWORKS.CHAIN_1,
     address: MAPNETTOADDRESS_CHAIN1[CONTRACT_ADDRESSES.WWLC_ADDRESS],
@@ -58,17 +62,7 @@ export const bridgeSelectListETH: ListItemType[] = [
 
 export const bridgeSelectListWLD: ListItemType[] = [
   {
-    token: 'WETH',
-    tokenIcon: WldChainIcon,
-    network: 'Worldland',
-    networkIcon: WldChainIcon,
-    networkId: NETWORKS.CHAIN_2,
-    address: MAPNETTOADDRESS_CHAIN2[CONTRACT_ADDRESSES.WETH_ADDRESS],
-    funcType: 'burnWETH',
-    fundType: 'token',
-    balance: '0',
-  },
-  {
+    id: 1,
     token: 'WLC',
     tokenIcon: WldChainIcon,
     network: 'Worldland',
@@ -79,9 +73,22 @@ export const bridgeSelectListWLD: ListItemType[] = [
     fundType: 'coin',
     balance: '0',
   },
+  {
+    id: 0,
+    token: 'WETH',
+    tokenIcon: WldChainIcon,
+    network: 'Worldland',
+    networkIcon: WldChainIcon,
+    networkId: NETWORKS.CHAIN_2,
+    address: MAPNETTOADDRESS_CHAIN2[CONTRACT_ADDRESSES.WETH_ADDRESS],
+    funcType: 'burnWETH',
+    fundType: 'token',
+    balance: '0',
+  },
 ];
 
 export const initialSwapSelect: SelectType = {
+  id: 0,
   type: 'input',
   listType: 'tokenList',
   token: 'WETH',
@@ -96,9 +103,10 @@ export const initialSwapSelect: SelectType = {
 } as const;
 
 export const initialBridgeSelect: ListItemType = {
+  id: 0,
   token: 'ETH',
   tokenIcon: ETHTokenIcon,
-  network: 'Ethereum',
+  network: 'Sepolia',
   networkIcon: EthereumIcon,
   networkId: NETWORKS.CHAIN_1,
   address: MAPNETTOADDRESS_CHAIN1[CONTRACT_ADDRESSES.ETH_ADDRESS],

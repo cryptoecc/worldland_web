@@ -24,15 +24,16 @@ import { ABI, CONTRACT_ADDRESSES, FUNCTION } from "utils/enum";
 import { MAP_STR_ABI } from "configs/abis";
 import { parseEther } from "viem";
 import { handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
+import { useToasts } from 'react-toast-notifications';
 
 import { NETWORKS } from "configs/networks";
-
-
+import { MESSAGES } from "utils/messages";
 
 const Bridge = () => {
     const { chain } = useNetwork();
     const { address, isConnected } = useAccount();
     const { open } = useWeb3Modal();
+    const { addToast } = useToasts();
     const [thisChainTokenList, setThisChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListETH : bridgeSelectListWLD);
     const [otherChainTokenList, setOtherChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListWLD : bridgeSelectListETH);
     const [inputSelect, setInputSelect] = useState<ListItemType>(thisChainTokenList[0]);
@@ -41,24 +42,53 @@ const Bridge = () => {
     const [modal, setModal] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(false);
     const [btnState, setBtnState] = useState<number>(1);
-    const { data: ethBalance } = useBalance({ address });
-    const { data: otherChainEthBalance } = useBalance({ chainId: outputSelect.networkId, address });
+    const [chainToggleState, setChainToggleState] = useState<boolean>(false);
+    const { data: ethBalance } = useBalance({ address, watch: true });
+    const { data: otherChainEthBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true });
 
-    const { data: tokenBalance } = useBalance({ address, token: inputSelect.address });
-    const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, token: outputSelect.address });
+    const { data: tokenBalance } = useBalance({ address, token: inputSelect.address, watch: true });
+    const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true, token: outputSelect.address });
 
 
-    const { write: send } = useContractWrite({
+    const { data: tx, write: send } = useContractWrite({
         address: MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: inputSelect.funcType,
+        gas: BigInt(3000000),
         onSuccess() {
             setInput("");
+            addToast(MESSAGES.TX_SENT, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
         },
-        onError(err) {
-            console.log({ approvalErrB: err });
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
         },
     });
+
+    useWaitForTransaction({
+        hash: tx?.hash,
+        staleTime: 2_000,
+        onSuccess(data) {
+            addToast('Transaction has been executed!', {
+                appearance: 'success',
+                content: 'Transactions are stored and batch executed each 15 seconds!',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        }
+    })
 
     const { switchNetwork } = useSwitchNetwork({
         onSuccess(data) {
@@ -123,6 +153,7 @@ const Bridge = () => {
     function toggleChain() {
         try {
             if (isConnected) {
+
             }
         } catch (err) {
             console.log(err);

@@ -8,7 +8,7 @@ type Token = 'ETH' | 'WETH' | 'USDC' | 'WLC' | 'WWLC' | 'DAI';
 
 type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
 
-type Network = 'Ethereum' | 'Worldland';
+type Network = 'Ethereum' | 'Worldland' | 'Sepolia';
 
 type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 
@@ -17,6 +17,7 @@ type FunctionType = 'lockETH' | 'burnWETH' | 'lockToken' | 'burnToken';
 export type FundType = 'coin' | 'token';
 
 export interface SelectType {
+  id: number;
   type: Type;
   listType: SelectListType;
   token: Token;
@@ -31,6 +32,7 @@ export interface SelectType {
 }
 
 export interface ListItemType {
+  id: number;
   token: Token;
   tokenIcon: TokenIcon;
   network: Network;

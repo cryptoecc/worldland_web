@@ -56,7 +56,7 @@ const SelectList = ({ modal, handler, tokenList, setInputSelect }: SelectListPro
                         tokenIcon={item.tokenIcon}
                         network={item.network}
                         networkIcon={item.networkIcon}
-                        onClick={() => handleSelect(item, index)}
+                        onClick={() => handleSelect(item, item.id)}
                     />
                 ))}
             </S.ItemWrapper>
