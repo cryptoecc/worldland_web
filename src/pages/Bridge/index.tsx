@@ -75,9 +75,9 @@ const Bridge = () => {
         hash: tx?.hash,
         staleTime: 2_000,
         onSuccess(data) {
-            addToast('Transaction has been executed!', {
+            addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
-                content: 'Transactions are stored and batch executed each 15 seconds!',
+                content: MESSAGES.TX_CONTENT,
                 autoDismiss: true,
             });
         },
@@ -92,7 +92,10 @@ const Bridge = () => {
 
     const { switchNetwork } = useSwitchNetwork({
         onSuccess(data) {
-            console.log({ data });
+            addToast(MESSAGES.CHAIN_CHANGE(data?.name), {
+                appearance: 'success',
+                autoDismiss: true,
+            });
         },
     });
 
