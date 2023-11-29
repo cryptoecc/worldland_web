@@ -4,15 +4,20 @@ export type Type = 'input' | 'output';
 
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'WETH' | 'USDC' | 'DAI';
+type Token = 'ETH' | 'WETH' | 'USDC' | 'WLC' | 'WWLC' | 'DAI';
 
 type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
 
-type Network = 'Wrapped ETH' | 'USDC' | 'DAI';
+type Network = 'Ethereum' | 'Worldland' | 'Sepolia';
 
 type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 
+type FunctionType = 'lockETH' | 'burnWETH' | 'lockToken' | 'burnToken';
+
+export type FundType = 'coin' | 'token';
+
 export interface SelectType {
+  id: number;
   type: Type;
   listType: SelectListType;
   token: Token;
@@ -27,9 +32,14 @@ export interface SelectType {
 }
 
 export interface ListItemType {
+  id: number;
   token: Token;
   tokenIcon: TokenIcon;
   network: Network;
   networkIcon: NetworkIcon;
+  networkId?: number;
   address: `0x${string}`;
+  funcType?: FunctionType;
+  balance?: string;
+  fundType?: FundType;
 }

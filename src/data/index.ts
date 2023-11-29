@@ -9,4 +9,6 @@ export const mapMessageToObject: any = {
   5: (token: ListItemType) => `Enter ${token.token} amount`,
   6: 'Swap',
   7: 'Switch network',
+  8: (token: ListItemType) => `Switch network to ${token.network}`,
+  9: 'Transfer',
 };

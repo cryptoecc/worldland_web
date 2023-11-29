@@ -4,7 +4,7 @@ import { SEPOLIA_ADDRESSES, WLD_ADDRESSES } from 'configs/contract_addresses';
 import { FC, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, Field } from 'utils/enum';
-import { to_wei, setDeadline, handleSwapBtnState } from 'utils/util';
+import { to_wei, setDeadline, handleBtnState } from 'utils/util';
 import { Spin, Space } from 'antd';
 // import Web3 from 'web3';
 
@@ -44,7 +44,7 @@ export const AiSwapButton = ({
       loader ? (<Space size="large">
         <Spin />
       </Space>) :
-        handleSwapBtnState(btnState, spotlightToken)
+        handleBtnState(btnState, spotlightToken)
     }
   </Button>;
 };

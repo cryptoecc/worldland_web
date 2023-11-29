@@ -24,7 +24,6 @@ const HeaderWrapper = styled.header`
   justify-content: center;
   align-items: center;
   user-select: none;
-  border-bottom: 1px solid ${theme.colors.black700};
   width: 100%;
  
 
@@ -81,8 +80,6 @@ function AppHeader() {
           </LogoWrapper>
         </Link>
         <MainMenu />
-        {/* <AddNetworkButton /> */}
-        {/* <MobileMetamask /> */}
         <Web3ConnectButton
           onAccountConnected={function (account: string): void {
             throw new Error('Function not implemented.');
