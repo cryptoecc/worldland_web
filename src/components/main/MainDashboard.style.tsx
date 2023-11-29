@@ -146,7 +146,7 @@ const LearnBtn = styled(Link)`
   text-decoration: none; /* Add this to remove underline */
 
   &:hover {
-    background-color: ${theme.colors.white800};
+    background-color: ${theme.colors.white80};
     color: ${theme.colors.white};
     transition:
       color 0.3s,
@@ -168,8 +168,8 @@ const DocsBtn = styled(Link)`
   text-decoration: none; /* Add this to remove underline */
 
   &:hover {
-    background-color: ${theme.colors.white800};
-    border: 1px solid ${theme.colors.white800};
+    background-color: ${theme.colors.white80};
+    border: 1px solid ${theme.colors.white80};
     transition:
       background 0.3s,
       border 0.3s;

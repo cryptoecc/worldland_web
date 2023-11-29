@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
@@ -22,34 +22,35 @@ const MainAreaChart = () => {
     getNodeCount();
   }, []);
 
-  // console.log(response);
-
   return (
     <ChartContainer>
-      <CustomAreaChart width={1200} height={300} data={nodeCount}>
-        <XAxis dataKey="date" />
-        <YAxis dataKey="node_count" />
-        <CartesianGrid stroke="none" />
-        <Tooltip />
-        <Legend />
-        <defs>
-          <linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={theme.colors.white} />
-            <stop offset="100%" stopColor={theme.colors.black} />
-          </linearGradient>
-        </defs>
-        <Area
-          type="monotone"
-          dataKey="node_count"
-          stroke="gray"
-          strokeWidth={3.5}
-          fill="url(#areaColor)"
-          dot={false}
-          activeDot={{ stroke: 'white', r: 4 }}
-        />
-      </CustomAreaChart>
+      <DetailDescription>Active Nodes</DetailDescription>
+
+      <ResponsiveContainer width="100%" height={300}>
+        <CustomAreaChart data={nodeCount}>
+          <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}일`} />
+          <YAxis dataKey="node_count" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} />
+          <CartesianGrid stroke="none" />
+          <Tooltip />
+          <Legend />
+          <defs>
+            <linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={theme.colors.white} />
+              <stop offset="100%" stopColor={theme.colors.black} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="monotone"
+            dataKey="node_count"
+            stroke="gray"
+            strokeWidth={3.5}
+            fill="url(#areaColor)"
+            dot={false}
+            activeDot={{ stroke: 'black', r: 4 }}
+          />
+        </CustomAreaChart>
+      </ResponsiveContainer>
       <br />
-      {/* <DetailDescription>Active Nodes</DetailDescription> */}
     </ChartContainer>
   );
 };

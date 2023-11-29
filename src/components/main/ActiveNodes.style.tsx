@@ -9,9 +9,9 @@ const ChartContainer = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   background: transparent;
-  color: ${theme.colors.white};
+  color: ${theme.colors.black};
   overflow: hidden;
-  width: 100%;
+  width: 80%;
   margin: 0 auto;
   align-items: center;
   padding: 80px 0;
@@ -31,7 +31,7 @@ const CustomAreaChart = styled(AreaChart)`
 const DetailDescription = styled.div`
   text-align: center;
   font-size: 18px;
-  color: ${theme.colors.white800};
+  color: ${theme.colors.white80};
 `;
 
 export { ChartContainer, CustomAreaChart, DetailDescription };

@@ -12,7 +12,7 @@ const Main = () => {
     <>
       <MainDashboard />
       <MainStatistics />
-      {/* <MainAreaChart /> */}
+      <MainAreaChart />
       <MainData />
       <MainPartner />
     </>
