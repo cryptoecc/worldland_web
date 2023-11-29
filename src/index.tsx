@@ -9,13 +9,13 @@ import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { arbitrum, mainnet, sepolia } from 'wagmi/chains';
 import { HelmetProvider } from 'react-helmet-async';
-import { worldland, worldland_testnet, sepolia_custom } from 'utils/wagmi';
+import { worldland, worldland_testnet, sepolia_custom, local_1, local_2 } from 'utils/wagmi';
 import { Provider } from 'react-redux';
 import { store } from 'store';
 import { ToastProvider } from 'react-toast-notifications';
+import { projectId } from 'configs/services/wagmi-credentials';
 
-const chains = [sepolia_custom, worldland, worldland_testnet, arbitrum, mainnet, sepolia];
-const projectId = '90f6c51de51a4046732827e944ba4958';
+const chains = [sepolia_custom, worldland, worldland_testnet, arbitrum, mainnet, sepolia, local_1, local_2];
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
 const wagmiConfig = createConfig({

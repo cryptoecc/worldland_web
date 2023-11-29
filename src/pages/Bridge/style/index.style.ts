@@ -33,7 +33,7 @@ export const Title = styled.h2`
   font-weight: 700;
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ disabled?: boolean }>`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -48,6 +48,7 @@ export const Button = styled.button`
 
   &:disabled {
     background-color: ${({ disabled }) => (disabled ? theme.colors.black70 : theme.colors.red)};
+    cursor: not-allowed;
   }
 `;
 
@@ -138,7 +139,6 @@ export const TokenWrap = styled.div`
 
   span {
     position: absolute;
-    top: -18px;
     right: -1rem;
     height: 3.3rem;
     width: 1px;

@@ -14,6 +14,8 @@ type NetworkIcon = typeof DAIIcon | typeof EthereumIcon;
 
 type FunctionType = 'lockETH' | 'burnWETH' | 'lockToken' | 'burnToken';
 
+export type FundType = 'coin' | 'token';
+
 export interface SelectType {
   type: Type;
   listType: SelectListType;
@@ -37,4 +39,5 @@ export interface ListItemType {
   address: `0x${string}`;
   funcType?: FunctionType;
   balance?: string;
+  fundType?: FundType;
 }

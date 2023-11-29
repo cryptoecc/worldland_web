@@ -57,6 +57,44 @@ export const sepolia_custom = {
   },
 } as const satisfies Chain;
 
+export const local_1 = {
+  id: 1337,
+  name: 'local_1',
+  network: 'local_1',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'ETH',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    public: { http: ['http://localhost:8545'] },
+    default: { http: ['http://localhost:8545'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'LocalTestnet', url: 'https://sepolia.etherscan.io/' },
+    default: { name: 'LocalTestnet', url: 'https://sepolia.etherscan.io/' },
+  },
+} as const satisfies Chain;
+
+export const local_2 = {
+  id: 31337,
+  name: 'local_2',
+  network: 'local_2',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'ETH',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    public: { http: ['http://localhost:8546'] },
+    default: { http: ['http://localhost:8546'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'LocalTestnet', url: 'https://sepolia.etherscan.io/' },
+    default: { name: 'LocalTestnet', url: 'https://sepolia.etherscan.io/' },
+  },
+} as const satisfies Chain;
+
 export const chainImages = {
   103: 'https://lv-storage1.s3.amazonaws.com/logo_2.svg',
 };

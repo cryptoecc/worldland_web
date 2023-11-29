@@ -7,7 +7,7 @@ import { EthTokenIcon, } from "assets/static/token-assets/EthTokenIcon";
 import { DownArrowIcon } from "assets";
 import BridgeModeToggleIcon from "assets/static/chain-assets/BridgeModeToggleIcon";
 import SelectList from "components/Bridge/SelectList";
-import { bridgeSelectListETH, bridgeSelectListWLD, initialBridgeSelect } from "constants/select";
+import { FundTypes, bridgeSelectListETH, bridgeSelectListWLD, initialBridgeSelect } from "constants/select";
 import { ListItemType } from "types/select";
 import {
     useAccount,
@@ -19,11 +19,13 @@ import {
     useContractRead,
 } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/react';
-import { MAPNETTOADDRESS, MAPNETWORKTOCHAINID } from "configs/contract_address_config";
+import { MAPNETWORKTOCHAINID } from "configs/contract_address_config";
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from "utils/enum";
 import { MAP_STR_ABI } from "configs/abis";
-import { formatEther, parseEther } from "viem";
-import { from_wei, handleBtnState, to_wei } from "utils/util";
+import { parseEther } from "viem";
+import { handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
+
+import { NETWORKS } from "configs/networks";
 
 
 
@@ -31,19 +33,20 @@ const Bridge = () => {
     const { chain } = useNetwork();
     const { address, isConnected } = useAccount();
     const { open } = useWeb3Modal();
-    const [thisChainTokenList, setThisChainTokenList] = useState<ListItemType[]>(chain?.id === 1 ? bridgeSelectListETH : bridgeSelectListWLD);
-    const [otherChainTokenList, setOtherChainTokenList] = useState<ListItemType[]>(chain?.id === 1 ? bridgeSelectListWLD : bridgeSelectListETH);
+    const [thisChainTokenList, setThisChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListETH : bridgeSelectListWLD);
+    const [otherChainTokenList, setOtherChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListWLD : bridgeSelectListETH);
     const [inputSelect, setInputSelect] = useState<ListItemType>(thisChainTokenList[0]);
     const [outputSelect, setOutputSelect] = useState<ListItemType>(thisChainTokenList[0]);
     const [input, setInput] = useState("");
     const [modal, setModal] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(false);
     const [btnState, setBtnState] = useState<number>(1);
-
     const { data: ethBalance } = useBalance({ address });
-    const { data: tokenBalance } = useBalance({ address, token: inputSelect.address });
     const { data: otherChainEthBalance } = useBalance({ chainId: outputSelect.networkId, address });
+
+    const { data: tokenBalance } = useBalance({ address, token: inputSelect.address });
     const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, token: outputSelect.address });
+
 
     const { write: send } = useContractWrite({
         address: MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
@@ -52,7 +55,6 @@ const Bridge = () => {
         onSuccess() {
             setInput("");
         },
-
         onError(err) {
             console.log({ approvalErrB: err });
         },
@@ -132,23 +134,29 @@ const Bridge = () => {
     }
 
     useEffect(() => {
-        switch (chain?.id) {
-            case 1:
-                setInputSelect(bridgeSelectListETH[0]);
-                setOutputSelect(bridgeSelectListWLD[0]);
-                setThisChainTokenList(bridgeSelectListETH);
-                setOtherChainTokenList(bridgeSelectListWLD);
-                break;
-            case 103:
-                setInputSelect(bridgeSelectListWLD[0]);
-                setOutputSelect(bridgeSelectListETH[0]);
-                setThisChainTokenList(bridgeSelectListWLD);
-                setOtherChainTokenList(bridgeSelectListETH);
-                break;
-            default:
-                return;
+        if (isConnected) {
+            switch (chain?.id) {
+                case NETWORKS.CHAIN_1:
+                    setInputSelect(bridgeSelectListETH[0]);
+                    setOutputSelect(bridgeSelectListWLD[0]);
+                    setThisChainTokenList(bridgeSelectListETH);
+                    setOtherChainTokenList(bridgeSelectListWLD);
+                    break;
+                case NETWORKS.CHAIN_2:
+                    setInputSelect(bridgeSelectListWLD[0]);
+                    setOutputSelect(bridgeSelectListETH[0]);
+                    setThisChainTokenList(bridgeSelectListWLD);
+                    setOtherChainTokenList(bridgeSelectListETH);
+                    break;
+                default:
+                    setInputSelect(bridgeSelectListETH[0]);
+                    setOutputSelect(bridgeSelectListWLD[0]);
+                    setThisChainTokenList(bridgeSelectListETH);
+                    setOtherChainTokenList(bridgeSelectListWLD);
+            }
         }
-    }, [chain?.id])
+
+    }, [isConnected, chain?.id])
 
     useEffect(() => {
         if (!isConnected) {
@@ -190,6 +198,27 @@ const Bridge = () => {
         tokenBalance?.formatted
     ])
 
+    useEffect(() => {
+        if (isConnected) {
+            // balance monitor chain 1
+            switch (inputSelect.fundType) {
+                case FundTypes.COIN:
+                    setInputSelect(prev => ({ ...prev, balance: putCommaAtPrice(ethBalance?.formatted ?? '0', 4) }));
+                    break;
+                case FundTypes.TOKEN:
+                    setInputSelect(prev => ({ ...prev, balance: putCommaAtPrice(tokenBalance?.formatted ?? '0', 4) }))
+            }
+            // balance monitor chain 2
+            switch (outputSelect.fundType) {
+                case FundTypes.COIN:
+                    setOutputSelect(prev => ({ ...prev, balance: putCommaAtPrice(otherChainEthBalance?.formatted ?? '0', 4) }));
+                    break;
+                case FundTypes.TOKEN:
+                    setOutputSelect(prev => ({ ...prev, balance: putCommaAtPrice(otherChainTokenBalance?.formatted ?? '0', 4) }))
+            }
+        }
+    }, [isConnected, inputSelect.fundType, outputSelect.fundType, ethBalance, otherChainEthBalance, tokenBalance, otherChainTokenBalance])
+
 
 
     return (
@@ -206,7 +235,7 @@ const Bridge = () => {
                             </S.B>
                         </S.ChainNameWrap>
                         <S.B>
-                            Balance: <span>0</span>
+                            Balance: <span>{inputSelect.balance}</span>
                         </S.B>
                     </S.Chain>
                     <S.InputWrapper>
@@ -247,11 +276,11 @@ const Bridge = () => {
                             </S.B>
                         </S.ChainNameWrap>
                         <S.B>
-                            Balance: <span>0</span>
+                            Balance: <span>{outputSelect.balance}</span>
                         </S.B>
                     </S.Chain>
                 </S.ParentWrap>
-                <S.Button onClick={handleFunctionSelector}>
+                <S.Button disabled={disabled} onClick={handleFunctionSelector}>
                     {handleBtnState(btnState, inputSelect)}
                 </S.Button>
                 {modal && <SelectList tokenList={thisChainTokenList} setInputSelect={handleSelectItem} modal={modal} handler={setModal} />}
