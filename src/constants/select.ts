@@ -48,7 +48,7 @@ export const bridgeSelectListETH: ListItemType[] = [
   {
     id: 1,
     token: 'WWLC',
-    tokenIcon: ETHTokenIcon,
+    tokenIcon: WldChainIcon,
     network: 'Sepolia',
     networkIcon: EthereumIcon,
     networkId: NETWORKS.CHAIN_1,
@@ -88,7 +88,7 @@ export const bridgeSelectListWLD: ListItemType[] = [
   {
     id: 0,
     token: 'WETH',
-    tokenIcon: WldChainIcon,
+    tokenIcon: ETHTokenIcon,
     network: 'Worldland',
     networkIcon: WldChainIcon,
     networkId: NETWORKS.CHAIN_2,

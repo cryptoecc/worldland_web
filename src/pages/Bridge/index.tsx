@@ -22,8 +22,8 @@ import { useWeb3Modal } from '@web3modal/react';
 import { MAPNETWORKTOCHAINID } from "configs/contract_address_config";
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from "utils/enum";
 import { MAP_STR_ABI } from "configs/abis";
-import { parseEther } from "viem";
-import { from_wei, handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
+import { formatEther, parseEther } from "viem";
+import { handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
 import { useToasts } from 'react-toast-notifications';
 
 import { NETWORKS } from "configs/networks";
@@ -69,7 +69,7 @@ const Bridge = () => {
         functionName: FUNCTION.APPROVE,
         args: [
             MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
-            (10 ** 10).toString()
+            to_wei('1000000000000')
         ],
         onSuccess() {
             setInput("");
@@ -175,7 +175,7 @@ const Bridge = () => {
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
                     return;
-                } else if (parseFloat(from_wei(allowance)) < parseFloat(input)) {
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                     // low allowance
                     sendApprove();
                     return;
@@ -191,6 +191,10 @@ const Bridge = () => {
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
                     return;
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                    // low allowance
+                    sendApprove();
+                    return;
                 } else {
                     sendBridge({
                         args: [
@@ -205,7 +209,7 @@ const Bridge = () => {
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
                     return;
-                } else if (parseFloat(from_wei(allowance)) < parseFloat(input)) {
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                     // low allowance
                     sendApprove();
                     return;
@@ -267,6 +271,7 @@ const Bridge = () => {
     }, [isConnected, chain?.id])
 
     useEffect(() => {
+        console.log({ ALLOWANCE_TOKEN: parseFloat(formatEther(allowance)) })
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -292,6 +297,10 @@ const Bridge = () => {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
             } else {
                 setDisabled(false);
                 setBtnState(9);
@@ -301,6 +310,10 @@ const Bridge = () => {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
             } else {
                 setDisabled(false);
                 setBtnState(9);
@@ -310,6 +323,10 @@ const Bridge = () => {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
             } else {
                 setDisabled(false);
                 setBtnState(9);
@@ -318,6 +335,7 @@ const Bridge = () => {
     }, [
         isConnected,
         chain?.id,
+        allowance,
         input,
         inputSelect,
         ethBalance?.formatted,

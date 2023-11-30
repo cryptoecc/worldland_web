@@ -26,7 +26,6 @@ import { from_wei, to_wei } from 'utils/util';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { useWeb3Modal } from '@web3modal/react';
 import { chain_query } from 'configs/contract_calls';
-import { gasLimit } from 'utils/wagmi';
 import { useToasts } from 'react-toast-notifications';
 import { chainIds } from 'configs/services/chainIds';
 import { parseEther } from 'viem';
@@ -93,19 +92,7 @@ const AddLiquidity = () => {
     queryCurrentPrice();
   }, [selectedToken0?.address, selectedToken1?.address]);
 
-  const { data: coinBalanceA } = useBalance({
-    address,
-    // abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    // functionName: 'balanceOf',
-    // args: [address],
-    // watch: true,
-    onSuccess(data: any) {
-      console.log({ coinBalanceA: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
+  const { data: coinBalanceA } = useBalance({ address });
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken0?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -214,7 +201,6 @@ const AddLiquidity = () => {
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.ADDLIQUIDITY,
-    gas: gasLimit,
     onSuccess(data) {
       console.log({ approvalB: data });
     },
@@ -227,7 +213,6 @@ const AddLiquidity = () => {
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.ADDLIQUIDITYETH,
-    gas: gasLimit,
     value: parseEther(selectedTokenAmount0),
     onSuccess(data) {
       console.log({ approvalB: data });
@@ -240,15 +225,24 @@ const AddLiquidity = () => {
   async function handleAddLiquidity() {
     let deadline = await setDeadline(3600);
     let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '');
-    console.log({ cleanedOutput: to_wei(cleanedOutput) });
+    console.log({
+      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+      token0: selectedToken0.address,
+      token1: selectedToken1.address,
+      amount0: to_wei(selectedTokenAmount0),
+      amount1: to_wei(cleanedOutput),
+      amountOutMin: to_wei('0.0001'),
+      address,
+      deadline
+    });
     AddLiquidity({
       args: [
         selectedToken0?.address,
         selectedToken1?.address,
         to_wei(selectedTokenAmount0),
         to_wei(cleanedOutput),
-        to_wei('10'),
-        to_wei('10'),
+        to_wei('0.0001'),
+        to_wei('0.0001'),
         address,
         deadline,
       ],
@@ -311,14 +305,22 @@ const AddLiquidity = () => {
       Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) &&
       Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
     ) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
-      // approves two tokens automatically if allowance of both of them is low
+      // low allowanceA
+      // approveA
       handleApprovals(0);
+      handleApprovals(1);
+    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
+      // low allowanceA
+      // approveA
+      handleApprovals(0);
+    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))) {
+      // low allowanceB
+      // approveB
       handleApprovals(1);
     } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
       // if allowanceA is low
       handleApprovals(0);
-    } else if (Number(from_wei(amountOut) ? from_wei(amountOut) : '0') > Number(from_wei(allowanceB))) {
+    } else if (Number(from_wei(selectedTokenAmount0) ? from_wei(selectedTokenAmount0) : '0') > Number(from_wei(allowanceB))) {
       // if allowanceB is low
       handleApprovals(1);
     } else {
@@ -374,10 +376,18 @@ const AddLiquidity = () => {
       setBtnState(1);
       setLowBalanceToken(selectedToken1);
     } else if (
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) ||
+      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) &&
       Number(from_wei(amountOut)) > Number(from_wei(allowanceB))
     ) {
-      // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
+      // low allowanceA && allowanceB
+      setDisabled(false);
+      setBtnState(2);
+    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
+      // low allowanceA
+      setDisabled(false);
+      setBtnState(2);
+    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))) {
+      // low allowanceB
       setDisabled(false);
       setBtnState(2);
     } else {

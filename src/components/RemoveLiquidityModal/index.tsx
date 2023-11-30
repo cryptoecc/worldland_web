@@ -12,7 +12,6 @@ import { from_wei, putCommaAtPrice, setDeadline, to_wei } from 'utils/util';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { gasLimit } from 'utils/wagmi';
 
 interface IDisabled {
   approve?: boolean;
@@ -29,7 +28,6 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.REMOVELIQUIDITY,
-    gas: gasLimit,
     onSuccess(data) {
       console.log({ removalLiquidity: data });
     },
