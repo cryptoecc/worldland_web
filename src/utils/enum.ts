@@ -56,6 +56,13 @@ export enum FUNCTION {
   GETRESERVES = 'getReserves',
   LOCKETH = 'lockETH',
   BURNWETH = 'burnWETH',
+  LOCKTOKEN = 'lockToken',
+  BURNTOKEN = 'burnToken',
+}
+
+export enum QUERY {
+  ALLOWANCE = 'allowance',
+  BALANCEOF = 'balanceOf',
 }
 
 export enum CHAINDS {

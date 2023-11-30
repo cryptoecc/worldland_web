@@ -57,6 +57,18 @@ export const bridgeSelectListETH: ListItemType[] = [
     fundType: 'token',
     balance: '0',
   },
+  {
+    id: 2,
+    token: 'DAI',
+    tokenIcon: DAITokenIcon,
+    network: 'Sepolia',
+    networkIcon: EthereumIcon,
+    networkId: NETWORKS.CHAIN_1,
+    address: MAPNETTOADDRESS_CHAIN1[CONTRACT_ADDRESSES.DAI_ADDRESS],
+    funcType: 'lockToken',
+    fundType: 'token',
+    balance: '0',
+  },
 ];
 // coin / tokens should be passed in a parallel order to both bridgeSelectListETH and bridgeSelectListWLD respectively
 
@@ -82,6 +94,18 @@ export const bridgeSelectListWLD: ListItemType[] = [
     networkId: NETWORKS.CHAIN_2,
     address: MAPNETTOADDRESS_CHAIN2[CONTRACT_ADDRESSES.WETH_ADDRESS],
     funcType: 'burnWETH',
+    fundType: 'token',
+    balance: '0',
+  },
+  {
+    id: 2,
+    token: 'DAI',
+    tokenIcon: DAITokenIcon,
+    network: 'Worldland',
+    networkIcon: WldChainIcon,
+    networkId: NETWORKS.CHAIN_2,
+    address: MAPNETTOADDRESS_CHAIN2[CONTRACT_ADDRESSES.DAI_ADDRESS],
+    funcType: 'burnToken',
     fundType: 'token',
     balance: '0',
   },
