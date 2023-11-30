@@ -23,7 +23,7 @@ function MainStatistics() {
 
   const listAccount = async () => {
     const response = await axios.post(
-      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=500`,
+      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=700`,
     );
 
     const response2 = response.data.result.length;
