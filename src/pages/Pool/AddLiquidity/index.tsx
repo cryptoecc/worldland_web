@@ -1,4 +1,4 @@
-import { useState, useEffect, createElement } from 'react';
+import { useState, useEffect, createElement, useCallback } from 'react';
 import styled from 'styled-components';
 import VideoContainer from 'components/VideoContainer';
 import Video from 'components/Video';
@@ -30,10 +30,14 @@ import { useToasts } from 'react-toast-notifications';
 import { chainIds } from 'configs/services/chainIds';
 import { parseEther } from 'viem';
 import { ListItemType } from 'types/select';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchData } from 'store/actions';
+import debounce from 'lodash.debounce';
 
 const AddLiquidity = () => {
   const { address, isConnected } = useAccount();
   const { addToast } = useToasts();
+  const dispatch = useDispatch();
   const [btnState, setBtnState] = useState<number>(1);
   const [lowBalanceToken, setLowBalanceToken] = useState<ListItemType>(selectList[0]);
   const [selectedToken0, setSelectedToken0] = useState<ListItemType>(selectList[0]);
@@ -43,9 +47,9 @@ const AddLiquidity = () => {
   const [selectedTokenAmount1, setSelectedTokenAmount1] = useState<string>('');
   const [disabled, setDisabled] = useState<boolean>(false);
   const [modal, setModal] = useState(false);
-  const [amountOut, setAmountOut] = useState<string>('');
   const [currentPrice, setCurrentPrice] = useState<string>('');
   const { open } = useWeb3Modal();
+  const { data: amountOut } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
   const location = useLocation;
   const approvalAmount = '1000000000';
   const mapIndexToFunction: ImapIndexToFunction = {
@@ -67,29 +71,46 @@ const AddLiquidity = () => {
     setModal((prev) => !prev);
   }
 
+  const handleDebouncedAmountOut = useCallback(
+    debounce((value: string) => {
+      dispatch(fetchData({
+        amountIn: value,
+        tokenA: selectedToken0?.address,
+        tokenB: selectedToken1?.address
+      }) as any)
+    }, 500), [selectedTokenAmount0, selectedToken0?.address, selectedToken1?.address]
+  )
+
   async function queryCurrentPrice() {
     // makes a chain query regardless of wallet connection
+    if (selectedTokenAmount0 === '') {
+      return;
+    }
     if (selectedToken0?.address === selectedToken1?.address) {
       return;
     }
-    let args = {
+    const blockNumber = await web3_wld.eth.getBlockNumber();
+    let getPairTx = {
       chain: 2,
-      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-      abikind: ABI.LVSWAPV2_ROUTER,
-      methodname: FUNCTION.GETAMOUNTOUT,
-      f_args: [
-        MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-        to_wei('1'),
-        selectedToken0?.address,
-        selectedToken1?.address,
-      ],
+      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+      abikind: ABI.LVSWAPV2_FACTORY,
+      methodname: FUNCTION.GETPAIR,
+      f_args: [selectedToken0, selectedToken1],
     };
-    let price = await chain_query(args);
+    let marketPriceTx = {
+      chain: 2,
+      contract_address: await chain_query(getPairTx),
+      abikind: ABI.LVSWAPV2_PAIR,
+      methodname: FUNCTION.GETMARKETPRICE,
+      f_args: [blockNumber],
+    };
+    let price = from_wei(await chain_query(marketPriceTx));
     setCurrentPrice(price);
   }
 
   useEffect(() => {
     queryCurrentPrice();
+    dispatch(fetchData({ amountIn: selectedTokenAmount0, tokenA: selectedToken0, tokenB: selectedToken1 }) as any);
   }, [selectedToken0?.address, selectedToken1?.address]);
 
   const { data: coinBalanceA } = useBalance({ address });
@@ -142,29 +163,6 @@ const AddLiquidity = () => {
     watch: true,
     onSuccess(data: any) {
       console.log({ allowanceB: data });
-    },
-    onError(data: any) {
-      console.log({ error: data });
-    },
-  });
-
-  const { data: _amountOut } = useContractRead({
-    address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-    abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
-    functionName: FUNCTION.GETAMOUNTOUT,
-    args: [
-      MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-      to_wei(selectedTokenAmount0 ? selectedTokenAmount0 : '0'),
-      selectedToken0?.address,
-      selectedToken1?.address,
-    ],
-    watch: true,
-    onSuccess(data: any) {
-      queryCurrentPrice();
-      setAmountOut(data);
-      if (parseFloat(from_wei(data)) > 0) {
-        tokenAmountInputHandler(1, putCommaAtPrice(from_wei(data), 5));
-      }
     },
     onError(data: any) {
       console.log({ error: data });
@@ -273,6 +271,7 @@ const AddLiquidity = () => {
 
   function tokenAmountInputHandler(index: number, amount: string) {
     mapIndexToInput[index](amount);
+    if (index === 0) handleDebouncedAmountOut(amount)
   }
 
   function handleApprovals(index: number) {
@@ -435,13 +434,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken0 ? (
                   <>
-                    {createElement(selectList[0].tokenIcon)}
+                    {createElement(selectedToken0.tokenIcon)}
                     <p>{selectedToken0.token}</p>
                   </>
                 ) : (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
-                    <p>{selectList[1].token}</p>
+                    {createElement(selectedToken1.tokenIcon)}
+                    <p>{selectedToken1.token}</p>
                   </>
                 )}
               </span>
@@ -451,13 +450,13 @@ const AddLiquidity = () => {
               <span>
                 {selectedToken1 ? (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
+                    {createElement(selectedToken1.tokenIcon)}
                     <p>{selectedToken1.token}</p>
                   </>
                 ) : (
                   <>
-                    {createElement(selectList[1].tokenIcon)}
-                    <p>{selectList[1].token}</p>
+                    {createElement(selectedToken0.tokenIcon)}
+                    <p>{selectedToken0.token}</p>
                   </>
                 )}
               </span>

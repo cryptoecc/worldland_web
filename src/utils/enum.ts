@@ -47,6 +47,8 @@ export enum FUNCTION {
   APPROVE = 'approve',
   GETAMOUNTOUT = 'getAmountOut',
   GETAMOUNTSOUT = 'getAmountsOut',
+  GETMARKETPRICE = 'getMarketPrice',
+  GETPAIR = 'getPair',
   BURN = 'BURN',
   SWAPEXACTETHFORTOKENS = 'swapExactETHForTokens',
   SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',

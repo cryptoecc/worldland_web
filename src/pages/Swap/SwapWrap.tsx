@@ -40,8 +40,6 @@ const SwapWrap = () => {
     const { input, output } = useSwapContext();
     const {
         data: amountOut,
-        loading,
-        error,
     } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
     const [btnState, setBtnState] = useState<number>(1);
     const approvalAmount = '1000000';
@@ -84,7 +82,7 @@ const SwapWrap = () => {
         debounce((value: string) => {
             dispatch(
                 fetchData({
-                    amountIn: to_wei(value),
+                    amountIn: value,
                     tokenA: input?.address,
                     tokenB: output?.address,
                 }) as any,
@@ -144,7 +142,12 @@ const SwapWrap = () => {
 
     async function handleSwap() {
         let deadline = await setDeadline(3600);
-        const swapPath = [input.address, output.address];
+        const isTokenSorted = input.address < output.address;
+        const token0 = isTokenSorted ? input.address : output.address;
+        const token1 = isTokenSorted ? output.address : input.address;
+        const swapPath = [token0, token1];
+        console.log({ tokenA: input.address, tokenB: output.address });
+        console.log({ token0, token1 })
         if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS]) {
             swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
         } else {

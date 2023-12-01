@@ -271,7 +271,6 @@ const Bridge = () => {
     }, [isConnected, chain?.id])
 
     useEffect(() => {
-        console.log({ ALLOWANCE_TOKEN: parseFloat(formatEther(allowance)) })
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);

@@ -32,8 +32,6 @@ const Pool = () => {
     const [modal, setModal] = useState<boolean>(false);
     const [allowanceLP, setAllowanceLP] = useState<string>('')
 
-
-
     const { data } = useContractReads({
         contracts: PAIR_ADRESSES.map((el) => ({
             address: el,
