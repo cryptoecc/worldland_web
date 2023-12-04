@@ -30,7 +30,6 @@ import { parseEther } from 'viem';
 import { initialSwapSelect } from 'constants/select';
 import { ListItemType } from 'types/select';
 
-
 const SwapWrap = () => {
   const { address, isConnected } = useAccount();
   const { open } = useWeb3Modal();
@@ -46,6 +45,7 @@ const SwapWrap = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
   const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect);
+  const [marketPrice, setMarketPrice] = useState<string>('');
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
     let typedValue = e.target.value;
@@ -266,6 +266,34 @@ const SwapWrap = () => {
     }
   }
 
+  const getDataViaAPI = async () => {
+    fetch('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=ETH&tsyms=USD', {
+      method: 'GET',
+      headers: {
+        accept: 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const rawApiPrice = data.RAW.ETH.USD.PRICE;
+        const apiPrice = parseFloat(rawApiPrice).toFixed(2);
+
+        console.log(data);
+        console.log(`api로 가져온 price: ${apiPrice}`);
+        setMarketPrice(apiPrice);
+      })
+      .catch((error) => {
+        console.error('api로 가격 가져오는데 실패 : ', error);
+      });
+  };
+
+  useEffect(() => {
+    getDataViaAPI();
+    const interval = setInterval(getDataViaAPI, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     if (!isConnected) {
       // metamask is not connected
@@ -310,8 +338,21 @@ const SwapWrap = () => {
     <S.SwapWrapper>
       <Swap type="input" text="From" listType="tokenList" input={_input} eventHandler={inputHandler} />
       <ExchangeIcon />
-      <Swap type="output" text="To" listType="tokenList" output={amountOut} />
-      <S.Button disabled={disabled} onClick={handleFunctionSelector} type="button">{handleBtnState(btnState, spotlightToken)}</S.Button>
+      <Swap
+        type="output"
+        text={
+          'To                                                                                                    AI Predict Price'
+        }
+        listType="tokenList"
+        output={amountOut}
+      />
+      <S.PriceContainer>
+        <S.Content>Market Price 1 WETH : {marketPrice} USD</S.Content>
+        {/* <S.Content>Pridict Price : {amountOut}</S.Content> */}
+      </S.PriceContainer>
+      <S.Button disabled={disabled} onClick={handleFunctionSelector} type="button">
+        {handleBtnState(btnState, spotlightToken)}
+      </S.Button>
     </S.SwapWrapper>
   );
 };

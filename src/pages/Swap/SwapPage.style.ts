@@ -44,3 +44,18 @@ export const Button = styled.button`
     background-color: ${({ disabled }) => (disabled ? theme.colors.black70 : theme.colors.red)};
   }
 `;
+
+export const PriceContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  padding: 5px;
+  color: ${theme.colors.white90};
+  font-size: 0.8rem;
+`;
+
+export const Content = styled.div`
+  /* width: 100%; */
+  padding-top: 5px;
+`;
