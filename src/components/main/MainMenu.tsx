@@ -135,6 +135,9 @@ const MainMenu = () => {
             <Network>
               <div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <SpaceLink href="/bridge">
+                    <Strong>Bridge</Strong>
+                  </SpaceLink>
                   <SpaceLink href="/swap">
                     <Strong>Swap</Strong>
                   </SpaceLink>

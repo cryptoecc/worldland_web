@@ -47,6 +47,8 @@ export enum FUNCTION {
   APPROVE = 'approve',
   GETAMOUNTOUT = 'getAmountOut',
   GETAMOUNTSOUT = 'getAmountsOut',
+  GETMARKETPRICE = 'getMarketPrice',
+  GETPAIR = 'getPair',
   BURN = 'BURN',
   SWAPEXACTETHFORTOKENS = 'swapExactETHForTokens',
   SWAPEXACTTOKENSFORTOKENS = 'swapExactTokensForTokens',
@@ -56,6 +58,13 @@ export enum FUNCTION {
   GETRESERVES = 'getReserves',
   LOCKETH = 'lockETH',
   BURNWETH = 'burnWETH',
+  LOCKTOKEN = 'lockToken',
+  BURNTOKEN = 'burnToken',
+}
+
+export enum QUERY {
+  ALLOWANCE = 'allowance',
+  BALANCEOF = 'balanceOf',
 }
 
 export enum CHAINDS {

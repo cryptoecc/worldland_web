@@ -20,9 +20,9 @@ import {
 } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/react';
 import { MAPNETWORKTOCHAINID } from "configs/contract_address_config";
-import { ABI, CONTRACT_ADDRESSES, FUNCTION } from "utils/enum";
+import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from "utils/enum";
 import { MAP_STR_ABI } from "configs/abis";
-import { parseEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
 import { useToasts } from 'react-toast-notifications';
 
@@ -32,6 +32,7 @@ import { MESSAGES } from "utils/messages";
 const Bridge = () => {
     const { chain } = useNetwork();
     const { address, isConnected } = useAccount();
+    const networkType = MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.BRIDGE];
     const { open } = useWeb3Modal();
     const { addToast } = useToasts();
     const [thisChainTokenList, setThisChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListETH : bridgeSelectListWLD);
@@ -49,12 +50,49 @@ const Bridge = () => {
     const { data: tokenBalance } = useBalance({ address, token: inputSelect.address, watch: true });
     const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true, token: outputSelect.address });
 
+    const { data: allowance } = useContractRead({
+        address: inputSelect.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: QUERY.ALLOWANCE,
+        args: [address, networkType],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ tokenBalanceA: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
 
-    const { data: tx, write: send } = useContractWrite({
-        address: MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
+    const { data: approvalTx, write: sendApprove } = useContractWrite({
+        address: inputSelect.address,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: FUNCTION.APPROVE,
+        args: [
+            networkType,
+            to_wei('1000000000000')
+        ],
+        onSuccess() {
+            setInput("");
+            addToast(MESSAGES.TX_SENT, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        },
+    });
+
+
+    const { data: bridgeTx, write: sendBridge } = useContractWrite({
+        address: networkType,
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: inputSelect.funcType,
-        gas: BigInt(3000000),
         onSuccess() {
             setInput("");
             addToast(MESSAGES.TX_SENT, {
@@ -72,12 +110,12 @@ const Bridge = () => {
     });
 
     useWaitForTransaction({
-        hash: tx?.hash,
+        hash: bridgeTx?.hash || approvalTx?.hash,
         staleTime: 2_000,
-        onSuccess(data) {
+        onSuccess() {
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
-                content: MESSAGES.TX_CONTENT,
+                content: approvalTx?.hash ?? MESSAGES.TX_CONTENT,
                 autoDismiss: true,
             });
         },
@@ -101,8 +139,9 @@ const Bridge = () => {
 
     function handleSelectItem(item: ListItemType, index: number) {
         try {
+            const indexedItem = otherChainTokenList.find(el => index === el.id);
             setInputSelect(item);
-            setOutputSelect(otherChainTokenList[index]);
+            setOutputSelect(indexedItem as ListItemType);
         } catch (err) {
             console.log(err)
         }
@@ -125,7 +164,7 @@ const Bridge = () => {
                     // low eth balance
                     return;
                 } else {
-                    send({
+                    sendBridge({
                         args: [
                             address,
                             inputSelect.address
@@ -137,10 +176,50 @@ const Bridge = () => {
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
                     return;
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                    // low allowance
+                    sendApprove();
+                    return;
                 } else {
-                    send({
+                    sendBridge({
                         args: [
                             to_wei(input),
+                            inputSelect.address
+                        ]
+                    })
+                }
+            } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
+                if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                    // low token balance
+                    return;
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                    // low allowance
+                    sendApprove();
+                    return;
+                } else {
+                    sendBridge({
+                        args: [
+                            address,
+                            to_wei(input),
+                            inputSelect.token,
+                            inputSelect.address
+                        ],
+                    })
+                }
+            } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
+                if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                    // low token balance
+                    return;
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                    // low allowance
+                    sendApprove();
+                    return;
+                } else {
+                    sendBridge({
+                        args: [
+                            address,
+                            to_wei(input),
+                            inputSelect.token,
                             inputSelect.address
                         ]
                     })
@@ -188,6 +267,11 @@ const Bridge = () => {
                     setThisChainTokenList(bridgeSelectListETH);
                     setOtherChainTokenList(bridgeSelectListWLD);
             }
+        } else {
+            setInputSelect(bridgeSelectListETH[0]);
+            setOutputSelect(bridgeSelectListWLD[0]);
+            setThisChainTokenList(bridgeSelectListETH);
+            setOtherChainTokenList(bridgeSelectListWLD);
         }
 
     }, [isConnected, chain?.id])
@@ -218,6 +302,36 @@ const Bridge = () => {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
+            } else {
+                setDisabled(false);
+                setBtnState(9);
+            }
+        } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
+            if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                // low token balance
+                setDisabled(true);
+                setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
+            } else {
+                setDisabled(false);
+                setBtnState(9);
+            }
+        } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
+            if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                // low token balance
+                setDisabled(true);
+                setBtnState(1);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                // low allowance
+                setDisabled(false);
+                setBtnState(2);
             } else {
                 setDisabled(false);
                 setBtnState(9);
@@ -226,6 +340,7 @@ const Bridge = () => {
     }, [
         isConnected,
         chain?.id,
+        allowance,
         input,
         inputSelect,
         ethBalance?.formatted,

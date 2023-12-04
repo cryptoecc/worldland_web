@@ -31,23 +31,21 @@ import { initialSwapSelect } from 'constants/select';
 import { ListItemType } from 'types/select';
 
 const SwapWrap = () => {
-  const { address, isConnected } = useAccount();
-  const { open } = useWeb3Modal();
-  const { addToast } = useToasts();
-  const dispatch = useDispatch();
-  const [_input, setInput] = useState<string>('');
-  const { input, output } = useSwapContext();
-  const {
-    data: amountOut,
-    loading,
-    error,
-  } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
-  const [btnState, setBtnState] = useState<number>(1);
-  const approvalAmount = '1000000';
-  const [disabled, setDisabled] = useState<boolean>(false);
-  const [loader, setLoader] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect);
-  const [marketPrice, setMarketPrice] = useState<string>('');
+    const { address, isConnected } = useAccount();
+    const { open } = useWeb3Modal();
+    const { addToast } = useToasts();
+    const dispatch = useDispatch();
+    const [_input, setInput] = useState<string>("");
+    const { input, output } = useSwapContext();
+    const {
+        data: amountOut,
+    } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
+    const [btnState, setBtnState] = useState<number>(1);
+    const approvalAmount = '1000000';
+    const [disabled, setDisabled] = useState<boolean>(false);
+    const [loader, setLoader] = useState<boolean>(false);
+    const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect);
+    const [marketPrice, setMarketPrice] = useState<string>('');
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {
     let typedValue = e.target.value;
@@ -80,18 +78,18 @@ const SwapWrap = () => {
     },
   });
 
-  const handleDebouncedAmountOut = useCallback(
-    debounce((value: string) => {
-      dispatch(
-        fetchData({
-          amountIn: to_wei(value),
-          tokenA: input?.address,
-          tokenB: output?.address,
-        }) as any,
-      );
-    }, 500), // 500ms debounce delay
-    [_input, input?.address, output?.address],
-  );
+    const handleDebouncedAmountOut = useCallback(
+        debounce((value: string) => {
+            dispatch(
+                fetchData({
+                    amountIn: value,
+                    tokenA: input?.address,
+                    tokenB: output?.address,
+                }) as any,
+            );
+        }, 500), // 500ms debounce delay
+        [_input, input?.address, output?.address],
+    );
 
   const { chain } = useNetwork();
 
@@ -142,13 +140,21 @@ const SwapWrap = () => {
     },
   });
 
-  async function handleSwap() {
-    let deadline = await setDeadline(3600);
-    const swapPath = [input.address, output.address];
-    if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS]) {
-      swapWLC({ args: [to_wei('0.0001'), swapPath, address, deadline] });
-    } else {
-      swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
+
+    async function handleSwap() {
+        let deadline = await setDeadline(3600);
+        const isTokenSorted = input.address < output.address;
+        const token0 = isTokenSorted ? input.address : output.address;
+        const token1 = isTokenSorted ? output.address : input.address;
+        const swapPath = [token0, token1];
+        console.log({ tokenA: input.address, tokenB: output.address });
+        console.log({ token0, token1 })
+        if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS]) {
+            swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
+        } else {
+            swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
+        }
+        // setModal(true)
     }
     // setModal(true)
   }

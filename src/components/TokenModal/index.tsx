@@ -29,7 +29,7 @@ const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
       <ul className="often-selected-crypto">
         {selectList.map((el, i) => (
           <li key={i} onClick={() => handleTokenClicks(el)}>
-            {createElement(selectList[0].tokenIcon)}
+            {createElement(selectList[i].tokenIcon)}
             {el.token}
           </li>
         ))}
@@ -38,7 +38,7 @@ const TokenModal = ({ close, handleTokenClick }: TokenModalProps) => {
         {selectList.map((el, i) => (
           <li key={i} onClick={() => handleTokenClicks(el)}>
             <div className="list-item">
-              {createElement(selectList[0].tokenIcon)}
+              {createElement(selectList[i].tokenIcon)}
               <div className="title-wrap">
                 <p className="title">{el.token}</p>
                 <p className="symbol">{el.token}</p>
