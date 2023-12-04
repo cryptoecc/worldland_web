@@ -18,6 +18,7 @@ export const Layout = styled.div<Pick<SelectProps, 'maxWidth' | 'borderRadius'>>
 export const Label = styled.p`
   color: ${theme.colors.white80};
   font-size: 0.5rem;
+  white-space: pre;
 `;
 
 export const Container = styled.div<Pick<SelectProps, 'text'>>`

@@ -7,7 +7,7 @@ const SwapPage = () => {
   return (
     <Layout>
       <S.Container>
-        <S.Title>Swap</S.Title>
+        <S.Title>AI Swap</S.Title>
         <SwapProvider>
           <SwapWrap />
         </SwapProvider>
