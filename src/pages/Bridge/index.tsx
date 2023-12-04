@@ -251,13 +251,13 @@ const Bridge = () => {
             switch (chain?.id) {
                 case NETWORKS.CHAIN_1:
                     setInputSelect(bridgeSelectListETH[0]);
-                    setOutputSelect(bridgeSelectListWLD[0]);
+                    setOutputSelect(bridgeSelectListWLD[1]);
                     setThisChainTokenList(bridgeSelectListETH);
                     setOtherChainTokenList(bridgeSelectListWLD);
                     break;
                 case NETWORKS.CHAIN_2:
                     setInputSelect(bridgeSelectListWLD[0]);
-                    setOutputSelect(bridgeSelectListETH[0]);
+                    setOutputSelect(bridgeSelectListETH[1]);
                     setThisChainTokenList(bridgeSelectListWLD);
                     setOtherChainTokenList(bridgeSelectListETH);
                     break;
