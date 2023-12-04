@@ -32,6 +32,7 @@ import { MESSAGES } from "utils/messages";
 const Bridge = () => {
     const { chain } = useNetwork();
     const { address, isConnected } = useAccount();
+    const networkType = MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.BRIDGE];
     const { open } = useWeb3Modal();
     const { addToast } = useToasts();
     const [thisChainTokenList, setThisChainTokenList] = useState<ListItemType[]>(chain?.id === NETWORKS.CHAIN_1 ? bridgeSelectListETH : bridgeSelectListWLD);
@@ -53,7 +54,7 @@ const Bridge = () => {
         address: inputSelect.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: QUERY.ALLOWANCE,
-        args: [address, MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE]],
+        args: [address, networkType],
         watch: true,
         onSuccess(data: any) {
             console.log({ tokenBalanceA: data });
@@ -68,7 +69,7 @@ const Bridge = () => {
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
         functionName: FUNCTION.APPROVE,
         args: [
-            MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
+            networkType,
             to_wei('1000000000000')
         ],
         onSuccess() {
@@ -89,7 +90,7 @@ const Bridge = () => {
 
 
     const { data: bridgeTx, write: sendBridge } = useContractWrite({
-        address: MAPNETWORKTOCHAINID[chain?.id as number][CONTRACT_ADDRESSES.BRIDGE],
+        address: networkType,
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: inputSelect.funcType,
         onSuccess() {
@@ -266,6 +267,11 @@ const Bridge = () => {
                     setThisChainTokenList(bridgeSelectListETH);
                     setOtherChainTokenList(bridgeSelectListWLD);
             }
+        } else {
+            setInputSelect(bridgeSelectListETH[0]);
+            setOutputSelect(bridgeSelectListWLD[0]);
+            setThisChainTokenList(bridgeSelectListETH);
+            setOtherChainTokenList(bridgeSelectListWLD);
         }
 
     }, [isConnected, chain?.id])
