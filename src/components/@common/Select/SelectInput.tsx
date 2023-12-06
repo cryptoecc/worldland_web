@@ -46,7 +46,7 @@ const SelectInput = forwardRef(
           placeholder="0.0000"
           type={type}
           readOnly={type === 'output'}
-          value={type === 'input' ? _input : putCommaAtPrice(from_wei(_output), 5)}
+          value={type === 'input' ? _input : _output}
           onChange={handleValue}
         />
         {type === 'input' && <S.MaxBtn>Max</S.MaxBtn>}

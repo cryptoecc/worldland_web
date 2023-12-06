@@ -20,6 +20,7 @@ export const fetchData = (payload) => {
     dispatch(fetchAmountOutRequest());
     try {
       let { amountIn, tokenA, tokenB } = payload;
+      console.log({ tokenA, tokenB });
       const blockNumber = await web3_wld.eth.getBlockNumber();
       let getPairTx = {
         chain: 2,
@@ -28,6 +29,7 @@ export const fetchData = (payload) => {
         methodname: FUNCTION.GETPAIR,
         f_args: [tokenA, tokenB],
       };
+      console.log('CURRENT_PAIR', await chain_query(getPairTx));
       let marketPriceTx = {
         chain: 2,
         contract_address: await chain_query(getPairTx),
@@ -35,6 +37,7 @@ export const fetchData = (payload) => {
         methodname: FUNCTION.GETMARKETPRICE,
         f_args: [blockNumber],
       };
+      console.log('CURRENT_MARKET_PRICE', await chain_query(marketPriceTx));
       if (amountIn) {
         let amountOut = (parseFloat(amountIn) * parseFloat(from_wei(await chain_query(marketPriceTx)))).toString();
         dispatch(fetchAmountOutSuccess(amountOut));

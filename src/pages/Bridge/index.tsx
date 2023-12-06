@@ -263,7 +263,7 @@ const Bridge = () => {
                     break;
                 default:
                     setInputSelect(bridgeSelectListETH[0]);
-                    setOutputSelect(bridgeSelectListWLD[0]);
+                    setOutputSelect(bridgeSelectListWLD[1]);
                     setThisChainTokenList(bridgeSelectListETH);
                     setOtherChainTokenList(bridgeSelectListWLD);
             }
