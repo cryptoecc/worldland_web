@@ -122,10 +122,6 @@ const Pool = () => {
     }
 
     async function returnAmount(args: string[]) {
-        const isTokenSorted = args[0] < args[1];
-        const token0 = isTokenSorted ? args[0] : args[1];
-        const token1 = isTokenSorted ? args[1] : args[0];
-        const path = [token0, token1];
         return await chain_query({
             chain: 2,
             contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -134,8 +130,7 @@ const Pool = () => {
             f_args: [
                 MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
                 to_wei("1"),
-                path
-                // ...args
+                ...args
             ]
         })
     }

@@ -2,7 +2,7 @@ import { PropsWithChildren, createContext, useCallback, useContext, useEffect, u
 import { SelectType, Type } from 'types/select';
 
 import SelectList from 'components/@common/Select/SelectList';
-import { initialSwapSelect } from 'constants/select';
+import { initialSwapSelect0, initialSwapSelect1 } from 'constants/select';
 
 interface SwapContextType extends Pick<SelectType, 'isOpen' | 'openHandler'> {
   input: SelectType;
@@ -10,16 +10,16 @@ interface SwapContextType extends Pick<SelectType, 'isOpen' | 'openHandler'> {
 }
 
 export const SwapContext = createContext<SwapContextType>({
-  input: initialSwapSelect,
-  output: initialSwapSelect,
+  input: initialSwapSelect0,
+  output: initialSwapSelect1,
   isOpen: false,
   openHandler: () => { },
 });
 
 const SwapProvider = ({ children }: PropsWithChildren) => {
-  const [inputSelect, setInputSelect] = useState<SelectType>(initialSwapSelect);
+  const [inputSelect, setInputSelect] = useState<SelectType>(initialSwapSelect0);
   const [outputSelect, setOutputSelect] = useState<SelectType>({
-    ...initialSwapSelect,
+    ...initialSwapSelect1,
     type: 'output',
   });
   const [isOpen, setIsOpen] = useState<boolean>(false);

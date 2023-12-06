@@ -50,7 +50,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "scp -i ~/private_key -r build/. ubuntu@ip_address:/var/www/html/destination_folder"
+    "bd": "react-scripts build && scp -i ~/Downloads/worldland-foundation.pem -r build/. ubuntu@3.38.111.124:/var/www/html",
+    "deploy": "scp -i ~/Downloads/worldland-foundation.pem -r build/. ubuntu@3.38.111.124:/var/www/html"
   },
   "eslintConfig": {
     "extends": [

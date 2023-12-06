@@ -27,7 +27,7 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { useWeb3Modal } from '@web3modal/react';
 import { useToasts } from 'react-toast-notifications';
 import { parseEther } from 'viem';
-import { initialSwapSelect } from 'constants/select';
+import { initialSwapSelect0 } from 'constants/select';
 import { ListItemType } from 'types/select';
 
 const SwapWrap = () => {
@@ -44,7 +44,7 @@ const SwapWrap = () => {
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
   const [loader, setLoader] = useState<boolean>(false);
-  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect);
+  const [spotlightToken, setSpotlightToken] = useState<ListItemType>(initialSwapSelect0);
   const [marketPrice, setMarketPrice] = useState<string>('');
 
   function inputHandler(e: ChangeEvent<HTMLInputElement>) {

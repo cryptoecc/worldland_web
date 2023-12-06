@@ -111,7 +111,7 @@ export const bridgeSelectListWLD: ListItemType[] = [
   },
 ];
 
-export const initialSwapSelect: SelectType = {
+export const initialSwapSelect0: SelectType = {
   id: 0,
   type: 'input',
   listType: 'tokenList',
@@ -120,6 +120,21 @@ export const initialSwapSelect: SelectType = {
   network: 'Ethereum',
   networkIcon: EthereumIcon,
   address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.WETH_ADDRESS],
+  isOpen: false,
+  value: '',
+  openHandler: () => {},
+  changeSelect: () => {},
+} as const;
+
+export const initialSwapSelect1: SelectType = {
+  id: 1,
+  type: 'output',
+  listType: 'tokenList',
+  token: 'DAI',
+  tokenIcon: DAITokenIcon,
+  network: 'Worldland',
+  networkIcon: DAIIcon,
+  address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.DAI_ADDRESS],
   isOpen: false,
   value: '',
   openHandler: () => {},
