@@ -146,8 +146,7 @@ const SwapWrap = () => {
     const token0 = isTokenSorted ? input.address : output.address;
     const token1 = isTokenSorted ? output.address : input.address;
     const swapPath = [token0, token1];
-    console.log({ tokenA: input.address, tokenB: output.address });
-    console.log({ token0, token1 })
+    console.log({ swapPath })
     if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS]) {
       swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
     } else {
@@ -290,7 +289,6 @@ const SwapWrap = () => {
   useEffect(() => {
     getDataViaAPI();
     const interval = setInterval(getDataViaAPI, 10000);
-
     return () => clearInterval(interval);
   }, []);
 

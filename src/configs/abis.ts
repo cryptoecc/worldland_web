@@ -3,15 +3,15 @@ import { abi as POLYGON_BRIDGE_ABI } from './contract-abi/worldland_bridge_abi';
 import { abi as ERC20_ABI } from './contract-abi/erc20_abi';
 import { abi as UNISWAPV2_ROUTER } from './contract-abi/uniswapV2Router02';
 import { abi as UNISWAPV2_PAIR } from './contract-abi/uniswapV2Pair_abi';
-import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 import { abi as UNISWAPV2_FACTORY } from './contract-abi/uniswapV2Factory_abi';
 import { abi as WRAPPEDETH_ABI } from './contract-abi/wrappedeth_abi';
 import { abi as BRIDGEBASE_ABI } from './contract-abi/bridgebase_abi';
 
 //lv-swap abi
 
+import { abi as LVSWAPV2_FACTORY } from './contract-abi/lvswapV2Factory_abi';
 import { abi as LVSWAPV2_ROUTER } from './contract-abi/lvswapV2Router02_abi';
-import { abi as LVSWAPV2_FACTORY } from './contract-abi/lvswapV2Router02_abi';
+import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 
 export const MAP_STR_ABI = {
   ETHEREUM_BRIDGE_ABI,
