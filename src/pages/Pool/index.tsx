@@ -246,8 +246,12 @@ const Pool = () => {
                             {pairs.map((el, i) => (
                                 <li onClick={() => handlePairClick(el)} key={i}>
                                     <span className="pair-logo">
-                                        {createElement(selectList[0].tokenIcon)}
-                                        {createElement(selectList[1].tokenIcon)}
+                                        <span className="move">
+                                            {createElement(selectList[0].tokenIcon)}
+                                        </span>
+                                        <span>
+                                            {createElement(selectList[1].tokenIcon)}
+                                        </span>
                                         <p className="pair-name">
                                             {selectList[0].token}/{selectList[1].token}
                                         </p>
@@ -431,14 +435,8 @@ const Container = styled.div<Ipairs>`
                         gap: 10px;
                         width: 100%;
                         max-width: 330px;
+                        padding: 0 10px;
                         
-
-                        .image {
-                            width: 35px;
-                            height: 35px;
-                            border: 3px solid rgb(24, 32, 47, 0.7);
-                            border-radius: 50%;
-                        }
                         .move {
                             transform: translateX(23px);
                         }
