@@ -47,8 +47,9 @@ const Pool = () => {
                 data[i]['balance'] = data[i].result;
                 delete data[i]['result'];
                 delete data[i]['status'];
+                console.log({ BALANCE_PAIR: parseFloat(from_wei(data[i].balance)) });
 
-                if (Math.floor(parseFloat(from_wei(data[i].balance))) > 0) {
+                if (parseFloat(from_wei(data[i].balance)) > 0) {
                     // user has a balance of LP tokens
                     arr.push(data[i]);
                 }
