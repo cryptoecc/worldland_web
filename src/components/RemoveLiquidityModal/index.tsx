@@ -135,8 +135,8 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
       <section className="third-element">
         <p className="price">Price: </p>
         <div className="rate-wrap">
-          <p className="token">1 DAI = {putCommaAtPrice(from_wei(selectedPair?.BtoA), 5)} ETH</p>
-          <p className="token">1 ETH = {putCommaAtPrice(from_wei(selectedPair?.AtoB), 5)} DAI</p>
+          <p className="token">1 DAI = {putCommaAtPrice(from_wei(selectedPair?.BtoA), 5)} WETH</p>
+          <p className="token">1 WETH = {putCommaAtPrice(from_wei(selectedPair?.AtoB), 5)} DAI</p>
         </div>
       </section>
       <section className="btn-wrap">
@@ -168,7 +168,7 @@ const Container = styled.section`
   gap: 10px;
   font-weight: 700;
   height: 100%;
-  max-height: 650px;
+  max-height: 670px;
   font-family: 'Nunito Sans', sans-serif;
   padding: 10px 0 0 0;
   opacity: 0.9;

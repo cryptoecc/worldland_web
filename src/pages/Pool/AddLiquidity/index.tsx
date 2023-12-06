@@ -233,6 +233,7 @@ const AddLiquidity = () => {
       address,
       deadline
     });
+    console.log({ tokenA: selectedToken0, tokenB: selectedToken1 })
     AddLiquidity({
       args: [
         selectedToken0?.address,

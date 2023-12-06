@@ -122,6 +122,10 @@ const Pool = () => {
     }
 
     async function returnAmount(args: string[]) {
+        const isTokenSorted = args[0] < args[1];
+        const token0 = isTokenSorted ? args[0] : args[1];
+        const token1 = isTokenSorted ? args[1] : args[0];
+        const path = [token0, token1];
         return await chain_query({
             chain: 2,
             contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
@@ -130,7 +134,8 @@ const Pool = () => {
             f_args: [
                 MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
                 to_wei("1"),
-                ...args
+                path
+                // ...args
             ]
         })
     }
@@ -148,6 +153,7 @@ const Pool = () => {
             console.log(err);
         }
     }
+
     async function returnReserves(pair?: `0x${string}`) {
         try {
             let { 0: reserve0, 1: reserve1 } = await chain_query({
