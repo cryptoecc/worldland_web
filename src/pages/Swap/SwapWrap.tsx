@@ -82,7 +82,7 @@ const SwapWrap = () => {
     debounce((value: string) => {
       dispatch(
         fetchData({
-          amountIn: value,
+          amountIn: to_wei(value),
           tokenA: input?.address,
           tokenB: output?.address,
         }) as any,
@@ -150,8 +150,8 @@ const SwapWrap = () => {
       swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
     } else {
       console.log({ swapPath })
-      console.log({ _input: to_wei(_input), output: to_wei(amountOut) })
-      swap({ args: [to_wei(amountOut), to_wei(_input), swapPath, address, deadline] });
+      console.log({ _input: to_wei(_input), output: amountOut })
+      swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
     }
     // setModal(true)
   }
