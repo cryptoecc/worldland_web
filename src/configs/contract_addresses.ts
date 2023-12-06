@@ -24,7 +24,7 @@ export const WLD_ADDRESSES: ADDRESS_TYPE = {
   BRIDGE: '0xf4EB575194c225F04c9C6F85FBE8B57891F2648d',
 };
 
-export const PAIR_ADRESSES: `0x${string}`[] = [];
+export const PAIR_ADRESSES: `0x${string}`[] = ['0xf641F0b5533bD8D7daeddFC2371c243e599a3e22'];
 
 export const LOCALHOST1_ADDRESSES: ADDRESS_TYPE = {
   // token addresses

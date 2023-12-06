@@ -115,7 +115,7 @@ const SwapWrap = () => {
     },
 
     onError(err) {
-      console.log({ approvalErrB: err });
+      console.log({ err });
     },
   });
 
@@ -136,7 +136,7 @@ const SwapWrap = () => {
     },
 
     onError(err) {
-      console.log({ approvalErrB: err });
+      console.log({ err });
     },
   });
 
@@ -146,11 +146,12 @@ const SwapWrap = () => {
     const token0 = isTokenSorted ? input.address : output.address;
     const token1 = isTokenSorted ? output.address : input.address;
     const swapPath = [token0, token1];
-    console.log({ swapPath })
-    if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WWLC_ADDRESS]) {
+    if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS]) {
       swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
     } else {
-      swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
+      console.log({ swapPath })
+      console.log({ _input: to_wei(_input), output: to_wei(amountOut) })
+      swap({ args: [to_wei(amountOut), to_wei(_input), swapPath, address, deadline] });
     }
     // setModal(true)
   }
