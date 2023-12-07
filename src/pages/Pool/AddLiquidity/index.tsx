@@ -223,21 +223,10 @@ const AddLiquidity = () => {
   async function handleAddLiquidity() {
     let deadline = await setDeadline(3600);
     let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '');
-    console.log({
-      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
-      token0: selectedToken0.address,
-      token1: selectedToken1.address,
-      amount0: to_wei(selectedTokenAmount0),
-      amount1: to_wei(cleanedOutput),
-      amountOutMin: to_wei('0.0001'),
-      address,
-      deadline
-    });
-    console.log({ tokenA: selectedToken0, tokenB: selectedToken1 })
     AddLiquidity({
       args: [
-        selectedToken0?.address,
-        selectedToken1?.address,
+        selectedToken0.address,
+        selectedToken1.address,
         to_wei(selectedTokenAmount0),
         to_wei(cleanedOutput),
         to_wei('0.0001'),

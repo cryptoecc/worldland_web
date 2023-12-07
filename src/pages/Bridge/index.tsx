@@ -219,8 +219,8 @@ const Bridge = () => {
                         args: [
                             address,
                             to_wei(input),
-                            inputSelect.token,
-                            inputSelect.address
+                            inputSelect.address,
+                            inputSelect.token
                         ]
                     })
                 }
