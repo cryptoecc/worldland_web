@@ -144,9 +144,9 @@ const HamburgerBtn = () => {
                 <div className="user" onClick={() => open()}>
                   Add to Wallet
                 </div>
-                <div className="user" onClick={() => handleLinkClick('서비스 준비중입니다.')}>
+                {/* <div className="user" onClick={() => handleLinkClick('서비스 준비중입니다.')}>
                   Bridge
-                </div>
+                </div> */}
               </div>
               <div className="divider"></div>
               <div className="user-menu">
