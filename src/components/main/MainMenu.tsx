@@ -90,9 +90,9 @@ const MainMenu = () => {
               <Divider></Divider>
               <div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <SpaceLink onClick={() => handleLinkClick('서비스 준비중입니다.')}>
+                  {/* <SpaceLink onClick={() => handleLinkClick('서비스 준비중입니다.')}>
                     <Strong>Bridge</Strong>
-                  </SpaceLink>
+                  </SpaceLink> */}
                   <SpaceLink href="https://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
