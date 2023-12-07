@@ -225,10 +225,10 @@ const AddLiquidity = () => {
     let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '');
     AddLiquidity({
       args: [
-        selectedToken0.address,
         selectedToken1.address,
-        to_wei(selectedTokenAmount0),
+        selectedToken0.address,
         to_wei(cleanedOutput),
+        to_wei(selectedTokenAmount0),
         to_wei('0.0001'),
         to_wei('0.0001'),
         address,
