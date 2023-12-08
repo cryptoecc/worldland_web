@@ -74,7 +74,7 @@ const AddLiquidity = () => {
   const handleDebouncedAmountOut = useCallback(
     debounce((value: string) => {
       dispatch(fetchData({
-        amountIn: value,
+        amountIn: to_wei(value),
         tokenA: selectedToken0?.address,
         tokenB: selectedToken1?.address
       }) as any)
@@ -83,35 +83,28 @@ const AddLiquidity = () => {
 
   async function queryCurrentPrice() {
     // makes a chain query regardless of wallet connection
-    if (selectedTokenAmount0 === '') {
-      return;
-    }
     if (selectedToken0?.address === selectedToken1?.address) {
       return;
     }
-    const blockNumber = await web3_wld.eth.getBlockNumber();
-    let getPairTx = {
+    let txParams = {
       chain: 2,
-      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
-      abikind: ABI.LVSWAPV2_FACTORY,
-      methodname: FUNCTION.GETPAIR,
-      f_args: [selectedToken0, selectedToken1],
+      contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+      abikind: ABI.LVSWAPV2_ROUTER,
+      methodname: FUNCTION.GETAMOUNTOUT,
+      f_args: [
+        MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY],
+        to_wei('1'),
+        selectedToken0?.address,
+        selectedToken1?.address
+      ],
     };
-    let marketPriceTx = {
-      chain: 2,
-      contract_address: await chain_query(getPairTx),
-      abikind: ABI.LVSWAPV2_PAIR,
-      methodname: FUNCTION.GETMARKETPRICE,
-      f_args: [blockNumber],
-    };
-    let price = from_wei(await chain_query(marketPriceTx));
+    let price = (from_wei(await chain_query(txParams))).toString();
     setCurrentPrice(price);
   }
 
   useEffect(() => {
     queryCurrentPrice();
-    dispatch(fetchData({ amountIn: selectedTokenAmount0, tokenA: selectedToken0, tokenB: selectedToken1 }) as any);
-  }, [selectedToken0?.address, selectedToken1?.address]);
+  }, [selectedTokenAmount0, selectedToken0?.address, selectedToken1?.address]);
 
   const { data: coinBalanceA } = useBalance({ address });
   const { data: tokenBalanceA } = useContractRead({
@@ -462,7 +455,7 @@ const AddLiquidity = () => {
           </section>
           <div className="current-price-box">
             <p>Current price:</p>
-            <h2>{putCommaAtPrice(from_wei(currentPrice), 5)}</h2>
+            <h2>{putCommaAtPrice(currentPrice, 5)}</h2>
             <p>
               {selectedToken1.token} per {selectedToken0.token}
             </p>
@@ -502,7 +495,7 @@ const AddLiquidity = () => {
               <div className="input-wrap">
                 <div className="inner-items">
                   <input
-                    value={selectedTokenAmount1}
+                    value={putCommaAtPrice(from_wei(amountOut), 5)}
                     onChange={(e) => tokenAmountInputHandler(1, e.target.value)}
                     type="text"
                     placeholder={'0'}
