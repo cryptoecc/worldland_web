@@ -42,7 +42,7 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
 
   async function handleRemoveLiquidity() {
     let calcLiquidityPercentageToAmount = ((parseFloat(from_wei(selectedPair?.balance)) / 100) * value).toString();
-    console.log({ REMOVALAMOUNT: to_wei(calcLiquidityPercentageToAmount) });
+    console.log({ REMOVALAMOUNT: calcLiquidityPercentageToAmount });
     let deadline = await setDeadline(3600);
     console.log('@selected', selectedPair?.token0);
     console.log('@selected', selectedPair?.token1);
@@ -64,14 +64,14 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
       ALLOWANCE: Math.floor(parseFloat(from_wei(allowance))),
       BALANCE: Math.floor(parseFloat(from_wei(selectedPair?.balance as string))),
     });
-    if (Math.floor(parseFloat(from_wei(selectedPair?.balance as string))) === 0) {
+    if (parseFloat(from_wei(selectedPair?.balance as string)) === 0) {
       // user has 0 of LP token balance
       setDisabled(() => ({
         approve: true,
         remove: true,
       }));
     } else if (
-      Math.floor(parseFloat(from_wei(allowance))) < Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))
+      parseFloat(from_wei(allowance)) < parseFloat(from_wei(selectedPair?.balance as string))
     ) {
       // if allowance is less than user's pair balance
       setDisabled(() => ({
@@ -79,7 +79,7 @@ const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }:
         remove: true,
       }));
     } else if (
-      Math.floor(parseFloat(from_wei(allowance))) >= Math.floor(parseFloat(from_wei(selectedPair?.balance as string)))
+      parseFloat(from_wei(allowance)) >= parseFloat(from_wei(selectedPair?.balance as string))
     ) {
       // if allowance is more than user's pair balance
       setDisabled(() => ({
