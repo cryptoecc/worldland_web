@@ -142,10 +142,7 @@ const SwapWrap = () => {
 
   async function handleSwap() {
     let deadline = await setDeadline(3600);
-    const isTokenSorted = input.address < output.address;
-    const token0 = isTokenSorted ? input.address : output.address;
-    const token1 = isTokenSorted ? output.address : input.address;
-    const swapPath = [token0, token1];
+    const swapPath = [input.address, output.address];
     if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS]) {
       swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
     } else {

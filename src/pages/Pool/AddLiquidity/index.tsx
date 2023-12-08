@@ -193,7 +193,7 @@ const AddLiquidity = () => {
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.ADDLIQUIDITY,
     onSuccess(data) {
-      console.log({ approvalB: data });
+      console.log({ addLiquidity: data });
     },
     onError(err) {
       console.log({ approvalErrB: err });
@@ -206,7 +206,7 @@ const AddLiquidity = () => {
     functionName: FUNCTION.ADDLIQUIDITYETH,
     value: parseEther(selectedTokenAmount0),
     onSuccess(data) {
-      console.log({ approvalB: data });
+      console.log({ addLiquidityETH: data });
     },
     onError(err) {
       console.log({ approvalErrB: err });
@@ -215,7 +215,7 @@ const AddLiquidity = () => {
 
   async function handleAddLiquidity() {
     let deadline = await setDeadline(3600);
-    let cleanedOutput = selectedTokenAmount1.replace(/[,\.]/g, '');
+    let cleanedOutput = amountOut.replace(/[,\.]/g, '');
     AddLiquidity({
       args: [
         selectedToken1.address,
@@ -277,32 +277,32 @@ const AddLiquidity = () => {
     } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
       // empty field
       return;
-    } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
+    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
       // balance A is not enough
       return;
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+    } else if (parseFloat(from_wei(tokenBalanceB)) < parseFloat(from_wei(amountOut))) {
       // balance B is not enough
       return;
     } else if (
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) &&
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))
+      parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceA)) &&
+      parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceB))
     ) {
       // low allowanceA
       // approveA
       handleApprovals(0);
       handleApprovals(1);
-    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceA))) {
       // low allowanceA
       // approveA
       handleApprovals(0);
-    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceB))) {
       // low allowanceB
       // approveB
       handleApprovals(1);
-    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceA))) {
       // if allowanceA is low
       handleApprovals(0);
-    } else if (Number(from_wei(selectedTokenAmount0) ? from_wei(selectedTokenAmount0) : '0') > Number(from_wei(allowanceB))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceB))) {
       // if allowanceB is low
       handleApprovals(1);
     } else {
@@ -333,8 +333,8 @@ const AddLiquidity = () => {
   }, [location]);
 
   useEffect(() => {
-    console.log({ allowanceA: Number(from_wei(allowanceA)) });
-    console.log({ allowanceB: Number(from_wei(amountOut)) > Number(from_wei(allowanceB)) });
+    console.log({ allowanceA: parseFloat(from_wei(allowanceA)) });
+    console.log({ allowanceB: parseFloat(from_wei(amountOut)) > parseFloat(from_wei(allowanceB)) });
     if (!isConnected) {
       // metamask is not connected
       setDisabled(false);
@@ -347,28 +347,28 @@ const AddLiquidity = () => {
       // empty field
       setDisabled(true);
       setBtnState(0);
-    } else if (Number(from_wei(tokenBalanceA)) < Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
+    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(selectedTokenAmount0 ? selectedTokenAmount0 : '0')) {
       // balance A is not enough
       setDisabled(true);
       setBtnState(1);
       setLowBalanceToken(selectedToken0);
-    } else if (Number(from_wei(tokenBalanceB)) < Number(from_wei(amountOut))) {
+    } else if (parseFloat(from_wei(tokenBalanceB)) < parseFloat(from_wei(amountOut))) {
       // balance B is not enough
       setDisabled(true);
       setBtnState(1);
       setLowBalanceToken(selectedToken1);
     } else if (
-      Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA)) &&
-      Number(from_wei(amountOut)) > Number(from_wei(allowanceB))
+      parseFloat(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > parseFloat(from_wei(allowanceA)) &&
+      parseFloat(from_wei(amountOut)) > parseFloat(from_wei(allowanceB))
     ) {
       // low allowanceA && allowanceB
       setDisabled(false);
       setBtnState(2);
-    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceA))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceA))) {
       // low allowanceA
       setDisabled(false);
       setBtnState(2);
-    } else if (Number(selectedTokenAmount0 ? selectedTokenAmount0 : '0') > Number(from_wei(allowanceB))) {
+    } else if (parseFloat(selectedTokenAmount0 ?? '0') > parseFloat(from_wei(allowanceB))) {
       // low allowanceB
       setDisabled(false);
       setBtnState(2);
