@@ -137,6 +137,14 @@ const Bridge = () => {
         },
     });
 
+    function setInputToMax() {
+        try {
+            setInput(inputSelect.balance as string);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     function handleSelectItem(item: ListItemType, index: number) {
         try {
             const indexedItem = otherChainTokenList.find(el => index === el.id);
@@ -407,7 +415,7 @@ const Bridge = () => {
                             value={input}
                             onChange={handleEvent}
                         />
-                        <S.MaxBtn>Max</S.MaxBtn>
+                        <S.MaxBtn onClick={setInputToMax}>Max</S.MaxBtn>
                     </S.InputWrapper>
                 </S.ParentWrap>
                 <S.ToggleIconHolder>

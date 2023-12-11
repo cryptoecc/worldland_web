@@ -20,7 +20,7 @@ interface IDisabled {
 
 const RemoveLiquidityModal = ({ close, selectedPair, allowance, handleApprove }: IRemoveLiquidity) => {
   const { address } = useAccount();
-  const [value, setValue] = useState<number>(30);
+  const [value, setValue] = useState<number>(0);
   const customValues = [25, 50, 75, 100];
   const [disabled, setDisabled] = useState<IDisabled>({ approve: true, remove: true });
 

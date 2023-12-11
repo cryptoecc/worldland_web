@@ -2,7 +2,7 @@ import * as S from './SwapPage.style';
 import { ExchangeIcon } from 'assets';
 import Swap from 'components/swap/Swap';
 import { useSwapContext } from 'contexts/SwapProvider';
-import { handleBtnState } from 'utils/util';
+import { handleBtnState, putCommaAtPrice } from 'utils/util';
 
 import { debounce } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -123,7 +123,7 @@ const SwapWrap = () => {
     address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTETHFORTOKENS,
-    value: parseEther(_input),
+    // value: parseEther(_input),
     onSuccess() {
       setInput("");
       dispatch(
@@ -146,8 +146,6 @@ const SwapWrap = () => {
     if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS]) {
       swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
     } else {
-      console.log({ swapPath })
-      console.log({ _input: to_wei(_input), output: amountOut })
       swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
     }
     // setModal(true)
@@ -240,6 +238,15 @@ const SwapWrap = () => {
     },
   });
 
+  function setInputToMax() {
+    try {
+      setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
+      console.log({ ACTIVATED: putCommaAtPrice(from_wei(tokenBalanceA), 5) });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   function handleFunctionSelector() {
     if (!isConnected) {
       // metamask is not connected
@@ -251,10 +258,10 @@ const SwapWrap = () => {
     } else if (_input === '0' || _input === '') {
       // empty field
       return;
-    } else if (Number(from_wei(tokenBalanceA)) < Number(_input ? _input : '0')) {
+    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
       // balance A is not enough
       return;
-    } else if (Number(_input ? _input : '0') > Number(from_wei(allowanceA))) {
+    } else if (parseFloat(_input ? _input : '0') > parseFloat(from_wei(allowanceA))) {
       // if allowanceA is low
       approveA();
     } else {
@@ -304,12 +311,12 @@ const SwapWrap = () => {
       setDisabled(true);
       setBtnState(5);
       setSpotlightToken(input);
-    } else if (Number(from_wei(tokenBalanceA)) < Number(_input ? _input : '0')) {
+    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
       // balance A is not enough
       setDisabled(true);
       setBtnState(1);
       setSpotlightToken(input);
-    } else if (Number(_input ? _input : '0') > Number(from_wei(allowanceA))) {
+    } else if (parseFloat(_input ? _input : '0') > parseFloat(from_wei(allowanceA))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
       setDisabled(false);
       setBtnState(2);
@@ -332,7 +339,7 @@ const SwapWrap = () => {
 
   return (
     <S.SwapWrapper>
-      <Swap type="input" text="From" listType="tokenList" input={_input} eventHandler={inputHandler} />
+      <Swap type="input" setMax={setInputToMax} text="From" listType="tokenList" input={_input} eventHandler={inputHandler} />
       <ExchangeIcon />
       <Swap
         type="output"

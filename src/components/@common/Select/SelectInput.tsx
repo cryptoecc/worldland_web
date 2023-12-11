@@ -15,7 +15,7 @@ export type SelectInputProps = {
 } & Partial<SelectProps> &
   HTMLAttributes<HTMLInputElement>;
 
-const SelectInput = forwardRef(({ type, _input, _output, handleValue, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
+const SelectInput = forwardRef(({ type, _input, _output, handleValue, setMax, ...props }: SelectInputProps, ref: ForwardedRef<HTMLInputElement>) => {
   const { input, output } = useSwapContext();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const SelectInput = forwardRef(({ type, _input, _output, handleValue, ...props }
         value={type === 'input' ? _input : putCommaAtPrice(from_wei(_output), 5)}
         onChange={handleValue}
       />
-      {type === 'input' && <S.MaxBtn>Max</S.MaxBtn>}
+      {type === 'input' && <S.MaxBtn onClick={setMax}>Max</S.MaxBtn>}
     </S.InputWrapper>
   );
 });

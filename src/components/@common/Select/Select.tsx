@@ -17,6 +17,7 @@ export interface SelectProps {
   input?: string;
   output?: string;
   eventHandler?: (e: ChangeEvent<HTMLInputElement>) => void;
+  setMax?: () => void;
 }
 
 const Select = ({
