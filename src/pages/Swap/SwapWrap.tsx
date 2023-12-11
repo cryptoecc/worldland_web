@@ -35,11 +35,9 @@ const SwapWrap = () => {
   const { open } = useWeb3Modal();
   const { addToast } = useToasts();
   const dispatch = useDispatch();
-  const [_input, setInput] = useState<string>("");
+  const [_input, setInput] = useState<string>('');
   const { input, output } = useSwapContext();
-  const {
-    data: amountOut,
-  } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
+  const { data: amountOut } = useSelector((state: { data: string; loading: boolean; error: any }) => state);
   const [btnState, setBtnState] = useState<number>(1);
   const approvalAmount = '1000000';
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -62,10 +60,10 @@ const SwapWrap = () => {
     functionName: 'approve',
     onSuccess(data) {
       console.log({ approvalA: data });
-      setInput("");
+      setInput('');
       dispatch(
         fetchData({
-          amountIn: "",
+          amountIn: '',
           tokenA: input?.address,
           tokenB: output?.address,
         }) as any,
@@ -104,10 +102,10 @@ const SwapWrap = () => {
     abi: MAP_STR_ABI[ABI.LVSWAPV2_ROUTER],
     functionName: FUNCTION.SWAPEXACTTOKENSFORTOKENS,
     onSuccess() {
-      setInput("");
+      setInput('');
       dispatch(
         fetchData({
-          amountIn: "",
+          amountIn: '',
           tokenA: input?.address,
           tokenB: output?.address,
         }) as any,
@@ -125,10 +123,10 @@ const SwapWrap = () => {
     functionName: FUNCTION.SWAPEXACTETHFORTOKENS,
     value: parseEther(_input),
     onSuccess() {
-      setInput("");
+      setInput('');
       dispatch(
         fetchData({
-          amountIn: "",
+          amountIn: '',
           tokenA: input?.address,
           tokenB: output?.address,
         }) as any,
@@ -144,10 +142,10 @@ const SwapWrap = () => {
     let deadline = await setDeadline(3600);
     const swapPath = [input.address, output.address];
     if (input.address === MAPNETTOADDRESS[CONTRACT_ADDRESSES.WLC_ADDRESS]) {
-      swapWLC({ args: [to_wei("0.0001"), swapPath, address, deadline] });
+      swapWLC({ args: [to_wei('0.0001'), swapPath, address, deadline] });
     } else {
-      console.log({ swapPath })
-      console.log({ _input: to_wei(_input), output: amountOut })
+      console.log({ swapPath });
+      console.log({ _input: to_wei(_input), output: amountOut });
       swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
     }
     // setModal(true)
@@ -318,17 +316,7 @@ const SwapWrap = () => {
       setBtnState(6);
       setDisabled(false);
     }
-  }, [
-    chain?.id,
-    _input,
-    input,
-    allowanceA,
-    amountOut,
-    isConnected,
-    tokenBalanceA,
-    tokenBalanceB,
-  ]);
-
+  }, [chain?.id, _input, input, allowanceA, amountOut, isConnected, tokenBalanceA, tokenBalanceB]);
 
   return (
     <S.SwapWrapper>
@@ -337,7 +325,7 @@ const SwapWrap = () => {
       <Swap
         type="output"
         text={
-          'To                                                                                                    AI Predict Price'
+          'To                                                                                                    AI Prediction Price'
         }
         listType="tokenList"
         output={amountOut}
