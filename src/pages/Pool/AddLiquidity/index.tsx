@@ -383,7 +383,7 @@ const AddLiquidity = () => {
     selectedTokenAmount0,
     allowanceA,
     allowanceB,
-    amountOut,
+    // amountOut,
     isConnected,
     selectedToken0,
     selectedToken1,
