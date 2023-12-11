@@ -4,7 +4,7 @@ export type Type = 'input' | 'output';
 
 export type SelectListType = 'tokenList' | 'networkList';
 
-type Token = 'ETH' | 'WETH' | 'USDC' | 'WLC' | 'WWLC' | 'DAI';
+type Token = 'ETH' | 'wETH' | 'USDC' | 'WLC' | 'wWLC' | 'DAI';
 
 type TokenIcon = typeof DAITokenIcon | typeof ETHTokenIcon;
 

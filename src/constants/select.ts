@@ -12,7 +12,7 @@ export const FundTypes: { COIN: FundType; TOKEN: FundType } = {
 export const selectList: ListItemType[] = [
   {
     id: 0,
-    token: 'WETH',
+    token: 'wETH',
     tokenIcon: ETHTokenIcon,
     network: 'Worldland',
     networkIcon: EthereumIcon,
@@ -47,7 +47,7 @@ export const bridgeSelectListETH: ListItemType[] = [
   },
   {
     id: 1,
-    token: 'WWLC',
+    token: 'wWLC',
     tokenIcon: WldChainIcon,
     network: 'Sepolia',
     networkIcon: EthereumIcon,
@@ -87,7 +87,7 @@ export const bridgeSelectListWLD: ListItemType[] = [
   },
   {
     id: 0,
-    token: 'WETH',
+    token: 'wETH',
     tokenIcon: ETHTokenIcon,
     network: 'Worldland',
     networkIcon: WldChainIcon,
@@ -115,7 +115,7 @@ export const initialSwapSelect0: SelectType = {
   id: 0,
   type: 'input',
   listType: 'tokenList',
-  token: 'WETH',
+  token: 'wETH',
   tokenIcon: ETHTokenIcon,
   network: 'Ethereum',
   networkIcon: EthereumIcon,
