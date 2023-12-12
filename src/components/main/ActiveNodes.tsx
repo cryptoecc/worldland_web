@@ -51,6 +51,12 @@ const MainAreaChart = () => {
         </CustomAreaChart>
       </ResponsiveContainer>
       <br />
+      <br />
+
+      <DetailDescription>
+        Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 24 hours
+      </DetailDescription>
+      <br />
     </ChartContainer>
   );
 };
