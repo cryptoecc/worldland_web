@@ -239,7 +239,6 @@ const SwapWrap = () => {
   function setInputToMax() {
     try {
       setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
-      console.log({ ACTIVATED: putCommaAtPrice(from_wei(tokenBalanceA), 5) });
     } catch (err) {
       console.log(err);
     }

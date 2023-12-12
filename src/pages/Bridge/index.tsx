@@ -139,7 +139,7 @@ const Bridge = () => {
 
     function setInputToMax() {
         try {
-            setInput(inputSelect.balance as string);
+            setInput(inputSelect.balance ?? '');
         } catch (err) {
             console.log(err);
         }
@@ -243,7 +243,8 @@ const Bridge = () => {
     function toggleChain() {
         try {
             if (isConnected) {
-
+                setInputSelect(outputSelect);
+                setOutputSelect(inputSelect);
             }
         } catch (err) {
             console.log(err);
@@ -407,9 +408,9 @@ const Bridge = () => {
                             <span></span>
                         </S.TokenWrap>
                         <S.Input
-                            type="number"
+                            type="text"
                             pattern="^[0-9]*[.,]?[0.9]*$"
-                            min="0.0001"
+                            min="0.00001"
                             autoComplete="off"
                             placeholder="0.0000"
                             value={input}
