@@ -236,12 +236,13 @@ const SwapWrap = () => {
     },
   });
 
+  function toggleExchange() {
+    input.changeSelect({ ...output, type: 'input' });
+    output.changeSelect({ ...input, type: 'output' })
+  }
+
   function setInputToMax() {
-    try {
-      setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
-    } catch (err) {
-      console.log(err);
-    }
+    setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
   }
 
   function handleFunctionSelector() {
@@ -327,7 +328,7 @@ const SwapWrap = () => {
   return (
     <S.SwapWrapper>
       <Swap type="input" setMax={setInputToMax} text="From" listType="tokenList" input={_input} eventHandler={inputHandler} />
-      <ExchangeIcon />
+      <ExchangeIcon onClick={toggleExchange} />
       <Swap
         type="output"
         text={
