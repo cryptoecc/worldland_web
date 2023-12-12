@@ -146,7 +146,6 @@ const SwapWrap = () => {
     } else {
       swap({ args: [to_wei(_input), amountOut, swapPath, address, deadline] });
     }
-    // setModal(true)
   }
 
   useWaitForTransaction({
@@ -239,10 +238,24 @@ const SwapWrap = () => {
   function toggleExchange() {
     input.changeSelect({ ...output, type: 'input' });
     output.changeSelect({ ...input, type: 'output' })
+    dispatch(
+      fetchData({
+        amountIn: to_wei(_input),
+        tokenA: input?.address,
+        tokenB: output?.address,
+      }) as any,
+    );
   }
 
   function setInputToMax() {
     setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
+    dispatch(
+      fetchData({
+        amountIn: tokenBalanceA,
+        tokenA: input?.address,
+        tokenB: output?.address,
+      }) as any,
+    );
   }
 
   function handleFunctionSelector() {
