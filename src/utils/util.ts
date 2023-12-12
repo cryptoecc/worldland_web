@@ -5,32 +5,17 @@ import { ListItemType } from 'types/select';
 export const from_wei = (val?: string) => (val ? Web3.utils.fromWei('' + val, 'ether') : '');
 export const to_wei = (val?: string) => (val ? Web3.utils.toWei('' + val, 'ether') : '');
 
-export function putCommaAtPrice(data: number | string, precision: number | string) {
+export function putCommaAtPrice(data: number | string, precision: number) {
   let str;
 
   if (data === '') {
     return '';
   }
   if (data !== undefined) {
-    if (typeof data === 'string') {
-      data = parseFloat(data);
-      let formatted = data.toFixed(4);
-      console.log('FORMATTED!: ', formatted);
-    } else {
-      data = Number(data);
-      if (Number.isFinite(+precision)) {
-        data = data.toFixed(+precision);
-      }
-    }
-
     str = data.toString().split('.');
 
-    const valueAsString = '0.0099999';
-    const valueAsNumber = parseFloat(valueAsString);
-    const formattedValue = valueAsNumber.toFixed(4);
-    console.log(formattedValue);
-
     str[0] = `${str[0]}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    if (str.length > 1) str[1] = str[1].slice(0, +precision);
     return str.join('.');
   }
   return '';
