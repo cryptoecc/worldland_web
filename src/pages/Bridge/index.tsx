@@ -365,6 +365,7 @@ const Bridge = () => {
                     break;
                 case FundTypes.TOKEN:
                     setInputSelect(prev => ({ ...prev, balance: putCommaAtPrice(tokenBalance?.formatted ?? '0', 4) }))
+                    console.log({ TOKENBALANCEWETH: tokenBalance })
             }
             // balance monitor chain 2
             switch (outputSelect.fundType) {

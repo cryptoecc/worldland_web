@@ -12,15 +12,23 @@ export function putCommaAtPrice(data: number | string, precision: number | strin
     return '';
   }
   if (data !== undefined) {
-    data = Number(data);
-
-    if (Number.isFinite(+precision)) {
-      data = data.toFixed(+precision);
+    if (typeof data === 'string') {
+      data = parseFloat(data);
+      let formatted = data.toFixed(4);
+      console.log('FORMATTED!: ', formatted);
+    } else {
+      data = Number(data);
+      if (Number.isFinite(+precision)) {
+        data = data.toFixed(+precision);
+      }
     }
-    // if (data < 1000)
-    //   return data.toFixed(3);
 
     str = data.toString().split('.');
+
+    const valueAsString = '0.0099999';
+    const valueAsNumber = parseFloat(valueAsString);
+    const formattedValue = valueAsNumber.toFixed(4);
+    console.log(formattedValue);
 
     str[0] = `${str[0]}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return str.join('.');
