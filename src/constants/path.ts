@@ -19,4 +19,5 @@ export const PATH = {
   ADD: '/pool/add-liquidity',
   CONTACT: '/contact',
   CHART: '/chart',
+  ADMIN: '/wl-admin',
 };
