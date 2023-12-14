@@ -21,6 +21,7 @@ import Chart from 'pages/Chart';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
 import Admin from 'pages/Admin';
+import Tokens from 'pages/Tokens';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -49,6 +50,7 @@ const Router = () => {
         { path: `${PATH.SWAP}`, element: <SwapPage /> },
         { path: `${PATH.BRIDGE}`, element: <Bridge /> },
         { path: `${PATH.POOL}`, element: <Pool /> },
+        { path: `${PATH.TOKENS}`, element: <Tokens /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.CHART}`, element: <Chart /> },

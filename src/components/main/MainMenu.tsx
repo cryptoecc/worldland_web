@@ -144,6 +144,9 @@ const MainMenu = () => {
                   <SpaceLink href="/pool">
                     <Strong>Pool</Strong>
                   </SpaceLink>
+                  <SpaceLink href="/tokens">
+                    <Strong>Tokens</Strong>
+                  </SpaceLink>
                 </div>
               </div>
             </Network>

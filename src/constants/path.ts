@@ -15,6 +15,7 @@ export const PATH = {
   SWAP: '/swap',
   SWAP_LEGACY: '/swap--legacy',
   POOL: '/pool',
+  TOKENS: '/tokens',
   TESTPAGE: '/testpage',
   ADD: '/pool/add-liquidity',
   CONTACT: '/contact',
