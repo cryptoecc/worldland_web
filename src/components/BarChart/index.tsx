@@ -94,7 +94,7 @@ const Chart = () => {
                         dataKey="uv"
                         axisLine={false}
                         tickLine={false}
-                        tickFormatter={(time) => dayjs(time).format('DD')}
+                        tickFormatter={(time) => dayjs().format('DD')}
                         minTickGap={10}
                     />
                     <Tooltip

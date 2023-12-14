@@ -20,6 +20,12 @@ const Wrapper = styled(Card)`
   background-color: ${({ theme }) => theme.colors.bg0_08};
   > * {
     font-size: 1rem;
+    font-family: 'Inter var', sans-serif;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 500;
+    color: ${({ theme }) => theme.colors.text2}
   }
 `
 
@@ -54,6 +60,7 @@ const Chart = () => {
     const color = "#dc4646";
     return (
         <Wrapper theme={theme}>
+            <h2>TVL</h2>
             <ResponsiveContainer width="100%" height="100%">
                 <AreaChart width={500}
                     height={300}
