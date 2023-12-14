@@ -241,8 +241,8 @@ const SwapWrap = () => {
     dispatch(
       fetchData({
         amountIn: to_wei(_input),
-        tokenA: input?.address,
-        tokenB: output?.address,
+        tokenA: output?.address,
+        tokenB: input?.address,
       }) as any,
     );
   }
