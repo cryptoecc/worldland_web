@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from 'recharts';
+import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from 'recharts';
 import Card from 'components/Card'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -16,12 +16,32 @@ const Wrapper = styled(Card)`
   padding-right: 2rem;
   margin: 1rem;
   display: flex;
-  flex-direction: column;
   background-color: ${({ theme }) => theme.colors.bg0_08};
+  flex-direction: column;
   > * {
     font-size: 1rem;
   }
 `
+
+const CustomBar = ({
+    x,
+    y,
+    width,
+    height,
+    fill,
+}: {
+    x: number
+    y: number
+    width: number
+    height: number
+    fill: string
+}) => {
+    return (
+        <g>
+            <rect x={x} y={y} fill={fill} width={width} height={height} rx="2" />
+        </g>
+    )
+}
 
 const Chart = () => {
     const theme = useTheme()
@@ -53,9 +73,9 @@ const Chart = () => {
     ];
     const color = "#dc4646";
     return (
-        <Wrapper theme={theme}>
+        <Wrapper>
             <ResponsiveContainer width="100%" height="100%">
-                <AreaChart width={500}
+                <BarChart width={500}
                     height={300}
                     data={data}
                     margin={{
@@ -74,15 +94,21 @@ const Chart = () => {
                         dataKey="uv"
                         axisLine={false}
                         tickLine={false}
-                        tickFormatter={() => dayjs().format('DD')}
+                        tickFormatter={(time) => dayjs(time).format('DD')}
                         minTickGap={10}
                     />
                     <Tooltip
                         cursor={{ stroke: theme?.bg2 }}
                     // contentStyle={{ display: 'none' }}
                     />
-                    <Area dataKey="uv" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />
-                </AreaChart>
+                    <Bar
+                        dataKey="uv"
+                        fill={color}
+                        shape={(props: any) => {
+                            return <CustomBar height={props.height} width={props.width} x={props.x} y={props.y} fill={color} />
+                        }}
+                    />
+                </BarChart>
             </ResponsiveContainer>
         </Wrapper>
     )

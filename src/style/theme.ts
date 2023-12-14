@@ -28,6 +28,7 @@ const colors = {
 
   // backgrounds / greys
   bg0: '#191B1F',
+  bg0_08: '#191b1fe4',
   bg1: '#1F2128',
   bg2: '#2C2F36',
   bg3: '#525955',
