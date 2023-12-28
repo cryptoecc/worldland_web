@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { WorldLandLogo } from 'assets';
 import styled from 'styled-components';
+import axios from 'axios';
 
 // 스타일 컴포넌트 정의
 const Container = styled.div`
@@ -30,7 +32,7 @@ const LoginForm = styled.form`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 80%;
   max-width: 400px;
-  height: 32%;
+  height: 280px;
   margin: 0 auto; /* 중앙 정렬을 위해 추가 */
 
   @media (min-width: 600px) {
@@ -72,14 +74,36 @@ const Button = styled.button`
 
 // 관리자 로그인 컴포넌트
 const Admin = () => {
-  const [adminId, setAdminId] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: '',
+  });
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const naviage = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Admin ID:${adminId},Password:${password}`);
-    console.log('Admin ID:', adminId);
-    console.log('Password:', password);
+
+    try {
+      const response = await axios.post('http://localhost:4000/api/admin/login', formData);
+
+      console.log(response.data);
+      localStorage.setItem('token', response.data.token);
+      // const response2 = await axios.get('http://localhost:4000/api/admin/admin-info', {
+      //   withCredentials: true,
+      // });
+
+      // console.log(response2.data);
+      naviage('/wl-admin/board');
+    } catch (e) {
+      console.log(e);
+      alert('로그일 실패 : 아이디와 패스워드를 다시 입력해주세요');
+    }
   };
 
   return (
@@ -90,9 +114,9 @@ const Admin = () => {
       <LoginForm onSubmit={handleLogin}>
         <InputGroup>
           <Title>Admin ID</Title>
-          <Input type="text" value={adminId} onChange={(e) => setAdminId(e.target.value)} />
+          <Input type="text" name="username" value={formData.username} onChange={handleChange} />
           <Title>Password</Title>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Input type="password" name="password" value={formData.password} onChange={handleChange} />
         </InputGroup>
         <Button type="submit">Log In</Button>
       </LoginForm>

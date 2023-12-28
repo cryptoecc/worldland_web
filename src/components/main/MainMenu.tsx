@@ -170,6 +170,9 @@ const MainMenu = () => {
               <SpaceLink href="https://medium.com/@worldland-official" target="_blank" rel="noopener noreferrer">
                 <Strong>Medium</Strong>
               </SpaceLink>
+              <SpaceLink href="https://www.youtube.com/@Worldland-2023" target="_blank" rel="noopener noreferrer">
+                <Strong>YouTube</Strong>
+              </SpaceLink>
               <SpaceLink href="https://twitter.com/Worldland_space" target="_blank" rel="noopener norefeerer">
                 <Strong>
                   <Twitter />
