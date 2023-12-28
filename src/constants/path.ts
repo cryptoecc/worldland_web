@@ -20,4 +20,5 @@ export const PATH = {
   CONTACT: '/contact',
   CHART: '/chart',
   ADMIN: '/wl-admin',
+  ADMIN_BOARD: '/wl-admin/board',
 };

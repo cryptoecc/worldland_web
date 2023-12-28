@@ -21,6 +21,7 @@ import Chart from 'pages/Chart';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
 import Admin from 'pages/Admin';
+import AdminBoard from 'pages/Admin/AdminBoard';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -53,6 +54,7 @@ const Router = () => {
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.CHART}`, element: <Chart /> },
         { path: `${PATH.ADMIN}`, element: <Admin /> },
+        { path: `${PATH.ADMIN_BOARD}`, element: <AdminBoard /> },
       ],
     },
   ]);
