@@ -8,6 +8,9 @@ import { useContractWrite } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { MAP_STR_ABI } from 'configs/abis';
+import { to_wei } from 'utils/util';
+import { useToasts } from 'react-toast-notifications';
+import { MESSAGES } from 'utils/messages';
 
 type Receiver = {
   receiveAddress: string;
@@ -57,11 +60,26 @@ const Input = styled.input`
 const AddReceiver = () => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
   const navigate = useNavigate();
+  const { addToast } = useToasts();
 
   const { write: bulkDeposit } = useContractWrite({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: FUNCTION.BULKDEPOSITTOKENS
+    functionName: FUNCTION.BULKDEPOSITTOKENS,
+    onSuccess() {
+      addToast(MESSAGES.TX_SUCCESS, {
+        appearance: 'success',
+        content: MESSAGES.DEPOSIT_SUCCESS,
+        autoDismiss: true,
+      });
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
   })
 
   const addReceiverField = () => {
@@ -106,7 +124,7 @@ const AddReceiver = () => {
     let _amounts: string[] = []
     for (let i = 0; i < receivers.length; i++) {
       _receivers[i] = receivers[i].receiveAddress
-      _amounts[i] = receivers[i].totalAmount
+      _amounts[i] = to_wei(receivers[i].totalAmount)
     }
     bulkDeposit?.({ args: [_receivers, _amounts] })
   };
@@ -133,8 +151,9 @@ const AddReceiver = () => {
           </InputRow>
         ))}
         <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>+</Button>
+        <Button sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">Submit</Button>
       </form>
-      <Button variant="contained" type="submit">Submit</Button>
+
     </Container>
   );
 };

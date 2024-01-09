@@ -20,6 +20,8 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Button, { ButtonProps } from '@mui/material/Button';
+import { purple } from '@mui/material/colors';
 
 interface Contract {
   balance: string;
@@ -28,6 +30,7 @@ interface Contract {
   initialTimestamp: string;
   owner: string;
   interactionFinalized: boolean;
+  timestampSet: boolean;
 }
 const initialContractObj = {
   balance: '',
@@ -36,6 +39,7 @@ const initialContractObj = {
   initialTimestamp: '',
   owner: '',
   interactionFinalized: false,
+  timestampSet: false
 }
 
 const Container = styled.section`
@@ -46,6 +50,7 @@ const Container = styled.section`
   position: relative;
   height: 100vh;
   font-family: 'Nunito Sans', sans-serif;
+  margin-top: 20px;
 `;
 
 const Content = styled.div`
@@ -77,6 +82,15 @@ const AdminInfo = styled.div`
     color: #01b30d;
   }
 `;
+const BtnWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+
+
 
 const timeFormat = 'YYYY / MM / DD hh:mm:ss'
 
@@ -116,6 +130,9 @@ const AdminBoard = () => {
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.TIMESTAMPISSET,
     watch: true,
+    onSuccess(data: boolean) {
+      setContract((prev) => ({ ...prev, timestampSet: data }))
+    }
   })
 
   const { data: initialTimestamp } = useContractRead({
@@ -163,7 +180,7 @@ const AdminBoard = () => {
     setAdminId(address);
   }, []);
 
-  let _timestampSet = timestampSet ? 'Has been set up!' : "Is not set!"
+  let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
   return (
     <Container>
       <Content>
@@ -174,9 +191,12 @@ const AdminBoard = () => {
         <AdminInfo>Initial timestamp : {contract.initialTimestamp} ( {dayjs(contract.initialTimestamp).fromNow()} )</AdminInfo>
         <AdminInfo>Lock Time ending : {contract.cliffEdge} ( {dayjs(contract.cliffEdge).fromNow()} )</AdminInfo>
         <AdminInfo>Final Release Time Ending : {contract?.releaseEdge} ( {dayjs(contract.releaseEdge).fromNow()} )</AdminInfo>
-        <AdminInfo>Timestamp status : <span className={timestampSet ? 'success' : ''}>{_timestampSet}</span></AdminInfo>
-        <SetTimestamp />
+        <AdminInfo>Timestamp status : <span className={_timestampSet ? 'success' : ''}>{_timestampSet}</span></AdminInfo>
+        <SetTimestamp isTimestampSet={contract.timestampSet} />
         <AddReceiver />
+        <BtnWrap>
+          <Button color="error" variant="contained">Finalize Admin Interaction</Button>
+        </BtnWrap>
       </Content>
     </Container>
   );

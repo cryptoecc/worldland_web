@@ -115,7 +115,7 @@ const Bridge = () => {
         onSuccess() {
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
-                content: approvalTx?.hash ?? MESSAGES.TX_CONTENT,
+                content: approvalTx?.hash && MESSAGES.TX_CONTENT,
                 autoDismiss: true,
             });
         },

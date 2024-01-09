@@ -57,7 +57,7 @@ const H1 = styled.h1`
 `;
 
 
-const SetTimestamp = () => {
+const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
     const navigate = useNavigate();
     const [time, setTime] = useState<ITimestamp>({ lockPeriod: '', releasePeriod: '' });
     const [disabled, setDisabled] = useState<boolean>(true);
@@ -82,12 +82,12 @@ const SetTimestamp = () => {
     };
 
     useEffect(() => {
-        if (!time.lockPeriod || !time.releasePeriod) {
+        if (!time.lockPeriod || !time.releasePeriod || isTimestampSet) {
             setDisabled(true)
         } else {
             setDisabled(false);
         }
-    }, [time.lockPeriod, time.releasePeriod])
+    }, [time.lockPeriod, time.releasePeriod, isTimestampSet])
 
     return (
         <Container>
@@ -95,11 +95,13 @@ const SetTimestamp = () => {
                 <InputWrap>
                     <H1>Timestamp</H1>
                     <DateTimePicker
+                        disabled={isTimestampSet}
                         label="Lock Period"
                         value={time.lockPeriod}
                         onChange={(newValue) => setTime((prev) => ({ ...prev, lockPeriod: newValue }))}
                     />
                     <DateTimePicker
+                        disabled={isTimestampSet}
                         label="Release Period"
                         value={time.releasePeriod}
                         onChange={(newValue) => setTime((prev) => ({ ...prev, releasePeriod: newValue }))}
