@@ -164,7 +164,6 @@ const AdminBoard = () => {
   }, []);
 
   let _timestampSet = timestampSet ? 'Has been set up!' : "Is not set!"
-
   return (
     <Container>
       <Content>
@@ -177,7 +176,7 @@ const AdminBoard = () => {
         <AdminInfo>Final Release Time Ending : {contract?.releaseEdge} ( {dayjs(contract.releaseEdge).fromNow()} )</AdminInfo>
         <AdminInfo>Timestamp status : <span className={timestampSet ? 'success' : ''}>{_timestampSet}</span></AdminInfo>
         <SetTimestamp />
-        {/* <AddReceiver /> */}
+        <AddReceiver />
       </Content>
     </Container>
   );

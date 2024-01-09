@@ -63,6 +63,7 @@ export enum FUNCTION {
   LOCKTOKEN = 'lockToken',
   BURNTOKEN = 'burnToken',
   SETTIMESTAMP = 'setTimestamp',
+  BULKDEPOSITTOKENS = 'bulkDepositTokens',
 }
 
 export enum QUERY {

@@ -53,6 +53,7 @@ width: 100%;
 
 const H1 = styled.h1`
   font-size: 20px;
+  font-weight: bold;
 `;
 
 
@@ -106,7 +107,7 @@ const SetTimestamp = () => {
                 </InputWrap>
             </LocalizationProvider>
             <BtnWrap>
-                <Button disabled={disabled} onClick={handleSubmit} variant="contained">Submit</Button>
+                <Button sx={{ width: '100%' }} disabled={disabled} onClick={handleSubmit} variant="contained">Submit</Button>
             </BtnWrap>
         </Container>
     );

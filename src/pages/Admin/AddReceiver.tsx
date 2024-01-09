@@ -3,11 +3,15 @@ import { styled } from 'styled-components';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { CheckJwt } from 'utils/jwt';
+import { Button } from '@mui/material';
+import { useContractWrite } from 'wagmi';
+import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
+import { WLD_ADDRESSES } from 'configs/contract_addresses';
+import { MAP_STR_ABI } from 'configs/abis';
 
 type Receiver = {
   receiveAddress: string;
   totalAmount: string;
-  totalTime: string;
 };
 
 const Container = styled.div`
@@ -15,52 +19,53 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 20px;
+  width: 100%;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
+  }
 `;
 
 const H1 = styled.h1`
-  margin-left: 100px;
   font-size: 20px;
+  font-weight: bold;
 `;
 
 const InputRow = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  align-self: stretch;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const Input = styled.input`
   border: 1px solid white;
-  background-color: #282828;
+  background-color: #bcbcbc;
   border-radius: 5px;
   text-align: center;
-  color: white;
-`;
-
-const SendBtn = styled.button`
-  width: 80px;
-  background-color: #282828;
-  padding: 8px;
-  border: 1px solid white;
-  border-radius: 5px;
-  color: white;
-  font-size: 10px;
-  margin-left: 750px;
-  cursor: pointer;
-`;
-
-const Button = styled.button`
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
+  color: #000000;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
 `;
 
 const AddReceiver = () => {
-  const [receivers, setReceivers] = useState([{ receiveAddress: '', totalAmount: '', totalTime: '' }]);
+  const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
   const navigate = useNavigate();
 
+  const { write: bulkDeposit } = useContractWrite({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    functionName: FUNCTION.BULKDEPOSITTOKENS
+  })
+
   const addReceiverField = () => {
-    setReceivers([...receivers, { receiveAddress: '', totalAmount: '', totalTime: '' }]);
+    setReceivers((prev) => ([...prev, { receiveAddress: '', totalAmount: '' }]));
   };
 
   const updateField = (index: number, field: keyof Receiver, value: string) => {
@@ -97,46 +102,39 @@ const AddReceiver = () => {
     //     console.error('Error fetching', err);
     //   }
     // }
-
-    console.log(receivers);
+    let _receivers: string[] = []
+    let _amounts: string[] = []
+    for (let i = 0; i < receivers.length; i++) {
+      _receivers[i] = receivers[i].receiveAddress
+      _amounts[i] = receivers[i].totalAmount
+    }
+    bulkDeposit?.({ args: [_receivers, _amounts] })
   };
 
   return (
     <Container>
-      <H1>Function Add Receivers</H1>
+      <H1>Add Receivers</H1>
       <form onSubmit={handleSubmit}>
         {receivers.map((receiver, index) => (
           <InputRow key={index}>
-            <div className="input-field">
-              <Input
-                type="text"
-                value={receiver.receiveAddress}
-                onChange={(e) => updateField(index, 'receiveAddress', e.target.value)}
-                placeholder="Address"
-              />
-            </div>
-            <div className="input-field">
-              <Input
-                type="text"
-                value={receiver.totalAmount}
-                onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
-                placeholder="T.Amount"
-              />
-            </div>
-            <div className="input-field">
-              <Input
-                type="text"
-                value={receiver.totalTime}
-                onChange={(e) => updateField(index, 'totalTime', e.target.value)}
-                placeholder="T.Time"
-              />
-            </div>
-            {receivers.length > 1 && <Button onClick={() => removeReceiverField(index)}>-</Button>}
+            <Input
+              type="text"
+              value={receiver.receiveAddress}
+              onChange={(e) => updateField(index, 'receiveAddress', e.target.value)}
+              placeholder="Wallet Address"
+            />
+            <Input
+              type="text"
+              value={receiver.totalAmount}
+              onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
+              placeholder="Distributed Amount"
+            />
+            <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>-</Button>
           </InputRow>
         ))}
-        <SendBtn type="submit">Submit</SendBtn>
+        <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>+</Button>
       </form>
-      <Button onClick={addReceiverField}>+</Button>
+      <Button variant="contained" type="submit">Submit</Button>
     </Container>
   );
 };
