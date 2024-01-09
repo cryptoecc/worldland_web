@@ -11,6 +11,7 @@ export enum ABI {
   LVSWAPV2_FACTORY = 'LVSWAPV2_FACTORY',
   LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
   BRIDGEBASE_ABI = 'BRIDGEBASE_ABI',
+  LINEAR_TIMELOCK = 'LINEAR_TIMELOCK',
 }
 
 export enum Field {
@@ -38,6 +39,7 @@ export enum CONTRACT_ADDRESSES {
   DAI_ADDRESS = 'DAI_ADDRESS',
   ERC20_ABI = 'ERC20_ABI',
   BRIDGE = 'BRIDGE',
+  LINEAR_TIMELOCK = 'LINEAR_TIMELOCK',
 }
 
 export enum FUNCTION {
@@ -60,6 +62,7 @@ export enum FUNCTION {
   BURNWETH = 'burnWETH',
   LOCKTOKEN = 'lockToken',
   BURNTOKEN = 'burnToken',
+  SETTIMESTAMP = 'setTimestamp',
 }
 
 export enum QUERY {

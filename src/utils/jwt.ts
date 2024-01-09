@@ -1,10 +1,11 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import { provider } from 'configs/axios';
 
 export const CheckJwt = async (navigate: any) => {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await axios.get('http://localhost:4000/api/admin/admin-info', {
+    const response = await provider.get('/api/admin/admin-info', {
       headers: {
         Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
       },

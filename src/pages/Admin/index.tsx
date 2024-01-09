@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WorldLandLogo } from 'assets';
 import styled from 'styled-components';
-import axios from 'axios';
+import { provider } from 'configs/axios';
 
 // 스타일 컴포넌트 정의
 const Container = styled.div`
@@ -90,11 +90,11 @@ const Admin = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/api/admin/login', formData);
+      const response = await provider.post('/api/admin/login', formData);
 
       console.log(response.data);
       localStorage.setItem('token', response.data.token);
-      // const response2 = await axios.get('http://localhost:4000/api/admin/admin-info', {
+      // const response2 = await provider.get('http://localhost:4000/api/admin/admin-info', {
       //   withCredentials: true,
       // });
 
