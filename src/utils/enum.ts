@@ -68,6 +68,11 @@ export enum FUNCTION {
 export enum QUERY {
   ALLOWANCE = 'allowance',
   BALANCEOF = 'balanceOf',
+  TIMESTAMPISSET = 'timestampSet',
+  CONTRACTBALANCE = 'contractBalance',
+  CLIFFEDGE = 'cliffEdge',
+  RELEASEEDGE = 'releaseEdge',
+  INITIALTIMESTAMP = 'initialTimestamp',
 }
 
 export enum CHAINDS {
