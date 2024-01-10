@@ -64,6 +64,7 @@ export enum FUNCTION {
   BURNTOKEN = 'burnToken',
   SETTIMESTAMP = 'setTimestamp',
   BULKDEPOSITTOKENS = 'bulkDepositTokens',
+  FINALIZE = 'finalizeAllIncomingDeposits',
 }
 
 export enum QUERY {
@@ -74,6 +75,8 @@ export enum QUERY {
   CLIFFEDGE = 'cliffEdge',
   RELEASEEDGE = 'releaseEdge',
   INITIALTIMESTAMP = 'initialTimestamp',
+  ISFINALISED = 'allIncomingDepositsFinalised',
+  OWNER = 'owner',
 }
 
 export enum CHAINDS {

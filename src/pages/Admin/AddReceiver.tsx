@@ -57,7 +57,7 @@ const Input = styled.input`
   max-width: 300px;
 `;
 
-const AddReceiver = () => {
+const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
   const navigate = useNavigate();
   const { addToast } = useToasts();
@@ -122,11 +122,30 @@ const AddReceiver = () => {
     // }
     let _receivers: string[] = []
     let _amounts: string[] = []
+    let empty_fields = [];
     for (let i = 0; i < receivers.length; i++) {
       _receivers[i] = receivers[i].receiveAddress
       _amounts[i] = to_wei(receivers[i].totalAmount)
+      if (_receivers[i] === '' || _amounts[i] === '') empty_fields[i] = _receivers[i]
     }
-    bulkDeposit?.({ args: [_receivers, _amounts] })
+    if (_receivers.length > 0 && _amounts.length > 0) {
+      if (empty_fields.length > 0) {
+        addToast(MESSAGES.SUBMISSION_ERROR, {
+          appearance: 'error',
+          content: MESSAGES.EMPTY_FIELD,
+          autoDismiss: true,
+        });
+        return;
+      } else {
+        bulkDeposit?.({ args: [_receivers, _amounts] })
+      }
+    } else {
+      addToast(MESSAGES.SUBMISSION_ERROR, {
+        appearance: 'error',
+        content: MESSAGES.NO_RECEIVER,
+        autoDismiss: true,
+      });
+    }
   };
 
   return (
@@ -151,9 +170,8 @@ const AddReceiver = () => {
           </InputRow>
         ))}
         <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>+</Button>
-        <Button sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">Submit</Button>
+        <Button disabled={isFinalised} sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">Submit</Button>
       </form>
-
     </Container>
   );
 };

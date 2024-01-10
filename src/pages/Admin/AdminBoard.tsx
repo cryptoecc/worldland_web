@@ -15,21 +15,25 @@ import {
   useContractRead,
 } from 'wagmi';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
-import { ABI, CONTRACT_ADDRESSES, QUERY } from 'utils/enum';
+import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Button, { ButtonProps } from '@mui/material/Button';
 import { purple } from '@mui/material/colors';
+import WarningModal from 'components/WarningModal';
+import { useToasts } from 'react-toast-notifications';
+import { MESSAGES } from 'utils/messages';
+import CustomTable from 'components/CustomTable';
 
-interface Contract {
+export interface Contract {
   balance: string;
   cliffEdge: string;
   releaseEdge: string;
   initialTimestamp: string;
   owner: string;
-  interactionFinalized: boolean;
+  isAllIncomingDepositsFinalised: boolean;
   timestampSet: boolean;
 }
 const initialContractObj = {
@@ -38,7 +42,7 @@ const initialContractObj = {
   releaseEdge: '',
   initialTimestamp: '',
   owner: '',
-  interactionFinalized: false,
+  isAllIncomingDepositsFinalised: false,
   timestampSet: false
 }
 
@@ -50,7 +54,7 @@ const Container = styled.section`
   position: relative;
   height: 100vh;
   font-family: 'Nunito Sans', sans-serif;
-  margin-top: 20px;
+  margin-top: 70px;
 `;
 
 const Content = styled.div`
@@ -95,12 +99,12 @@ const BtnWrap = styled.div`
 const timeFormat = 'YYYY / MM / DD hh:mm:ss'
 
 const AdminBoard = () => {
-  dayjs.extend(relativeTime);
   const [adminId, setAdminId] = useState<string | undefined>('')
   const { address } = useAccount()
   const [contract, setContract] = useState<Contract>(initialContractObj)
   const navigate = useNavigate()
-
+  const [modal, setModal] = useState<boolean>(false)
+  const { addToast } = useToasts();
   const token = localStorage.getItem('token');
   const fetchUserInfo = async () => {
     try {
@@ -125,6 +129,14 @@ const AdminBoard = () => {
     }
   };
 
+  const { data: owner } = useContractRead({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    functionName: QUERY.OWNER,
+    onSuccess(data: string) {
+      setContract((prev) => ({ ...prev, owner: data }))
+    }
+  })
   const { data: timestampSet } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
@@ -174,30 +186,82 @@ const AdminBoard = () => {
       setContract((prev) => ({ ...prev, balance: from_wei(data as string) }))
     }
   })
+  const { data: isAllIncomingDepositsFinalised } = useContractRead({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    functionName: QUERY.ISFINALISED,
+    watch: true,
+    onSuccess(data: boolean) {
+      setContract((prev) => ({ ...prev, isAllIncomingDepositsFinalised: data }))
+    }
+  })
+
+  const { write: finalize } = useContractWrite({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    functionName: FUNCTION.FINALIZE,
+    onSuccess() {
+      addToast(MESSAGES.TX_SUCCESS, {
+        appearance: 'success',
+        content: MESSAGES.FINALIZED,
+        autoDismiss: true,
+      });
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
+  })
+
+  async function handleFinalize() {
+    try {
+      if (parseInt(contract.balance) === 0) {
+        addToast(MESSAGES.TX_FAIL, {
+          appearance: 'error',
+          content: MESSAGES.LOW_CONTRACT_BALANCE,
+          autoDismiss: true,
+        });
+        setModal(false);
+      } else if (!contract.timestampSet) {
+        addToast(MESSAGES.TX_FAIL, {
+          appearance: 'error',
+          content: MESSAGES.NO_TIMESTAMP,
+          autoDismiss: true,
+        });
+        setModal(false);
+      } else {
+        finalize?.();
+        setModal(false);
+      }
+    } catch (err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
+  }
 
   useEffect(() => {
     fetchUserInfo();
     setAdminId(address);
   }, []);
 
-  let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
   return (
     <Container>
       <Content>
         <H1>Timelock Period Setting</H1>
-        <AdminInfo>Contract Owner : {adminId}</AdminInfo>
-        <AdminInfo>Timelock Contract Address : {adminId}</AdminInfo>
-        <AdminInfo>Contract Balance : {contract?.balance} WL</AdminInfo>
-        <AdminInfo>Initial timestamp : {contract.initialTimestamp} ( {dayjs(contract.initialTimestamp).fromNow()} )</AdminInfo>
-        <AdminInfo>Lock Time ending : {contract.cliffEdge} ( {dayjs(contract.cliffEdge).fromNow()} )</AdminInfo>
-        <AdminInfo>Final Release Time Ending : {contract?.releaseEdge} ( {dayjs(contract.releaseEdge).fromNow()} )</AdminInfo>
-        <AdminInfo>Timestamp status : <span className={_timestampSet ? 'success' : ''}>{_timestampSet}</span></AdminInfo>
+        <CustomTable address={WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]} contract={contract} />
         <SetTimestamp isTimestampSet={contract.timestampSet} />
-        <AddReceiver />
+        <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} />
         <BtnWrap>
-          <Button color="error" variant="contained">Finalize Admin Interaction</Button>
+          <Button disabled={contract?.isAllIncomingDepositsFinalised} onClick={() => setModal(true)} color="error" variant="contained">Finalize Admin Interaction</Button>
         </BtnWrap>
       </Content>
+      <WarningModal open={modal} setModal={setModal} exec={handleFinalize} />
     </Container>
   );
 };
