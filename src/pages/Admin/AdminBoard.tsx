@@ -37,6 +37,12 @@ export interface Contract {
   isAllIncomingDepositsFinalised: boolean;
   timestampSet: boolean;
 }
+
+export interface UserData {
+  wallet_address: string;
+  total_amount: string;
+}
+
 const initialContractObj = {
   balance: '',
   cliffEdge: '',
@@ -44,8 +50,8 @@ const initialContractObj = {
   initialTimestamp: '',
   owner: '',
   isAllIncomingDepositsFinalised: false,
-  timestampSet: false
-}
+  timestampSet: false,
+};
 
 const Container = styled.section`
   display: flex;
@@ -79,7 +85,6 @@ const H1 = styled.h1`
   font-weight: bold;
 `;
 
-
 const BtnWrap = styled.div`
   display: flex;
   align-items: center;
@@ -94,19 +99,17 @@ const TableWrap = styled.div`
   max-width: 800px;
   width: 100%;
   margin: 40px 0 0;
-`
+`;
 
-
-
-
-const timeFormat = 'YYYY / MM / DD hh:mm:ss'
+const timeFormat = 'YYYY / MM / DD hh:mm:ss';
 
 const AdminBoard = () => {
-  const [adminId, setAdminId] = useState<string | undefined>('')
-  const { address } = useAccount()
-  const [contract, setContract] = useState<Contract>(initialContractObj)
-  const navigate = useNavigate()
-  const [modal, setModal] = useState<boolean>(false)
+  const [adminId, setAdminId] = useState<string | undefined>('');
+  const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
+  const { address } = useAccount();
+  const [contract, setContract] = useState<Contract>(initialContractObj);
+  const navigate = useNavigate();
+  const [modal, setModal] = useState<boolean>(false);
   const { addToast } = useToasts();
   const token = localStorage.getItem('token');
   const fetchUserInfo = async () => {
@@ -132,23 +135,39 @@ const AdminBoard = () => {
     }
   };
 
+  const fetchDaoInfo = async () => {
+    try {
+      const response = await provider.get('/api/admin/dao-info', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
+        },
+      });
+
+      console.log(response.data);
+
+      setDaoInfo(response.data);
+    } catch (error) {
+      console.error('Error fetching', error);
+    }
+  };
+
   const { data: owner } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.OWNER,
     onSuccess(data: string) {
-      setContract((prev) => ({ ...prev, owner: data }))
-    }
-  })
+      setContract((prev) => ({ ...prev, owner: data }));
+    },
+  });
   const { data: timestampSet } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.TIMESTAMPISSET,
     watch: true,
     onSuccess(data: boolean) {
-      setContract((prev) => ({ ...prev, timestampSet: data }))
-    }
-  })
+      setContract((prev) => ({ ...prev, timestampSet: data }));
+    },
+  });
 
   const { data: initialTimestamp } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -156,9 +175,9 @@ const AdminBoard = () => {
     functionName: QUERY.INITIALTIMESTAMP,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, initialTimestamp: dayjs.unix(Number(data)).format(timeFormat) }))
-    }
-  })
+      setContract((prev) => ({ ...prev, initialTimestamp: dayjs.unix(Number(data)).format(timeFormat) }));
+    },
+  });
 
   const { data: cliffEdge } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -166,9 +185,9 @@ const AdminBoard = () => {
     functionName: QUERY.CLIFFEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, cliffEdge: dayjs.unix(Number(data)).format(timeFormat) }))
-    }
-  })
+      setContract((prev) => ({ ...prev, cliffEdge: dayjs.unix(Number(data)).format(timeFormat) }));
+    },
+  });
 
   const { data: releaseEdge } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -176,9 +195,9 @@ const AdminBoard = () => {
     functionName: QUERY.RELEASEEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, releaseEdge: dayjs.unix(Number(data)).format(timeFormat) }))
-    }
-  })
+      setContract((prev) => ({ ...prev, releaseEdge: dayjs.unix(Number(data)).format(timeFormat) }));
+    },
+  });
 
   const { data: contractBalance } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -186,18 +205,18 @@ const AdminBoard = () => {
     functionName: QUERY.CONTRACTBALANCE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data as string) }))
-    }
-  })
+      setContract((prev) => ({ ...prev, balance: from_wei(data as string) }));
+    },
+  });
   const { data: isAllIncomingDepositsFinalised } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.ISFINALISED,
     watch: true,
     onSuccess(data: boolean) {
-      setContract((prev) => ({ ...prev, isAllIncomingDepositsFinalised: data }))
-    }
-  })
+      setContract((prev) => ({ ...prev, isAllIncomingDepositsFinalised: data }));
+    },
+  });
 
   const { write: finalize } = useContractWrite({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -216,8 +235,8 @@ const AdminBoard = () => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
-    }
-  })
+    },
+  });
 
   async function handleFinalize() {
     try {
@@ -250,6 +269,7 @@ const AdminBoard = () => {
 
   useEffect(() => {
     fetchUserInfo();
+    fetchDaoInfo();
     setAdminId(address);
   }, []);
 
@@ -259,13 +279,20 @@ const AdminBoard = () => {
         <H1>Timelock Period Setting</H1>
         <CustomTable address={WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]} contract={contract} />
         <SetTimestamp isTimestampSet={contract.timestampSet} />
-        <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} />
+        <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
         <BtnWrap>
-          <Button disabled={contract?.isAllIncomingDepositsFinalised} onClick={() => setModal(true)} color="error" variant="contained">Finalize Admin Interaction</Button>
+          <Button
+            disabled={contract?.isAllIncomingDepositsFinalised}
+            onClick={() => setModal(true)}
+            color="error"
+            variant="contained"
+          >
+            Finalize Admin Interaction
+          </Button>
         </BtnWrap>
       </Content>
       <TableWrap>
-        <UsersTable users={[{ address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' },]} />
+        <UsersTable users={daoInfo} />
       </TableWrap>
       <WarningModal open={modal} setModal={setModal} exec={handleFinalize} />
     </Container>
