@@ -28,6 +28,10 @@ function MainStatistics() {
 
     const response2 = response.data.result.length;
     setTotalWalletCount(response2);
+
+    const averageBlock = await axios.post(`https://scan.worldland.foundation/api/eth-rpc/stats`);
+
+    console.log('asdds', averageBlock);
   };
 
   const fetchBlockData = useCallback(async () => {
