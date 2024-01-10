@@ -76,7 +76,7 @@ function MainStatistics() {
           <StatisticsDetail>
             <CountUp end={time} duration={0.5} decimals={1} formattingFn={formatValue} />
           </StatisticsDetail>
-          <DetailDescription>Average Block Time</DetailDescription>
+          <DetailDescription>Average Block Time / Day</DetailDescription>
         </StatisticContainer>
         <StatisticContainer>
           <StatisticsDetail>
