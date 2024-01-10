@@ -3,7 +3,6 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Contract } from 'pages/Admin/AdminBoard';
@@ -29,9 +28,9 @@ export default function CustomTable({ address, contract }: TableProps) {
         createData('Contract Owner', contract?.owner),
         createData('Timelock Contract Address', address),
         createData('Contract Balance', contract?.balance + ' WL'),
-        createData('Initial Timestamp', `${contract?.initialTimestamp} (${dayjs(contract.initialTimestamp).fromNow()})`),
-        createData('Lock Time Ending', `${contract?.cliffEdge} (${dayjs(contract.cliffEdge).fromNow()})`),
-        createData('Final Release Time Ending', `${contract?.releaseEdge} (${dayjs(contract.releaseEdge).fromNow()})`),
+        createData('Initial Timestamp', `${contract?.initialTimestamp} ${contract?.initialTimestamp === '-' ? "" : "(" + dayjs(contract.initialTimestamp).fromNow() + ")"}`),
+        createData('Lock Time Ending', `${contract?.cliffEdge} ${contract?.cliffEdge === '-' ? "" : "(" + dayjs(contract.cliffEdge).fromNow() + ")"}`),
+        createData('Final Release Time Ending', `${contract?.releaseEdge} ${contract?.releaseEdge === '-' ? "" : "(" + dayjs(contract.releaseEdge).fromNow() + ")"}`),
         createData('Timestamp Status', _timestampSet),
     ];
     return (
