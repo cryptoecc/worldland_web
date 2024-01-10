@@ -70,7 +70,7 @@ const Content = styled.div`
   background-color: #ffffff;
   color: #000000;
   border: 1px;
-  border-radius: 10px;
+  border-radius: 5px;
 `;
 
 const H1 = styled.h1`
