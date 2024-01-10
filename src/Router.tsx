@@ -17,7 +17,6 @@ import Index from 'pages/Index';
 import Pool from 'pages/Pool';
 import AddLiquidity from 'pages/Pool/AddLiquidity';
 import Contact from 'pages/Contact';
-import Chart from 'pages/Chart';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
 import Admin from 'pages/Admin';
@@ -52,7 +51,6 @@ const Router = () => {
         { path: `${PATH.POOL}`, element: <Pool /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
-        { path: `${PATH.CHART}`, element: <Chart /> },
         { path: `${PATH.ADMIN}`, element: <Admin /> },
         { path: `${PATH.ADMIN_BOARD}`, element: <AdminBoard /> },
       ],
