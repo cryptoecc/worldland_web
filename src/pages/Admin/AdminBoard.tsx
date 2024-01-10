@@ -26,6 +26,7 @@ import WarningModal from 'components/WarningModal';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
 import CustomTable from 'components/CustomTable';
+import UsersTable from 'components/UsersTable';
 
 export interface Contract {
   balance: string;
@@ -52,7 +53,7 @@ const Container = styled.section`
   justify-content: center;
   flex-direction: column;
   position: relative;
-  height: 100vh;
+  height: 100%;
   font-family: 'Nunito Sans', sans-serif;
   margin-top: 70px;
 `;
@@ -78,20 +79,22 @@ const H1 = styled.h1`
   font-weight: bold;
 `;
 
-const AdminInfo = styled.div`
-  text-align: start;
-  width: 100%;
 
-  .success {
-    color: #01b30d;
-  }
-`;
 const BtnWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
   width: 100%;
 `;
+
+const TableWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 800px;
+  width: 100%;
+  margin: 40px 0 0;
+`
 
 
 
@@ -261,6 +264,9 @@ const AdminBoard = () => {
           <Button disabled={contract?.isAllIncomingDepositsFinalised} onClick={() => setModal(true)} color="error" variant="contained">Finalize Admin Interaction</Button>
         </BtnWrap>
       </Content>
+      <TableWrap>
+        <UsersTable users={[{ address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' }, { address: '0x210706cbd9D26c26c727f4d3007D819390934375', total_amount: '100 WL' },]} />
+      </TableWrap>
       <WarningModal open={modal} setModal={setModal} exec={handleFinalize} />
     </Container>
   );

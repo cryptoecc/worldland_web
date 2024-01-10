@@ -164,7 +164,7 @@ const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
               type="text"
               value={receiver.totalAmount}
               onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
-              placeholder="Distributed Amount"
+              placeholder="Total Amount"
             />
             <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>-</Button>
           </InputRow>

@@ -17,7 +17,6 @@ function createData(
     return { name, value };
 }
 
-
 interface TableProps {
     address: string;
     contract: Contract;
@@ -29,8 +28,8 @@ export default function CustomTable({ address, contract }: TableProps) {
     const rows = [
         createData('Contract Owner', contract?.owner),
         createData('Timelock Contract Address', address),
-        createData('Contract Balance', contract?.balance),
-        createData('Initial Timestamp', contract?.initialTimestamp),
+        createData('Contract Balance', contract?.balance + ' WL'),
+        createData('Initial Timestamp', `${contract?.initialTimestamp} (${dayjs(contract.initialTimestamp).fromNow()})`),
         createData('Lock Time Ending', `${contract?.cliffEdge} (${dayjs(contract.cliffEdge).fromNow()})`),
         createData('Final Release Time Ending', `${contract?.releaseEdge} (${dayjs(contract.releaseEdge).fromNow()})`),
         createData('Timestamp Status', _timestampSet),
