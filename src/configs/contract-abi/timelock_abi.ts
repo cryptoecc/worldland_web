@@ -72,21 +72,8 @@ export const abi = [
       },
       {
         indexed: false,
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'WLDeposited',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
         internalType: 'address',
-        name: 'recipient',
+        name: 'to',
         type: 'address',
       },
       {
@@ -96,7 +83,7 @@ export const abi = [
         type: 'uint256',
       },
     ],
-    name: 'WLUnlocked',
+    name: 'Transfer',
     type: 'event',
   },
   {

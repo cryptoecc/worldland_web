@@ -27,7 +27,13 @@ import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
 import CustomTable from 'components/CustomTable';
 import UsersTable from 'components/UsersTable';
+import { parseEther } from 'viem';
 
+
+import FilledInput from '@mui/material/FilledInput';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
+import FormControl from '@mui/material/FormControl';
 export interface Contract {
   balance: string;
   cliffEdge: string;
@@ -44,7 +50,7 @@ export interface UserData {
 }
 
 const initialContractObj = {
-  balance: '',
+  balance: '0',
   cliffEdge: '',
   releaseEdge: '',
   initialTimestamp: '',
@@ -101,15 +107,17 @@ const TableWrap = styled.div`
   margin: 40px 0 0;
 `;
 
-const timeFormat = 'YYYY / MM / DD hh:mm:ss';
+const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
 
 const AdminBoard = () => {
-  const [adminId, setAdminId] = useState<string | undefined>('');
+  const [adminId, setAdminId] = useState<string | undefined>('')
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
-  const { address } = useAccount();
-  const [contract, setContract] = useState<Contract>(initialContractObj);
-  const navigate = useNavigate();
-  const [modal, setModal] = useState<boolean>(false);
+  const { address } = useAccount()
+  const [inputAmount, setInputAmount] = useState<string>('');
+  const [contract, setContract] = useState<Contract>(initialContractObj)
+  const navigate = useNavigate()
+  const [modal, setModal] = useState<boolean>(false)
+
   const { addToast } = useToasts();
   const token = localStorage.getItem('token');
   const fetchUserInfo = async () => {
@@ -175,9 +183,9 @@ const AdminBoard = () => {
     functionName: QUERY.INITIALTIMESTAMP,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, initialTimestamp: dayjs.unix(Number(data)).format(timeFormat) }));
-    },
-  });
+      setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
+    }
+  })
 
   const { data: cliffEdge } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -185,9 +193,9 @@ const AdminBoard = () => {
     functionName: QUERY.CLIFFEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, cliffEdge: dayjs.unix(Number(data)).format(timeFormat) }));
-    },
-  });
+      setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
+    }
+  })
 
   const { data: releaseEdge } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -195,9 +203,9 @@ const AdminBoard = () => {
     functionName: QUERY.RELEASEEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, releaseEdge: dayjs.unix(Number(data)).format(timeFormat) }));
-    },
-  });
+      setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
+    }
+  })
 
   const { data: contractBalance } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -205,9 +213,10 @@ const AdminBoard = () => {
     functionName: QUERY.CONTRACTBALANCE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data as string) }));
-    },
-  });
+      setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }))
+    }
+  })
+  
   const { data: isAllIncomingDepositsFinalised } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
@@ -237,6 +246,27 @@ const AdminBoard = () => {
       });
     },
   });
+
+  const { write: depositWL } = useContractWrite({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    functionName: FUNCTION.DEPOSITWL,
+    value: parseEther(inputAmount),
+    onSuccess() {
+      addToast(MESSAGES.TX_SUCCESS, {
+        appearance: 'success',
+        content: MESSAGES.TRANSFER_SUCCESS,
+        autoDismiss: true,
+      });
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
+  })
 
   async function handleFinalize() {
     try {
@@ -278,6 +308,17 @@ const AdminBoard = () => {
       <Content>
         <H1>Timelock Period Setting</H1>
         <CustomTable address={WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]} contract={contract} />
+        <FormControl fullWidth sx={{ m: 1 }} variant="filled">
+          <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
+          <FilledInput
+            id="filled-adornment-amount"
+            startAdornment={<InputAdornment position="start">₩L</InputAdornment>}
+            onChange={(e) => setInputAmount(e.target.value)}
+          />
+        </FormControl>
+        <BtnWrap>
+          <Button sx={{ width: '100%' }} disabled={contract?.isAllIncomingDepositsFinalised} onClick={() => depositWL()} variant="contained">Deposit WL</Button>
+        </BtnWrap>
         <SetTimestamp isTimestampSet={contract.timestampSet} />
         <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
         <BtnWrap>
