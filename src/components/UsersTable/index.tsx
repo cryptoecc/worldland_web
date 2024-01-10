@@ -9,42 +9,42 @@ import Paper from '@mui/material/Paper';
 import { Contract } from 'pages/Admin/AdminBoard';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { UserData } from 'pages/Admin/AdminBoard';
 
 type User = {
-    address: string;
-    total_amount: string | number;
-}
+  address: string;
+  total_amount: string | number;
+};
 
 interface TableProps {
-    users: User[];
+  users: UserData[];
 }
 
 export default function UsersTable({ users }: TableProps) {
-    dayjs.extend(relativeTime);
+  dayjs.extend(relativeTime);
 
-    return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{ fontWeight: 'bold' }}>Receiver Address</TableCell>
-                        <TableCell sx={{ fontWeight: 'bold' }} align="right">Receiver Total Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {users.map((row, i) => (
-                        <TableRow
-                            key={i}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.address}
-                            </TableCell>
-                            <TableCell align="right">{row.total_amount}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>Receiver Address</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+              Receiver Total Amount
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((row, i) => (
+            <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell component="th" scope="row">
+                {row.wallet_address}
+              </TableCell>
+              <TableCell align="right">{row.total_amount}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }

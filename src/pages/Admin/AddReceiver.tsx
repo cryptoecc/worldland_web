@@ -11,6 +11,7 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { to_wei } from 'utils/util';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
+import { provider } from '../../configs/axios';
 
 type Receiver = {
   receiveAddress: string;
@@ -57,7 +58,7 @@ const Input = styled.input`
   max-width: 300px;
 `;
 
-const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
+const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
   const navigate = useNavigate();
   const { addToast } = useToasts();
@@ -79,11 +80,11 @@ const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
-    }
-  })
+    },
+  });
 
   const addReceiverField = () => {
-    setReceivers((prev) => ([...prev, { receiveAddress: '', totalAmount: '' }]));
+    setReceivers((prev) => [...prev, { receiveAddress: '', totalAmount: '' }]);
   };
 
   const updateField = (index: number, field: keyof Receiver, value: string) => {
@@ -120,13 +121,14 @@ const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
     //     console.error('Error fetching', err);
     //   }
     // }
-    let _receivers: string[] = []
-    let _amounts: string[] = []
+    let _receivers: string[] = [];
+    let _amounts: string[] = [];
     let empty_fields = [];
+    const token = localStorage.getItem('token');
     for (let i = 0; i < receivers.length; i++) {
-      _receivers[i] = receivers[i].receiveAddress
-      _amounts[i] = to_wei(receivers[i].totalAmount)
-      if (_receivers[i] === '' || _amounts[i] === '') empty_fields[i] = _receivers[i]
+      _receivers[i] = receivers[i].receiveAddress;
+      _amounts[i] = to_wei(receivers[i].totalAmount);
+      if (_receivers[i] === '' || _amounts[i] === '') empty_fields[i] = _receivers[i];
     }
     if (_receivers.length > 0 && _amounts.length > 0) {
       if (empty_fields.length > 0) {
@@ -137,7 +139,18 @@ const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
         });
         return;
       } else {
-        bulkDeposit?.({ args: [_receivers, _amounts] })
+        bulkDeposit?.({ args: [_receivers, _amounts] });
+        const response = await provider.post(
+          '/api/admin/dao-list',
+          { _receivers, _amounts },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
+            },
+          },
+        );
+        console.log(response);
+        fetchDaoInfo();
       }
     } else {
       addToast(MESSAGES.SUBMISSION_ERROR, {
@@ -166,11 +179,17 @@ const AddReceiver = ({ isFinalised }: { isFinalised: boolean }) => {
               onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
               placeholder="Total Amount"
             />
-            <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>-</Button>
+            <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>
+              -
+            </Button>
           </InputRow>
         ))}
-        <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>+</Button>
-        <Button disabled={isFinalised} sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">Submit</Button>
+        <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>
+          +
+        </Button>
+        <Button sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">
+          Submit
+        </Button>
       </form>
     </Container>
   );
