@@ -4,11 +4,11 @@ import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { CheckJwt } from 'utils/jwt';
 import { Button } from '@mui/material';
-import { useContractWrite } from 'wagmi';
+import { useContractWrite, useWaitForTransaction } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { MAP_STR_ABI } from 'configs/abis';
-import { to_wei } from 'utils/util';
+import { from_wei, to_wei } from 'utils/util';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
 import { provider } from '../../configs/axios';
@@ -60,17 +60,17 @@ const Input = styled.input`
 
 const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
+  const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[] }>({ receivers: [], amounts: [] })
   const navigate = useNavigate();
   const { addToast } = useToasts();
 
-  const { write: bulkDeposit } = useContractWrite({
+  const { data: tx, write: bulkDeposit } = useContractWrite({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: FUNCTION.BULKDEPOSITTOKENS,
     onSuccess() {
-      addToast(MESSAGES.TX_SUCCESS, {
+      addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        content: MESSAGES.DEPOSIT_SUCCESS,
         autoDismiss: true,
       });
     },
@@ -82,6 +82,32 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
       });
     },
   });
+  useWaitForTransaction({
+    hash: tx?.hash,
+    async onSuccess() {
+      addToast(MESSAGES.TX_SUCCESS, {
+        appearance: 'success',
+        content: MESSAGES.DEPOSIT_SUCCESS,
+        autoDismiss: true,
+      });
+      let parsedAmounts = [];
+      for (let i = 0; i < txObj.amounts.length; i++) {
+        parsedAmounts[i] = from_wei(txObj.amounts[i]);
+      }
+      await provider.post(
+        '/api/admin/dao-list',
+        { _receivers: txObj.receivers, _amounts: parsedAmounts },
+      );
+      fetchDaoInfo();
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
+  })
 
   const addReceiverField = () => {
     setReceivers((prev) => [...prev, { receiveAddress: '', totalAmount: '' }]);
@@ -124,7 +150,6 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
     let _receivers: string[] = [];
     let _amounts: string[] = [];
     let empty_fields = [];
-    const token = localStorage.getItem('token');
     for (let i = 0; i < receivers.length; i++) {
       _receivers[i] = receivers[i].receiveAddress;
       _amounts[i] = to_wei(receivers[i].totalAmount);
@@ -137,20 +162,9 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
           content: MESSAGES.EMPTY_FIELD,
           autoDismiss: true,
         });
-        return;
       } else {
         bulkDeposit?.({ args: [_receivers, _amounts] });
-        const response = await provider.post(
-          '/api/admin/dao-list',
-          { _receivers, _amounts },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
-            },
-          },
-        );
-        console.log(response);
-        fetchDaoInfo();
+        setTxObj({ receivers: _receivers, amounts: _amounts })
       }
     } else {
       addToast(MESSAGES.SUBMISSION_ERROR, {
@@ -187,7 +201,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>
           +
         </Button>
-        <Button sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">
+        <Button disabled={isFinalised} sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">
           Submit
         </Button>
       </form>

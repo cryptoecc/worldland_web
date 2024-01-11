@@ -45,6 +45,8 @@ export interface Contract {
 }
 
 export interface UserData {
+  id: number;
+  created_at: string;
   wallet_address: string;
   total_amount: string;
 }
@@ -145,14 +147,8 @@ const AdminBoard = () => {
 
   const fetchDaoInfo = async () => {
     try {
-      const response = await provider.get('/api/admin/dao-info', {
-        headers: {
-          Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
-        },
-      });
-
+      const response = await provider.get('/api/admin/dao-info');
       console.log(response.data);
-
       setDaoInfo(response.data);
     } catch (error) {
       console.error('Error fetching', error);
@@ -216,7 +212,7 @@ const AdminBoard = () => {
       setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }))
     }
   })
-  
+
   const { data: isAllIncomingDepositsFinalised } = useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
@@ -306,7 +302,7 @@ const AdminBoard = () => {
   return (
     <Container>
       <Content>
-        <H1>Timelock Period Setting</H1>
+        <H1>Linear Timelock Contract Period Setting</H1>
         <CustomTable address={WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]} contract={contract} />
         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
@@ -333,7 +329,7 @@ const AdminBoard = () => {
         </BtnWrap>
       </Content>
       <TableWrap>
-        <UsersTable users={daoInfo} />
+        {daoInfo.length > 0 && <UsersTable users={daoInfo} />}
       </TableWrap>
       <WarningModal open={modal} setModal={setModal} exec={handleFinalize} />
     </Container>
