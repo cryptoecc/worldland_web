@@ -94,6 +94,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
       for (let i = 0; i < txObj.amounts.length; i++) {
         parsedAmounts[i] = from_wei(txObj.amounts[i]);
       }
+      setReceivers((prev) => [{ receiveAddress: '', totalAmount: '' }]);
       await provider.post(
         '/api/admin/dao-list',
         { _receivers: txObj.receivers, _amounts: parsedAmounts },

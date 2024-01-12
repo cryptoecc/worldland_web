@@ -7,6 +7,7 @@ export const MESSAGES = {
   CHAIN_CHANGE: (name: string) => `Metamask network changed to ${name}!`,
   DEPOSIT_SUCCESS: 'Bulk deposit successfully completed!',
   TRANSFER_SUCCESS: 'Deposit is complete!',
+  TIMESTAMP_SET: 'Timestamp has successfully been set!',
 
   // error messages
   TX_FAIL: 'Transaction failed!',

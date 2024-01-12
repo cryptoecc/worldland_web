@@ -21,6 +21,7 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Button } from '@mui/material';
 import { useToasts } from 'react-toast-notifications';
+import { MESSAGES } from 'utils/messages';
 
 type ITimestamp = {
     lockPeriod: string | null;
@@ -63,10 +64,41 @@ const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
     const [disabled, setDisabled] = useState<boolean>(true);
     const { addToast } = useToasts();
 
-    const { write } = useContractWrite({
+    const { data: tx, write } = useContractWrite({
         address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
         abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: FUNCTION.SETTIMESTAMP
+        functionName: FUNCTION.SETTIMESTAMP,
+        onSuccess() {
+            addToast(MESSAGES.TX_SENT, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        },
+    })
+
+    useWaitForTransaction({
+        hash: tx?.hash,
+        async onSuccess() {
+            addToast(MESSAGES.TX_SUCCESS, {
+                appearance: 'success',
+                content: MESSAGES.TIMESTAMP_SET,
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        }
     })
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -77,6 +109,7 @@ const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
             const now = dayjs().unix();
             let calcLockPeriod = dayjs(time.lockPeriod).unix() - now;
             let calcReleasePeriod = dayjs(time.releasePeriod).unix() - now;
+            console.log({ calcLockPeriod, calcReleasePeriod })
             write?.({ args: [calcLockPeriod, calcReleasePeriod] })
         }
     };

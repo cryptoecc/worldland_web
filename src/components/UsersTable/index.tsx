@@ -52,7 +52,7 @@ export default function UsersTable({ users }: TableProps) {
               <TableCell component="th" scope="row">
                 {row.wallet_address}
               </TableCell>
-              <TableCell align="right">{putCommaAtPrice(row.total_amount, 2)}</TableCell>
+              <TableCell align="right">{putCommaAtPrice(row.total_amount, 2)} WL</TableCell>
               <TableCell align="right">{dayjs(row.created_at).format(timeFormat)}</TableCell>
             </TableRow>
           ))}

@@ -223,14 +223,14 @@ const AdminBoard = () => {
     },
   });
 
-  const { write: finalize } = useContractWrite({
+  const { data: txFinalized, write: finalize } = useContractWrite({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: FUNCTION.FINALIZE,
     onSuccess() {
-      addToast(MESSAGES.TX_SUCCESS, {
+      addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        content: MESSAGES.FINALIZED,
+        // content: MESSAGES.FINALIZED,
         autoDismiss: true,
       });
     },
@@ -243,15 +243,33 @@ const AdminBoard = () => {
     },
   });
 
-  const { write: depositWL } = useContractWrite({
+  const { data: txWLDeposited, write: depositWL } = useContractWrite({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: FUNCTION.DEPOSITWL,
     value: parseEther(inputAmount),
     onSuccess() {
+      addToast(MESSAGES.TX_SENT, {
+        appearance: 'success',
+        // content: MESSAGES.TRANSFER_SUCCESS,
+        autoDismiss: true,
+      });
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    }
+  })
+
+  useWaitForTransaction({
+    hash: txFinalized?.hash || txWLDeposited?.hash,
+    async onSuccess() {
       addToast(MESSAGES.TX_SUCCESS, {
         appearance: 'success',
-        content: MESSAGES.TRANSFER_SUCCESS,
+        content: txWLDeposited?.hash ? MESSAGES.TRANSFER_SUCCESS : MESSAGES.FINALIZED,
         autoDismiss: true,
       });
     },
