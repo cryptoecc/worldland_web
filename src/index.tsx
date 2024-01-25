@@ -29,7 +29,7 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <>
-    <Provider store={store}>
+    < Provider store={store}>
       <HelmetProvider>
         <WagmiConfig config={wagmiConfig}>
           <ThemeProvider theme={theme}>
