@@ -79,6 +79,7 @@ export enum QUERY {
   INITIALTIMESTAMP = 'initialTimestamp',
   ISFINALISED = 'allIncomingDepositsFinalised',
   OWNER = 'owner',
+  BALANCES = 'balances',
 }
 
 export enum CHAINDS {

@@ -58,7 +58,8 @@ export const initialContractObj = {
   owner: '',
   isAllIncomingDepositsFinalised: false,
   timestampSet: false,
-  availAmount: '0'
+  availAmount: '0',
+  userBalance: '0'
 };
 
 const Container = styled.section`

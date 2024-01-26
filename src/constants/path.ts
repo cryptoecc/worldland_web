@@ -22,4 +22,5 @@ export const PATH = {
   ADMIN: '/wl-admin',
   ADMIN_BOARD: '/wl-admin/board',
   AIRDROP_LIST: '/airdrop/timelock-contracts',
+  AIRDROP_USER: '/airdrop/timelock-contracts/:contract_address',
 };
