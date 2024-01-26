@@ -13,6 +13,7 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei } from 'utils/util';
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { Contract, initialContractObj } from 'pages/Admin/AdminBoard';
 import { useEffect, useState } from 'react';
 import CustomTable from 'components/CustomTable';
@@ -34,6 +35,7 @@ function createData(
 
 const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
 const User = () => {
+    dayjs.extend(relativeTime);
     const { address } = useAccount();
     const { contract_address } = useParams();
     const [contract, setContract] = useState<UserInfo>(initialContractObj)
@@ -94,7 +96,7 @@ const User = () => {
         functionName: QUERY.RELEASEEDGE,
         watch: true,
         onSuccess(data) {
-            console.log({ releaseEdge: data })
+            console.log({ releaseEdge: dayjs.unix(Number(data)).format(timeFormat) })
             setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -112,6 +114,7 @@ const User = () => {
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
         functionName: QUERY.BALANCES,
+        args: [address],
         watch: true,
         onSuccess(data) {
             setContract((prev) => ({ ...prev, userBalance: from_wei(data as string) ? from_wei(data as string) : '0' }))

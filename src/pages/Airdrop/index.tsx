@@ -21,7 +21,7 @@ function createData(
 }
 
 const rows = [
-    createData('Merit Awardees', '0x42B42c72bB69a4b09D2AfD5147f487968eEfFEc3', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
+    createData('Merit Awardees', '0x1c174eeC2da7Ad57A9D551436fbA5f918b53fEA0', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
 ];
 
 export default function Airdrop() {
