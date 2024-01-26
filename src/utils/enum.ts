@@ -73,6 +73,7 @@ export enum QUERY {
   BALANCEOF = 'balanceOf',
   TIMESTAMPISSET = 'timestampSet',
   CONTRACTBALANCE = 'contractBalance',
+  GETAVAILAMOUNT = 'getAvailAmount',
   CLIFFEDGE = 'cliffEdge',
   RELEASEEDGE = 'releaseEdge',
   INITIALTIMESTAMP = 'initialTimestamp',
