@@ -254,6 +254,7 @@ const AdminBoard = () => {
         // content: MESSAGES.TRANSFER_SUCCESS,
         autoDismiss: true,
       });
+      setInputAmount("");
     },
     onError(err: any) {
       addToast(MESSAGES.TX_FAIL, {
