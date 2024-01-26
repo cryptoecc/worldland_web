@@ -72,6 +72,7 @@ const User = () => {
         functionName: QUERY.INITIALTIMESTAMP,
         watch: true,
         onSuccess(data) {
+            console.log({ initialTimestamp: data })
             setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -82,6 +83,7 @@ const User = () => {
         functionName: QUERY.CLIFFEDGE,
         watch: true,
         onSuccess(data) {
+            console.log({ cliffEdge: data })
             setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -92,6 +94,7 @@ const User = () => {
         functionName: QUERY.RELEASEEDGE,
         watch: true,
         onSuccess(data) {
+            console.log({ releaseEdge: data })
             setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -124,7 +127,9 @@ const User = () => {
             setContract((prev) => ({ ...prev, availAmount: from_wei(data as string) ? from_wei(data as string) : '0' }))
         }
     })
-    useEffect(() => { }, [contract.balance, contract.availAmount, contract.userBalance, contract.timestampSet])
+
+    // useEffect(() => { }, [contract.balance, contract.availAmount, contract.userBalance, contract.timestampSet])
+
     return (
         <Container>
             <Content>
