@@ -8,6 +8,7 @@ export const MESSAGES = {
   DEPOSIT_SUCCESS: 'Bulk deposit successfully completed!',
   TRANSFER_SUCCESS: 'Deposit is complete!',
   TIMESTAMP_SET: 'Timestamp has successfully been set!',
+  LOGIN_SUCCESS: (user: string) => `Successfully logged in as ${user}`,
 
   // error messages
   TX_FAIL: 'Transaction failed!',

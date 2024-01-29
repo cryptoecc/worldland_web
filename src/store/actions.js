@@ -3,7 +3,6 @@ import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { chain_query } from 'configs/contract_calls';
 // import { web3_wld } from 'configs/web3-wld';
 import { ABI, ACTIONS, CONTRACT_ADDRESSES, FUNCTION } from 'utils/enum';
-import { from_wei } from 'utils/util';
 // import { from_wei } from 'utils/util';
 
 // export your actions here

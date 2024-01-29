@@ -152,14 +152,6 @@ const AdminBoard = () => {
       setAdminId(response.data.id);
     } catch (error) {
       console.error('Error fetching', error);
-      const err = error as AxiosError;
-
-      if (err.response && err.response.status === 403) {
-        alert('Session expired. Please login again');
-        navigate('/wl-admin');
-      } else {
-        console.error('Error fetching', err);
-      }
     }
   };
 
@@ -336,7 +328,7 @@ const AdminBoard = () => {
   return (
     <Container>
       <Content>
-        <H1>Linear Timelock Contract Period Setting</H1>
+        <H1>Linear Timelock Smart Contract Period Setting</H1>
         <CustomTable rows={rows} />
         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>

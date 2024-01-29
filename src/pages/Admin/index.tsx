@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { WorldLandLogo } from 'assets';
 import styled from 'styled-components';
 import { provider } from 'configs/axios';
+import { useToasts } from 'react-toast-notifications';
+import { MESSAGES } from 'utils/messages';
 
 // 스타일 컴포넌트 정의
 const Container = styled.div`
@@ -73,14 +75,12 @@ const Button = styled.button`
 `;
 
 // 관리자 로그인 컴포넌트
-const Admin = () => {
+const Admin = ({ setToken }: { setToken: React.Dispatch<React.SetStateAction<string | null>> }) => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
-
-  const naviage = useNavigate();
-
+  const { addToast } = useToasts();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -91,15 +91,13 @@ const Admin = () => {
 
     try {
       const response = await provider.post('/api/admin/login', formData);
-
-      console.log(response.data);
       localStorage.setItem('token', response.data.token);
-      // const response2 = await provider.get('http://localhost:4000/api/admin/admin-info', {
-      //   withCredentials: true,
-      // });
-
-      // console.log(response2.data);
-      naviage('/wl-admin/board');
+      // causing react re-render here
+      setToken(response.data.token)
+      addToast(MESSAGES.LOGIN_SUCCESS(formData?.username), {
+        appearance: 'success',
+        autoDismiss: true,
+      });
     } catch (e) {
       console.log(e);
       alert('로그일 실패 : 아이디와 패스워드를 다시 입력해주세요');

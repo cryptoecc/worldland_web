@@ -191,7 +191,7 @@ const User = () => {
         <Container>
             <Content>
                 <Description>
-                    <h1>Airdrop page | Linear Timelock Contract</h1>
+                    <h1>Airdrop page | Linear Timelock Smart Contract</h1>
                     <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
                 </Description>
                 <CustomTable rows={rows} />

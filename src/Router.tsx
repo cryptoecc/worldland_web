@@ -23,6 +23,7 @@ import Admin from 'pages/Admin';
 import AdminBoard from 'pages/Admin/AdminBoard';
 import Airdrop from 'pages/Airdrop';
 import User from 'pages/Airdrop/User';
+import ProtectedRoute from 'pages/ProtectedRoute';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -53,8 +54,7 @@ const Router = () => {
         { path: `${PATH.POOL}`, element: <Pool /> },
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
-        { path: `${PATH.ADMIN}`, element: <Admin /> },
-        { path: `${PATH.ADMIN_BOARD}`, element: <AdminBoard /> },
+        { path: `${PATH.ADMIN}`, element: <ProtectedRoute /> },
         { path: `${PATH.AIRDROP_LIST}`, element: <Airdrop /> },
         { path: `${PATH.AIRDROP_USER}`, element: <User /> },
       ],
