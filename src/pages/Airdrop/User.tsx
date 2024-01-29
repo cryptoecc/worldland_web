@@ -77,7 +77,6 @@ const User = () => {
         functionName: QUERY.INITIALTIMESTAMP,
         watch: true,
         onSuccess(data) {
-            console.log({ initialTimestamp: data })
             setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })

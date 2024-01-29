@@ -248,7 +248,6 @@ const AdminBoard = () => {
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        // content: MESSAGES.FINALIZED,
         autoDismiss: true,
       });
     },
@@ -269,7 +268,6 @@ const AdminBoard = () => {
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        // content: MESSAGES.TRANSFER_SUCCESS,
         autoDismiss: true,
       });
     },
