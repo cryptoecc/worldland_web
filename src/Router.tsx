@@ -21,6 +21,8 @@ import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
 import Admin from 'pages/Admin';
 import AdminBoard from 'pages/Admin/AdminBoard';
+import Airdrop from 'pages/Airdrop';
+import User from 'pages/Airdrop/User';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -53,6 +55,8 @@ const Router = () => {
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.ADMIN}`, element: <Admin /> },
         { path: `${PATH.ADMIN_BOARD}`, element: <AdminBoard /> },
+        { path: `${PATH.AIRDROP_LIST}`, element: <Airdrop /> },
+        { path: `${PATH.AIRDROP_USER}`, element: <User /> },
       ],
     },
   ]);

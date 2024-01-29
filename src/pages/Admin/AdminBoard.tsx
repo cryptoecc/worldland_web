@@ -20,8 +20,7 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import Button, { ButtonProps } from '@mui/material/Button';
-import { purple } from '@mui/material/colors';
+import Button from '@mui/material/Button';
 import WarningModal from 'components/WarningModal';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
@@ -51,7 +50,7 @@ export interface UserData {
   total_amount: string;
 }
 
-const initialContractObj = {
+export const initialContractObj = {
   balance: '0',
   cliffEdge: '',
   releaseEdge: '',
@@ -59,6 +58,8 @@ const initialContractObj = {
   owner: '',
   isAllIncomingDepositsFinalised: false,
   timestampSet: false,
+  availAmount: '0',
+  userBalance: '0'
 };
 
 const Container = styled.section`
@@ -110,18 +111,35 @@ const TableWrap = styled.div`
 `;
 
 const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
+function createData(
+  name: string,
+  value: string | number,
+) {
+  return { name, value };
+}
 
 const AdminBoard = () => {
+  dayjs.extend(relativeTime);
   const [adminId, setAdminId] = useState<string | undefined>('')
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
   const { address } = useAccount()
   const [inputAmount, setInputAmount] = useState<string>('');
   const [contract, setContract] = useState<Contract>(initialContractObj)
   const navigate = useNavigate()
-  const [modal, setModal] = useState<boolean>(false)
-
+  const [modal, setModal] = useState<boolean>(false);
   const { addToast } = useToasts();
   const token = localStorage.getItem('token');
+  let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
+  const rows = [
+    createData('Contract Owner', contract?.owner),
+    createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]),
+    createData('Contract Balance', contract?.balance + ' WL'),
+    createData('Initial Timestamp', `${contract?.initialTimestamp} ${contract.initialTimestamp ? contract?.initialTimestamp === '-' ? "" : "(" + dayjs(contract.initialTimestamp).fromNow() + ")" : ""}`),
+    createData('Lock Time Ending', `${contract?.cliffEdge} ${contract.cliffEdge ? contract?.cliffEdge === '-' ? "" : "(" + dayjs(contract.cliffEdge).fromNow() + ")" : ""}`),
+    createData('Final Release Time Ending', `${contract?.releaseEdge} ${contract.releaseEdge ? contract?.releaseEdge === '-' ? "" : "(" + dayjs(contract.releaseEdge).fromNow() + ")" : ""}`),
+    createData('Timestamp Status', _timestampSet)
+  ]
+
   const fetchUserInfo = async () => {
     try {
       const response = await provider.get('/api/admin/admin-info', {
@@ -155,7 +173,7 @@ const AdminBoard = () => {
     }
   };
 
-  const { data: owner } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.OWNER,
@@ -163,7 +181,7 @@ const AdminBoard = () => {
       setContract((prev) => ({ ...prev, owner: data }));
     },
   });
-  const { data: timestampSet } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.TIMESTAMPISSET,
@@ -173,7 +191,7 @@ const AdminBoard = () => {
     },
   });
 
-  const { data: initialTimestamp } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.INITIALTIMESTAMP,
@@ -183,7 +201,7 @@ const AdminBoard = () => {
     }
   })
 
-  const { data: cliffEdge } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.CLIFFEDGE,
@@ -193,7 +211,7 @@ const AdminBoard = () => {
     }
   })
 
-  const { data: releaseEdge } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.RELEASEEDGE,
@@ -203,7 +221,7 @@ const AdminBoard = () => {
     }
   })
 
-  const { data: contractBalance } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.CONTRACTBALANCE,
@@ -213,7 +231,7 @@ const AdminBoard = () => {
     }
   })
 
-  const { data: isAllIncomingDepositsFinalised } = useContractRead({
+  useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
     abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
     functionName: QUERY.ISFINALISED,
@@ -230,7 +248,6 @@ const AdminBoard = () => {
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        // content: MESSAGES.FINALIZED,
         autoDismiss: true,
       });
     },
@@ -251,7 +268,6 @@ const AdminBoard = () => {
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
-        // content: MESSAGES.TRANSFER_SUCCESS,
         autoDismiss: true,
       });
       setInputAmount("");
@@ -317,12 +333,11 @@ const AdminBoard = () => {
     fetchDaoInfo();
     setAdminId(address);
   }, []);
-
   return (
     <Container>
       <Content>
         <H1>Linear Timelock Contract Period Setting</H1>
-        <CustomTable address={WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]} contract={contract} />
+        <CustomTable rows={rows} />
         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
           <FilledInput

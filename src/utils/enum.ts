@@ -66,6 +66,7 @@ export enum FUNCTION {
   BULKDEPOSITTOKENS = 'bulkDepositTokens',
   FINALIZE = 'finalizeAllIncomingDeposits',
   DEPOSITWL = 'depositWL',
+  WITHDRAW = 'transferTimeLockedTokensAfterTimePeriod',
 }
 
 export enum QUERY {
@@ -73,11 +74,13 @@ export enum QUERY {
   BALANCEOF = 'balanceOf',
   TIMESTAMPISSET = 'timestampSet',
   CONTRACTBALANCE = 'contractBalance',
+  GETAVAILAMOUNT = 'getAvailAmount',
   CLIFFEDGE = 'cliffEdge',
   RELEASEEDGE = 'releaseEdge',
   INITIALTIMESTAMP = 'initialTimestamp',
   ISFINALISED = 'allIncomingDepositsFinalised',
   OWNER = 'owner',
+  BALANCES = 'balances',
 }
 
 export enum CHAINDS {
