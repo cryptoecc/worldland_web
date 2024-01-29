@@ -11,7 +11,6 @@ import {
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei } from 'utils/util';
-import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Contract, initialContractObj } from 'pages/Admin/AdminBoard';
@@ -19,6 +18,8 @@ import { useEffect, useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { useParams } from "react-router-dom";
 import { Button } from '@mui/material';
+import { MESSAGES } from 'utils/messages';
+import { useToasts } from 'react-toast-notifications';
 
 interface UserInfo extends Contract {
     availAmount?: string;
@@ -37,8 +38,10 @@ const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
 const User = () => {
     dayjs.extend(relativeTime);
     const { address } = useAccount();
+    const { addToast } = useToasts();
     const { contract_address } = useParams();
     const [contract, setContract] = useState<UserInfo>(initialContractObj)
+    const [disabled, setDisabled] = useState<boolean>(true);
     let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
     const rows = [
         createData('Contract Owner', contract?.owner),
@@ -85,7 +88,6 @@ const User = () => {
         functionName: QUERY.CLIFFEDGE,
         watch: true,
         onSuccess(data) {
-            console.log({ cliffEdge: data })
             setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -96,7 +98,6 @@ const User = () => {
         functionName: QUERY.RELEASEEDGE,
         watch: true,
         onSuccess(data) {
-            console.log({ releaseEdge: dayjs.unix(Number(data)).format(timeFormat) })
             setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
         }
     })
@@ -128,10 +129,64 @@ const User = () => {
         watch: true,
         onSuccess(data) {
             setContract((prev) => ({ ...prev, availAmount: from_wei(data as string) ? from_wei(data as string) : '0' }))
+            if (Number(from_wei(data as string)) > 0) {
+                setDisabled(false);
+            } else {
+                setDisabled(true);
+            }
+        }
+    })
+    const { data: txWithdrawn, write: withdraw } = useContractWrite({
+        address: contract_address as `0x${string}`,
+        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+        functionName: FUNCTION.WITHDRAW,
+        args: [address],
+        onSuccess() {
+            addToast(MESSAGES.TX_SENT, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        },
+    });
+
+    useWaitForTransaction({
+        hash: txWithdrawn?.hash,
+        async onSuccess() {
+            addToast(MESSAGES.TX_SUCCESS, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
         }
     })
 
-    // useEffect(() => { }, [contract.balance, contract.availAmount, contract.userBalance, contract.timestampSet])
+    async function handleWithdraw() {
+        try {
+            if (Number(contract.availAmount) > 0) {
+                withdraw();
+            } else {
+                addToast(MESSAGES.NO_AVAIL_AMOUNT, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <Container>
@@ -141,7 +196,9 @@ const User = () => {
                     <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
                 </Description>
                 <CustomTable rows={rows} />
-                <Button sx={{ width: '100%' }} variant="contained">Withdraw available amount</Button>
+                <BtnWrap>
+                    <Button onClick={handleWithdraw} disabled={disabled} sx={{ width: '100%' }} variant="contained">Withdraw available amount</Button>
+                </BtnWrap>
             </Content>
         </Container>
     )
@@ -163,13 +220,16 @@ const Content = styled.div`
     justify-content: center;
     flex-direction: column;
     gap: 10px;
+    max-width: 800px;
+    width: 100%;
+    padding: 10px;
 `
 const Description = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    max-width: 800px;
+    max-width: inherit;
     width: 100%;
     padding: 15px 0;
     gap: 5px;
@@ -182,4 +242,10 @@ const Description = styled.div`
         color: #ffffff6e;
         font-size: 18px;
     }
+`
+
+const BtnWrap = styled.div`
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 5px;
 `

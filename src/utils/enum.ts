@@ -66,6 +66,7 @@ export enum FUNCTION {
   BULKDEPOSITTOKENS = 'bulkDepositTokens',
   FINALIZE = 'finalizeAllIncomingDeposits',
   DEPOSITWL = 'depositWL',
+  WITHDRAW = 'transferTimeLockedTokensAfterTimePeriod',
 }
 
 export enum QUERY {

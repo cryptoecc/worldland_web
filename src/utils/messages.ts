@@ -16,4 +16,5 @@ export const MESSAGES = {
   EMPTY_FIELD: 'Fields should not be empty!',
   LOW_CONTRACT_BALANCE: 'Insufficient contract balance! Try again after depositing WL to the contract!',
   NO_TIMESTAMP: 'Timestamps not set!',
+  NO_AVAIL_AMOUNT: 'No available amount to withdraw!',
 };
