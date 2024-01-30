@@ -196,7 +196,7 @@ const User = () => {
                 </Description>
                 <CustomTable rows={rows} />
                 <BtnWrap>
-                    <Button onClick={handleWithdraw} disabled={disabled} sx={{ width: '100%' }} variant="contained">Withdraw available amount</Button>
+                    <Button onClick={handleWithdraw} disabled={disabled} sx={{ width: '100%', }} variant="contained">Withdraw available amount</Button>
                 </BtnWrap>
             </Content>
         </Container>

@@ -19,3 +19,11 @@ export const MESSAGES = {
   NO_TIMESTAMP: 'Timestamps not set!',
   NO_AVAIL_AMOUNT: 'No available amount to withdraw!',
 };
+
+export const popups = {
+  WARNING: 'Warning!',
+  FINALIZE_W:
+    "Calling this function will finalize admin's interaction with the contract. This makes the linear timelock non-custodial, whereby the contract owner has no ability to alter token amounts and so forth. The operation of the linear timelock contract is purely based on the math in the transferTimeLockedTokensAfterTimePeriod function from this point forward.",
+  CONFIRM: 'Confirm',
+  LOGOUT: 'Are you sure to logout?',
+};

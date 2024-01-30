@@ -20,13 +20,15 @@ const style = {
 };
 
 interface Props {
+    header: string;
+    content: string;
     open: boolean;
-    setModal: React.Dispatch<React.SetStateAction<boolean>>;
+    setModal: () => void;
     exec: () => void;
 }
 
-export default function WarningModal({ open, setModal, exec }: Props) {
-    const handleClose = () => setModal(false);
+export default function WarningModal({ header, content, open, setModal, exec }: Props) {
+    const handleClose = () => setModal();
 
     return (
         <div>
@@ -46,10 +48,10 @@ export default function WarningModal({ open, setModal, exec }: Props) {
                 <Fade in={open}>
                     <Box sx={style}>
                         <Typography id="transition-modal-title" variant="h6" component="h2" sx={{ color: '#ff0000' }}>
-                            Warning!
+                            {header}
                         </Typography>
                         <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                            Calling this function will finalize admin's interaction with the contract. This makes the linear timelock non-custodial, whereby the contract owner has no ability to alter token amounts and so forth. The operation of the linear timelock contract is purely based on the math in the transferTimeLockedTokensAfterTimePeriod function from this point forward.
+                            {content}
                         </Typography>
                         <Button onClick={exec} sx={{ margin: '20px 0 0', width: '100%' }} color="error" variant="contained">Proceed</Button>
                     </Box>

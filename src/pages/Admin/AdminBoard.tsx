@@ -23,7 +23,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import Button from '@mui/material/Button';
 import WarningModal from 'components/WarningModal';
 import { useToasts } from 'react-toast-notifications';
-import { MESSAGES } from 'utils/messages';
+import { MESSAGES, popups } from 'utils/messages';
 import CustomTable from 'components/CustomTable';
 import UsersTable from 'components/UsersTable';
 import { parseEther } from 'viem';
@@ -96,9 +96,11 @@ const H1 = styled.h1`
 
 const BtnWrap = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
+  flex-direction: column;
   width: 100%;
+  gap: 10px;
 `;
 
 const TableWrap = styled.div`
@@ -118,17 +120,25 @@ function createData(
   return { name, value };
 }
 
-const AdminBoard = () => {
+interface IProps {
+  token: string | null;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+type Modals = {
+  modal0: boolean;
+  modal1: boolean;
+}
+
+const AdminBoard = ({ token, setToken }: IProps) => {
   dayjs.extend(relativeTime);
   const [adminId, setAdminId] = useState<string | undefined>('')
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
   const { address } = useAccount()
   const [inputAmount, setInputAmount] = useState<string>('');
   const [contract, setContract] = useState<Contract>(initialContractObj)
-  const navigate = useNavigate()
-  const [modal, setModal] = useState<boolean>(false);
+  const [modals, setModals] = useState<Modals>({ modal0: false, modal1: false });
   const { addToast } = useToasts();
-  const token = localStorage.getItem('token');
   let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
   const rows = [
     createData('Contract Owner', contract?.owner),
@@ -139,6 +149,12 @@ const AdminBoard = () => {
     createData('Final Release Time Ending', `${contract?.releaseEdge} ${contract.releaseEdge ? contract?.releaseEdge === '-' ? "" : "(" + dayjs(contract.releaseEdge).fromNow() + ")" : ""}`),
     createData('Timestamp Status', _timestampSet)
   ]
+
+  function handleRemoveAuthToken() {
+    localStorage.removeItem('token');
+    setToken('');
+    setModals(prev => ({ ...prev, modal1: false }))
+  }
 
   const fetchUserInfo = async () => {
     try {
@@ -299,17 +315,17 @@ const AdminBoard = () => {
           content: MESSAGES.LOW_CONTRACT_BALANCE,
           autoDismiss: true,
         });
-        setModal(false);
+        setModals(prev => ({ ...prev, modal0: false }));
       } else if (!contract.timestampSet) {
         addToast(MESSAGES.TX_FAIL, {
           appearance: 'error',
           content: MESSAGES.NO_TIMESTAMP,
           autoDismiss: true,
         });
-        setModal(false);
+        setModals(prev => ({ ...prev, modal0: false }));
       } else {
         finalize?.();
-        setModal(false);
+        setModals(prev => ({ ...prev, modal0: false }));
       }
     } catch (err: any) {
       addToast(MESSAGES.TX_FAIL, {
@@ -346,18 +362,26 @@ const AdminBoard = () => {
         <BtnWrap>
           <Button
             disabled={contract?.isAllIncomingDepositsFinalised}
-            onClick={() => setModal(true)}
+            onClick={() => setModals(prev => ({ ...prev, modal0: true }))}
             color="error"
             variant="contained"
           >
             Finalize Admin Interaction
+          </Button>
+          <Button
+            onClick={() => setModals(prev => ({ ...prev, modal1: true }))}
+            color="error"
+            variant="contained"
+          >
+            Logout
           </Button>
         </BtnWrap>
       </Content>
       <TableWrap>
         {daoInfo.length > 0 && <UsersTable users={daoInfo} />}
       </TableWrap>
-      <WarningModal open={modal} setModal={setModal} exec={handleFinalize} />
+      <WarningModal header={popups.WARNING} content={popups.FINALIZE_W} open={modals.modal0} setModal={() => setModals(prev => ({ ...prev, modal0: false }))} exec={handleFinalize} />
+      <WarningModal header={popups.CONFIRM} content={popups.LOGOUT} open={modals.modal1} setModal={() => setModals(prev => ({ ...prev, modal1: false }))} exec={handleRemoveAuthToken} />
     </Container>
   );
 };
