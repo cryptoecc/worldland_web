@@ -162,11 +162,11 @@ const MainMenu = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Strong>DAO</Strong>
+                <Strong>DAO Vote</Strong>
               </SpaceLink>
-              <SpaceLink>
+              {/* <SpaceLink>
                 <Strong>Help Center</Strong>
-              </SpaceLink>
+              </SpaceLink> */}
               <SpaceLink href="https://medium.com/@worldland-official" target="_blank" rel="noopener noreferrer">
                 <Strong>Medium</Strong>
               </SpaceLink>
