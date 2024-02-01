@@ -4,16 +4,29 @@ import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
 
+interface DataItem {
+  id: number;
+  date: string;
+  node_count: number;
+}
+
 const MainAreaChart = () => {
   const [nodeCount, setNodeCount] = useState();
 
   useEffect(() => {
     const getNodeCount = async () => {
       try {
-        const request = await axios.get('https://be.worldland.foundation/api/node/count');
+        const request = await axios.get('http://localhost:4000/api/node/count');
         console.log(request.data);
 
-        setNodeCount(request.data);
+        const filteredData = request.data.filter((data: any) => {
+          const day = parseInt(data.date.split('/')[1], 10);
+          return day === 15 || day === 30;
+        });
+
+        console.log('gd', filteredData);
+
+        setNodeCount(filteredData);
       } catch (error) {
         console.error('데이터 가져오기 오류', error);
       }
