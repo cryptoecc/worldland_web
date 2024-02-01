@@ -16,7 +16,7 @@ const MainAreaChart = () => {
   useEffect(() => {
     const getNodeCount = async () => {
       try {
-        const request = await axios.get('http://localhost:4000/api/node/count');
+        const request = await axios.get('https://be.worldland.foundation/api/node/count');
         console.log(request.data);
 
         const filteredData = request.data.filter((data: any) => {
