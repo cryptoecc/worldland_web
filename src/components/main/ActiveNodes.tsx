@@ -67,7 +67,7 @@ const MainAreaChart = () => {
       <br />
 
       <DetailDescription>
-        Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 7days.
+        Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 2 Month.
       </DetailDescription>
       <br />
     </ChartContainer>
