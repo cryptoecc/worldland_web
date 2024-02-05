@@ -23,7 +23,7 @@ function MainStatistics() {
 
   const listAccount = async () => {
     const response = await axios.post(
-      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=1000`,
+      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=900`,
     );
 
     const response2 = response.data.result.length;
@@ -64,10 +64,13 @@ function MainStatistics() {
 
     // Initial fetch
     fetchBlockData();
-    listAccount();
-
     return () => clearInterval(interval);
   }, [fetchBlockData]);
+
+  useEffect(() => {
+    console.log('실행됨');
+    listAccount();
+  }, []);
 
   return (
     <StatisticsContainer ref={statisticsRef}>
