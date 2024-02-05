@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
@@ -35,10 +35,31 @@ const MainAreaChart = () => {
   return (
     <ChartContainer>
       <DetailDescription>Active Nodes</DetailDescription>
-
       <ResponsiveContainer width="100%" height={300}>
-        <CustomAreaChart data={nodeCount}>
-          <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}일`} />
+        <LineChart data={nodeCount}>
+          <XAxis
+            dataKey="date"
+            tick={{ fontSize: 14 }}
+            tickFormatter={(value, index) => {
+              if (index / 3) {
+                // if (index % 2 === 0) {
+                return `${value}일`;
+              } else {
+                return '';
+              }
+            }}
+          />
+          {/* <XAxis
+            dataKey="date"
+            tick={{ fontSize: 14 }} // x축 텍스트 색상을 녹색으로 변경
+            tickFormatter={(value, index) => {
+              if (index % 15 === 0) {
+                return `${value}일`;
+              } else {
+                return '';
+              }
+            }}
+          /> */}
           <YAxis dataKey="node_count" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} />
           <CartesianGrid stroke="none" />
           <Tooltip />
@@ -49,22 +70,23 @@ const MainAreaChart = () => {
               <stop offset="100%" stopColor={theme.colors.black} />
             </linearGradient>
           </defs>
-          <Area
+          <Line
             type="monotone"
             dataKey="node_count"
-            stroke="gray"
+            stroke="silver" // 파란색으로 변경
             strokeWidth={3.5}
-            fill="url(#areaColor)"
             dot={false}
             activeDot={{ stroke: 'black', r: 4 }}
+            fillOpacity={0}
           />
-        </CustomAreaChart>
+        </LineChart>
       </ResponsiveContainer>
       <br />
       <br />
 
       <DetailDescription>
-        Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 7days.
+        {/* Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 2 Month. */}
+        Active Nodes : The number of mining nodes on the Worldland network.
       </DetailDescription>
       <br />
     </ChartContainer>
