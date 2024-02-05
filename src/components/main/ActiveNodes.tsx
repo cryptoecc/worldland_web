@@ -17,14 +17,11 @@ const MainAreaChart = () => {
     const getNodeCount = async () => {
       try {
         const request = await axios.get('https://be.worldland.foundation/api/node/count');
-        console.log(request.data);
 
         const filteredData = request.data.filter((data: any) => {
           const day = parseInt(data.date.split('/')[1], 10);
-          return day === 15 || day === 30;
+          return day >= 1 && day <= 31;
         });
-
-        console.log('gd', filteredData);
 
         setNodeCount(filteredData);
       } catch (error) {
