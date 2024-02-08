@@ -14,6 +14,8 @@ import { Provider } from 'react-redux';
 import { store } from 'store';
 import { ToastProvider } from 'react-toast-notifications';
 import { projectId } from 'configs/services/wagmi-credentials';
+import client from 'apollo/apolloClient';
+import { ApolloProvider } from '@apollo/client';
 
 const chains = [worldland, sepolia]; // will add mainnet in production
 
@@ -29,13 +31,15 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains);
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <>
-    < Provider store={store}>
+    <Provider store={store}>
       <HelmetProvider>
         <WagmiConfig config={wagmiConfig}>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
             <ToastProvider>
-              <App />
+              <ApolloProvider client={client}>
+                <App />
+              </ApolloProvider>
             </ToastProvider>
           </ThemeProvider>
         </WagmiConfig>

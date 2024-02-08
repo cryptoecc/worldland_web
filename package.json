@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/charts": "^1.4.2",
     "@ant-design/plots": "^1.2.5",
+    "@apollo/client": "^3.9.2",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
@@ -26,6 +27,8 @@
     "antd": "^5.9.2",
     "axios": "^1.4.0",
     "dayjs": "^1.11.10",
+    "env-cmd": "^10.1.0",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-countup": "^6.4.2",
     "react-dom": "^18.2.0",
@@ -47,8 +50,8 @@
     "web3": "^4.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.local react-scripts start",
+    "build": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "bd": "react-scripts build && scp -i ~/Downloads/worldland.foundation.pem -r build/. ubuntu@3.38.111.124:/var/www/html",
