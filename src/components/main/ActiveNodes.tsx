@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNodeCount } from 'hooks/useNodeCount';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
+import { useCodeWord } from 'hooks/useCodeWord';
 
 interface DataItem {
   id: number;
@@ -12,54 +14,47 @@ interface DataItem {
 
 const MainAreaChart = () => {
   const [nodeCount, setNodeCount] = useState();
+  const { nodeCounts, loading, error } = useNodeCount();
+  const { codeWord } = useCodeWord();
+  console.log(codeWord);
 
   useEffect(() => {
-    const getNodeCount = async () => {
-      try {
-        const request = await axios.get('https://be.worldland.foundation/api/node/count');
+    // const getNodeCount = async () => {
+    //   try {
+    //     const request = await axios.get('https://be.worldland.foundation/api/node/count');
 
-        const filteredData = request.data.filter((data: any) => {
+    //     const filteredData = request.data.filter((data: any) => {
+    //       const day = parseInt(data.date.split('/')[1], 10);
+    //       return day >= 1 && day <= 31;
+    //     });
+
+    //     setNodeCount(filteredData);
+    //     console.log(nodeCount);
+    //   } catch (error) {
+    //     console.error('데이터 가져오기 오류', error);
+    //   }
+    // };
+    const fetchNodeCount = async () => {
+      if (nodeCounts) {
+        const request = nodeCounts.filter((data: any) => {
           const day = parseInt(data.date.split('/')[1], 10);
           return day >= 1 && day <= 31;
         });
 
-        setNodeCount(filteredData);
-      } catch (error) {
-        console.error('데이터 가져오기 오류', error);
+        setNodeCount(request);
       }
     };
 
-    getNodeCount();
-  }, []);
+    fetchNodeCount();
+    // getNodeCount();
+  }, [nodeCounts]);
 
   return (
     <ChartContainer>
       <DetailDescription>Active Nodes</DetailDescription>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={nodeCount}>
-          <XAxis
-            dataKey="date"
-            tick={{ fontSize: 14 }}
-            tickFormatter={(value, index) => {
-              if (index / 3) {
-                // if (index % 2 === 0) {
-                return `${value}일`;
-              } else {
-                return '';
-              }
-            }}
-          />
-          {/* <XAxis
-            dataKey="date"
-            tick={{ fontSize: 14 }} // x축 텍스트 색상을 녹색으로 변경
-            tickFormatter={(value, index) => {
-              if (index % 15 === 0) {
-                return `${value}일`;
-              } else {
-                return '';
-              }
-            }}
-          /> */}
+          <XAxis dataKey="date" tick={{ fontSize: 12 }} tickFormatter={(value) => `${value}`} />
           <YAxis dataKey="node_count" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} />
           <CartesianGrid stroke="none" />
           <Tooltip />
