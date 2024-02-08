@@ -11,7 +11,7 @@ const Main = () => {
       <MainDashboard />
       <MainStatistics />
       <MainAreaChart />
-      <MainCodeWord />
+      {/* <MainCodeWord /> */}
       <MainData />
       <MainPartner />
     </>

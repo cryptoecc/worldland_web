@@ -19,34 +19,16 @@ const MainAreaChart = () => {
   console.log(codeWord);
 
   useEffect(() => {
-    // const getNodeCount = async () => {
-    //   try {
-    //     const request = await axios.get('https://be.worldland.foundation/api/node/count');
-
-    //     const filteredData = request.data.filter((data: any) => {
-    //       const day = parseInt(data.date.split('/')[1], 10);
-    //       return day >= 1 && day <= 31;
-    //     });
-
-    //     setNodeCount(filteredData);
-    //     console.log(nodeCount);
-    //   } catch (error) {
-    //     console.error('데이터 가져오기 오류', error);
-    //   }
-    // };
     const fetchNodeCount = async () => {
       if (nodeCounts) {
         const request = nodeCounts.filter((data: any) => {
           const day = parseInt(data.date.split('/')[1], 10);
           return day >= 1 && day <= 31;
         });
-
         setNodeCount(request);
       }
     };
-
     fetchNodeCount();
-    // getNodeCount();
   }, [nodeCounts]);
 
   return (
