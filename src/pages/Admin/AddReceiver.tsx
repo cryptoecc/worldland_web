@@ -60,7 +60,7 @@ const Input = styled.input`
 
 const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '' }]);
-  const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[] }>({ receivers: [], amounts: [] })
+  const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[] }>({ receivers: [], amounts: [] });
   const navigate = useNavigate();
   const { addToast } = useToasts();
 
@@ -95,10 +95,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         parsedAmounts[i] = from_wei(txObj.amounts[i]);
       }
       setReceivers((prev) => [{ receiveAddress: '', totalAmount: '' }]);
-      await provider.post(
-        '/api/admin/dao-list',
-        { _receivers: txObj.receivers, _amounts: parsedAmounts },
-      );
+      await provider.post('/api/admin/dao-list', { _receivers: txObj.receivers, _amounts: parsedAmounts });
       fetchDaoInfo();
     },
     onError(err: any) {
@@ -107,8 +104,8 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         content: err?.shortMessage,
         autoDismiss: true,
       });
-    }
-  })
+    },
+  });
 
   const addReceiverField = () => {
     setReceivers((prev) => [...prev, { receiveAddress: '', totalAmount: '' }]);
@@ -128,7 +125,9 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await CheckJwt(navigate);
+
+    const token = localStorage.getItem('token');
+    CheckJwt();
     // try {
     //   const response = await axios.get('http://localhost:4000/api/admin/admin-info', {
     //     headers: {
@@ -165,7 +164,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         });
       } else {
         bulkDeposit?.({ args: [_receivers, _amounts] });
-        setTxObj({ receivers: _receivers, amounts: _amounts })
+        setTxObj({ receivers: _receivers, amounts: _amounts });
       }
     } else {
       addToast(MESSAGES.SUBMISSION_ERROR, {

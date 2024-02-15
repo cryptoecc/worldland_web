@@ -28,7 +28,6 @@ import CustomTable from 'components/CustomTable';
 import UsersTable from 'components/UsersTable';
 import { parseEther } from 'viem';
 
-
 import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -59,7 +58,7 @@ export const initialContractObj = {
   isAllIncomingDepositsFinalised: false,
   timestampSet: false,
   availAmount: '0',
-  userBalance: '0'
+  userBalance: '0',
 };
 
 const Container = styled.section`
@@ -112,11 +111,8 @@ const TableWrap = styled.div`
   margin: 40px 0 0;
 `;
 
-const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
-function createData(
-  name: string,
-  value: string | number,
-) {
+const timeFormat = 'YYYY / MM / DD hh:mm:ss a';
+function createData(name: string, value: string | number) {
   return { name, value };
 }
 
@@ -128,32 +124,57 @@ interface IProps {
 type Modals = {
   modal0: boolean;
   modal1: boolean;
-}
+};
 
 const AdminBoard = ({ token, setToken }: IProps) => {
   dayjs.extend(relativeTime);
-  const [adminId, setAdminId] = useState<string | undefined>('')
+  const [adminId, setAdminId] = useState<string | undefined>('');
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
-  const { address } = useAccount()
+  const { address } = useAccount();
   const [inputAmount, setInputAmount] = useState<string>('');
-  const [contract, setContract] = useState<Contract>(initialContractObj)
+  const [contract, setContract] = useState<Contract>(initialContractObj);
   const [modals, setModals] = useState<Modals>({ modal0: false, modal1: false });
   const { addToast } = useToasts();
-  let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
+  const navigate = useNavigate();
+
+  let _timestampSet = contract.timestampSet ? 'Has been set up!' : 'Is not set!';
   const rows = [
     createData('Contract Owner', contract?.owner),
     createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]),
     createData('Contract Balance', contract?.balance + ' WL'),
-    createData('Initial Timestamp', `${contract?.initialTimestamp} ${contract.initialTimestamp ? contract?.initialTimestamp === '-' ? "" : "(" + dayjs(contract.initialTimestamp).fromNow() + ")" : ""}`),
-    createData('Lock Time Ending', `${contract?.cliffEdge} ${contract.cliffEdge ? contract?.cliffEdge === '-' ? "" : "(" + dayjs(contract.cliffEdge).fromNow() + ")" : ""}`),
-    createData('Final Release Time Ending', `${contract?.releaseEdge} ${contract.releaseEdge ? contract?.releaseEdge === '-' ? "" : "(" + dayjs(contract.releaseEdge).fromNow() + ")" : ""}`),
-    createData('Timestamp Status', _timestampSet)
-  ]
+    createData(
+      'Initial Timestamp',
+      `${contract?.initialTimestamp} ${
+        contract.initialTimestamp
+          ? contract?.initialTimestamp === '-'
+            ? ''
+            : '(' + dayjs(contract.initialTimestamp).fromNow() + ')'
+          : ''
+      }`,
+    ),
+    createData(
+      'Lock Time Ending',
+      `${contract?.cliffEdge} ${
+        contract.cliffEdge ? (contract?.cliffEdge === '-' ? '' : '(' + dayjs(contract.cliffEdge).fromNow() + ')') : ''
+      }`,
+    ),
+    createData(
+      'Final Release Time Ending',
+      `${contract?.releaseEdge} ${
+        contract.releaseEdge
+          ? contract?.releaseEdge === '-'
+            ? ''
+            : '(' + dayjs(contract.releaseEdge).fromNow() + ')'
+          : ''
+      }`,
+    ),
+    createData('Timestamp Status', _timestampSet),
+  ];
 
   function handleRemoveAuthToken() {
     localStorage.removeItem('token');
     setToken('');
-    setModals(prev => ({ ...prev, modal1: false }))
+    setModals((prev) => ({ ...prev, modal1: false }));
   }
 
   const fetchUserInfo = async () => {
@@ -205,9 +226,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     functionName: QUERY.INITIALTIMESTAMP,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-    }
-  })
+      setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
+    },
+  });
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -215,9 +236,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     functionName: QUERY.CLIFFEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-    }
-  })
+      setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
+    },
+  });
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -225,9 +246,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     functionName: QUERY.RELEASEEDGE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-    }
-  })
+      setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
+    },
+  });
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -235,9 +256,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     functionName: QUERY.CONTRACTBALANCE,
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }))
-    }
-  })
+      setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }));
+    },
+  });
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -278,7 +299,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         appearance: 'success',
         autoDismiss: true,
       });
-      setInputAmount("");
+      setInputAmount('');
     },
     onError(err: any) {
       addToast(MESSAGES.TX_FAIL, {
@@ -286,8 +307,8 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
-    }
-  })
+    },
+  });
 
   useWaitForTransaction({
     hash: txFinalized?.hash || txWLDeposited?.hash,
@@ -304,8 +325,8 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
-    }
-  })
+    },
+  });
 
   async function handleFinalize() {
     try {
@@ -315,17 +336,17 @@ const AdminBoard = ({ token, setToken }: IProps) => {
           content: MESSAGES.LOW_CONTRACT_BALANCE,
           autoDismiss: true,
         });
-        setModals(prev => ({ ...prev, modal0: false }));
+        setModals((prev) => ({ ...prev, modal0: false }));
       } else if (!contract.timestampSet) {
         addToast(MESSAGES.TX_FAIL, {
           appearance: 'error',
           content: MESSAGES.NO_TIMESTAMP,
           autoDismiss: true,
         });
-        setModals(prev => ({ ...prev, modal0: false }));
+        setModals((prev) => ({ ...prev, modal0: false }));
       } else {
         finalize?.();
-        setModals(prev => ({ ...prev, modal0: false }));
+        setModals((prev) => ({ ...prev, modal0: false }));
       }
     } catch (err: any) {
       addToast(MESSAGES.TX_FAIL, {
@@ -355,33 +376,46 @@ const AdminBoard = ({ token, setToken }: IProps) => {
           />
         </FormControl>
         <BtnWrap>
-          <Button sx={{ width: '100%' }} disabled={contract?.isAllIncomingDepositsFinalised} onClick={() => depositWL()} variant="contained">Deposit WL</Button>
+          <Button
+            sx={{ width: '100%' }}
+            disabled={contract?.isAllIncomingDepositsFinalised}
+            onClick={() => depositWL()}
+            variant="contained"
+          >
+            Deposit WL
+          </Button>
         </BtnWrap>
         <SetTimestamp isTimestampSet={contract.timestampSet} />
         <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
         <BtnWrap>
           <Button
             disabled={contract?.isAllIncomingDepositsFinalised}
-            onClick={() => setModals(prev => ({ ...prev, modal0: true }))}
+            onClick={() => setModals((prev) => ({ ...prev, modal0: true }))}
             color="error"
             variant="contained"
           >
             Finalize Admin Interaction
           </Button>
-          <Button
-            onClick={() => setModals(prev => ({ ...prev, modal1: true }))}
-            color="error"
-            variant="contained"
-          >
+          <Button onClick={() => setModals((prev) => ({ ...prev, modal1: true }))} color="error" variant="contained">
             Logout
           </Button>
         </BtnWrap>
       </Content>
-      <TableWrap>
-        {daoInfo.length > 0 && <UsersTable users={daoInfo} />}
-      </TableWrap>
-      <WarningModal header={popups.WARNING} content={popups.FINALIZE_W} open={modals.modal0} setModal={() => setModals(prev => ({ ...prev, modal0: false }))} exec={handleFinalize} />
-      <WarningModal header={popups.CONFIRM} content={popups.LOGOUT} open={modals.modal1} setModal={() => setModals(prev => ({ ...prev, modal1: false }))} exec={handleRemoveAuthToken} />
+      <TableWrap>{daoInfo.length > 0 && <UsersTable users={daoInfo} />}</TableWrap>
+      <WarningModal
+        header={popups.WARNING}
+        content={popups.FINALIZE_W}
+        open={modals.modal0}
+        setModal={() => setModals((prev) => ({ ...prev, modal0: false }))}
+        exec={handleFinalize}
+      />
+      <WarningModal
+        header={popups.CONFIRM}
+        content={popups.LOGOUT}
+        open={modals.modal1}
+        setModal={() => setModals((prev) => ({ ...prev, modal1: false }))}
+        exec={handleRemoveAuthToken}
+      />
     </Container>
   );
 };
