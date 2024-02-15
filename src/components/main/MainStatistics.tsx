@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import CountUp from 'react-countup';
 import { web3 } from '../web3/useWeb3';
 import axios from 'axios';
+import { useWalletCount } from 'hooks/useWalletCount';
 
 import {
   StatisticsContainer,
@@ -16,18 +17,14 @@ function MainStatistics() {
   const [totalBlocks, setTotalBlocks] = useState<number>(0);
   const [totalWalletCount, setTotalWalletCount] = useState<number>(0);
   const statisticsRef = useRef<HTMLDivElement>(null);
+  const { walletCounts, loading } = useWalletCount();
 
   const formatValue = (value: number) => {
     return `${value.toFixed(1)}s`;
   };
 
   const listAccount = async () => {
-    const response = await axios.post(
-      `https://scan.worldland.foundation/api?module=account&action=listaccounts&offset=900`,
-    );
-
-    const response2 = response.data.result.length;
-    setTotalWalletCount(response2);
+    setTotalWalletCount(walletCounts?.wallet_count ?? 0);
   };
 
   const fetchBlockData = useCallback(async () => {
@@ -68,9 +65,10 @@ function MainStatistics() {
   }, [fetchBlockData]);
 
   useEffect(() => {
-    console.log('실행됨');
-    listAccount();
-  }, []);
+    if (walletCounts) {
+      listAccount();
+    }
+  }, [walletCounts]);
 
   return (
     <StatisticsContainer ref={statisticsRef}>

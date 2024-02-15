@@ -20,4 +20,13 @@ const getCodeWord = gql`
   }
 `;
 
-export { getNodeCount, getCodeWord };
+const getWalletCount = gql`
+  query {
+    latestDailyWallet {
+      date
+      wallet_count
+    }
+  }
+`;
+
+export { getNodeCount, getCodeWord, getWalletCount };
