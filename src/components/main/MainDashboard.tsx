@@ -9,6 +9,7 @@ import {
   ButtonContainer,
   DocsBtn,
   LearnBtn,
+  PdfBtn,
 } from './MainDashboard.style';
 
 const MainDashboard = () => {
@@ -26,6 +27,9 @@ const MainDashboard = () => {
           <ButtonContainer>
             <LearnBtn to="https://worldland.foundation/learn">Learn</LearnBtn>
             <DocsBtn to="https://docs.worldland.foundation/">Docs</DocsBtn>
+            <PdfBtn href="/WorldLand_Flier_V1_Word_English.pdf" download={'Worldland_Filer.pdf'}>
+              About Us
+            </PdfBtn>
           </ButtonContainer>
         </TextContainer>
         <VideoContainer>

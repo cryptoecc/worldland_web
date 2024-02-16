@@ -176,6 +176,27 @@ const DocsBtn = styled(Link)`
   }
 `;
 
+const PdfBtn = styled.a`
+  display: flex;
+  padding: 12px 24px;
+  flex-direction: column;
+  border-radius: 6px;
+  background: #f4f4f4;
+  font-family: 'Inter';
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-decoration: none; /* Add this to remove underline */
+
+  &:hover {
+    background-color: ${theme.colors.white80};
+    color: ${theme.colors.white};
+    transition:
+      color 0.3s,
+      background 0.3s;
+  }
+`;
+
 export {
   DashboardContainer,
   VideoContainer,
@@ -187,4 +208,5 @@ export {
   ButtonContainer,
   DocsBtn,
   LearnBtn,
+  PdfBtn,
 };
