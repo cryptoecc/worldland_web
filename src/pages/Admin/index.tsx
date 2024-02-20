@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { provider } from 'configs/axios';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
+import { useLogin } from 'hooks/useLogin';
 
 // 스타일 컴포넌트 정의
 const Container = styled.div`
@@ -80,7 +81,11 @@ const Admin = ({ setToken }: { setToken: React.Dispatch<React.SetStateAction<str
     username: '',
     password: '',
   });
+
   const { addToast } = useToasts();
+  const { login, loading, error } = useLogin();
+  // console.log(lof)
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -90,14 +95,18 @@ const Admin = ({ setToken }: { setToken: React.Dispatch<React.SetStateAction<str
     e.preventDefault();
 
     try {
-      const response = await provider.post('/api/admin/login', formData);
-      localStorage.setItem('token', response.data.token);
-      // causing react re-render here
-      setToken(response.data.token)
-      addToast(MESSAGES.LOGIN_SUCCESS(formData?.username), {
-        appearance: 'success',
-        autoDismiss: true,
-      });
+      // const response = await provider.post('/api/admin/login', formData);
+      const { data } = await login(formData.username, formData.password);
+      console.log(data);
+      if (data.login.token) {
+        localStorage.setItem('token', data.login.token);
+        // causing react re-render here
+        setToken(data.login.token);
+        addToast(MESSAGES.LOGIN_SUCCESS(formData?.username), {
+          appearance: 'success',
+          autoDismiss: true,
+        });
+      }
     } catch (e) {
       console.log(e);
       alert('로그일 실패 : 아이디와 패스워드를 다시 입력해주세요');

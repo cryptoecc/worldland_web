@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useNodeCount } from 'hooks/useNodeCount';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { theme } from 'style/theme';
 import { ChartContainer, CustomAreaChart, DetailDescription } from './ActiveNodes.style';
 import axios from 'axios';
+import { useCodeWord } from 'hooks/useCodeWord';
 
 interface DataItem {
   id: number;
@@ -12,36 +14,29 @@ interface DataItem {
 
 const MainAreaChart = () => {
   const [nodeCount, setNodeCount] = useState();
+  const { nodeCounts, loading, error } = useNodeCount();
+  const { codeWord } = useCodeWord();
+  console.log(codeWord);
 
   useEffect(() => {
-    const getNodeCount = async () => {
-      try {
-        const request = await axios.get('https://be.worldland.foundation/api/node/count');
-        console.log(request.data);
-
-        const filteredData = request.data.filter((data: any) => {
+    const fetchNodeCount = async () => {
+      if (nodeCounts) {
+        const request = nodeCounts.filter((data: any) => {
           const day = parseInt(data.date.split('/')[1], 10);
-          return day === 15 || day === 30;
+          return day >= 1 && day <= 31;
         });
-
-        console.log('gd', filteredData);
-
-        setNodeCount(filteredData);
-      } catch (error) {
-        console.error('데이터 가져오기 오류', error);
+        setNodeCount(request);
       }
     };
-
-    getNodeCount();
-  }, []);
+    fetchNodeCount();
+  }, [nodeCounts]);
 
   return (
     <ChartContainer>
       <DetailDescription>Active Nodes</DetailDescription>
-
       <ResponsiveContainer width="100%" height={300}>
-        <CustomAreaChart data={nodeCount}>
-          <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}일`} />
+        <LineChart data={nodeCount}>
+          <XAxis dataKey="date" tick={{ fontSize: 12 }} tickFormatter={(value) => `${value}`} />
           <YAxis dataKey="node_count" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} />
           <CartesianGrid stroke="none" />
           <Tooltip />
@@ -52,22 +47,23 @@ const MainAreaChart = () => {
               <stop offset="100%" stopColor={theme.colors.black} />
             </linearGradient>
           </defs>
-          <Area
+          <Line
             type="monotone"
             dataKey="node_count"
-            stroke="gray"
+            stroke="silver" // 파란색으로 변경
             strokeWidth={3.5}
-            fill="url(#areaColor)"
             dot={false}
             activeDot={{ stroke: 'black', r: 4 }}
+            fillOpacity={0}
           />
-        </CustomAreaChart>
+        </LineChart>
       </ResponsiveContainer>
       <br />
       <br />
 
       <DetailDescription>
-        Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 7days.
+        {/* Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 2 Month. */}
+        Active Nodes : The number of mining nodes on the Worldland network.
       </DetailDescription>
       <br />
     </ChartContainer>
