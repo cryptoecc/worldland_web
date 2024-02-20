@@ -1,9 +1,6 @@
 import * as S from "./style/index.style"
 import Layout from 'components/@common/Layout/Layout';
 import { useState, ChangeEvent, createElement, useEffect } from "react";
-import { WldChainIcon } from "assets/static/chain-assets/WldChainIcon";
-import { EthChainIcon, } from "assets/static/chain-assets/EthChainIcon";
-import { EthTokenIcon, } from "assets/static/token-assets/EthTokenIcon";
 import { DownArrowIcon } from "assets";
 import BridgeModeToggleIcon from "assets/static/chain-assets/BridgeModeToggleIcon";
 import SelectList from "components/Bridge/SelectList";

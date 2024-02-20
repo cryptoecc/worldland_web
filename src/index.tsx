@@ -9,7 +9,7 @@ import { Web3Modal } from '@web3modal/react';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { HelmetProvider } from 'react-helmet-async';
-import { worldland } from 'utils/wagmi';
+import { worldland, worldland_testnet } from 'utils/wagmi';
 import { Provider } from 'react-redux';
 import { store } from 'store';
 import { ToastProvider } from 'react-toast-notifications';
@@ -17,7 +17,7 @@ import { projectId } from 'configs/services/wagmi-credentials';
 import client from 'apollo/apolloClient';
 import { ApolloProvider } from '@apollo/client';
 
-const chains = [worldland, sepolia]; // will add mainnet in production
+const chains = [worldland, worldland_testnet, sepolia]; // will add mainnet in production
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
 const wagmiConfig = createConfig({
