@@ -33,6 +33,7 @@ import FilledInput from '@mui/material/FilledInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
+import { EPS } from 'constants/api-routes';
 export interface Contract {
   balance: string;
   cliffEdge: string;
@@ -158,7 +159,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
 
   const fetchUserInfo = async () => {
     try {
-      const response = await provider.get('/api/admin/admin-info', {
+      const response = await provider.get(EPS.ADMIN_INFO, {
         headers: {
           Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
         },
@@ -173,7 +174,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
 
   const fetchDaoInfo = async () => {
     try {
-      const response = await provider.get('/api/admin/dao-info');
+      const response = await provider.get(EPS.DAO_INFO);
       console.log(response.data);
       setDaoInfo(response.data);
     } catch (error) {

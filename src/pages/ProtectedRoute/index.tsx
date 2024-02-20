@@ -9,4 +9,4 @@ const ProtectedRoute = () => {
     return authToken || _authToken ? <AdminBoard token={_authToken ?? authToken} setToken={setAuthToken} /> : <Admin setToken={setAuthToken} />
 }
 
-export default ProtectedRoute
+export default ProtectedRoute;
