@@ -85,7 +85,7 @@ export enum QUERY {
 
 export enum CHAINDS {
   WORLDLAND = 'worldland',
-  WORLDLAND_GWANGJU = 'worldland_gwangju',
+  WORLDLAND_TESTNET = 'worldland_testnet',
 }
 
 export enum TOKEN {

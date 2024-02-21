@@ -263,9 +263,9 @@ const SwapWrap = () => {
       // metamask is not connected
       open();
       return;
-    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND_TESTNET]) {
       // wrong network
-      switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
+      switchNetwork?.(chainIds[CHAINDS.WORLDLAND_TESTNET]);
     } else if (_input === '0' || _input === '') {
       // empty field
       return;
@@ -313,7 +313,7 @@ const SwapWrap = () => {
       // metamask is not connected
       setDisabled(false);
       setBtnState(4);
-    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND_TESTNET]) {
       // wrong network
       setDisabled(false);
       setBtnState(7);
