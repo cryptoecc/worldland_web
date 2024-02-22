@@ -106,7 +106,6 @@ const AddLiquidity = () => {
     queryCurrentPrice();
   }, [selectedTokenAmount0, selectedToken0?.address, selectedToken1?.address]);
 
-  const { data: coinBalanceA } = useBalance({ address });
   const { data: tokenBalanceA } = useContractRead({
     address: selectedToken0?.address,
     abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -271,9 +270,9 @@ const AddLiquidity = () => {
       // metamask is not connected
       open();
       return;
-    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND_TESTNET]) {
       // wrong network
-      switchNetwork?.(chainIds[CHAINDS.WORLDLAND]);
+      switchNetwork?.(chainIds[CHAINDS.WORLDLAND_TESTNET]);
     } else if (selectedTokenAmount0 === '0' || selectedTokenAmount0 === '') {
       // empty field
       return;
@@ -339,7 +338,7 @@ const AddLiquidity = () => {
       // metamask is not connected
       setDisabled(false);
       setBtnState(4);
-    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND_TESTNET]) {
       // wrong network
       setDisabled(false);
       setBtnState(7);
