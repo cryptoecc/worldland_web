@@ -43,7 +43,7 @@ export const WLD_TESTNET_ADDRESSES: ADDRESS_TYPE = {
   LINEAR_TIMELOCK: '0x1c174eeC2da7Ad57A9D551436fbA5f918b53fEA0',
 };
 
-export const PAIR_ADRESSES: `0x${string}`[] = ['0x59479455bC58f33ab1582A11B1eA77299D5Fa524'];
+export const PAIR_ADRESSES: `0x${string}`[] = ['0x35a5c4D34b7cD0F4A0e1477CC77A7cf9b73a3a19'];
 
 export const LOCALHOST1_ADDRESSES: ADDRESS_TYPE = {
   // token addresses
