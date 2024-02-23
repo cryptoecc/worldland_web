@@ -26,7 +26,7 @@ import { ABI, CHAINDS, CONTRACT_ADDRESSES, FUNCTION, Field } from '../../utils/e
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import { useWeb3Modal } from '@web3modal/react';
 import { useToasts } from 'react-toast-notifications';
-import { parseEther } from 'viem';
+import { ethers } from "ethers";
 import { initialSwapSelect0 } from 'constants/select';
 import { ListItemType } from 'types/select';
 
@@ -248,7 +248,7 @@ const SwapWrap = () => {
   }
 
   function setInputToMax() {
-    setInput(putCommaAtPrice(from_wei(tokenBalanceA), 5));
+    setInput(putCommaAtPrice(ethers.formatEther(tokenBalanceA), 5));
     dispatch(
       fetchData({
         amountIn: tokenBalanceA,
@@ -269,10 +269,10 @@ const SwapWrap = () => {
     } else if (_input === '0' || _input === '') {
       // empty field
       return;
-    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
+    } else if (parseFloat(ethers.formatEther(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
       // balance A is not enough
       return;
-    } else if (parseFloat(_input ? _input : '0') > parseFloat(from_wei(allowanceA))) {
+    } else if (parseFloat(_input ? _input : '0') > parseFloat(ethers.formatEther(allowanceA))) {
       // if allowanceA is low
       approveA();
     } else {
@@ -322,12 +322,12 @@ const SwapWrap = () => {
       setDisabled(true);
       setBtnState(5);
       setSpotlightToken(input);
-    } else if (parseFloat(from_wei(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
+    } else if (parseFloat(ethers.formatEther(tokenBalanceA)) < parseFloat(_input ? _input : '0')) {
       // balance A is not enough
       setDisabled(true);
       setBtnState(1);
       setSpotlightToken(input);
-    } else if (parseFloat(_input ? _input : '0') > parseFloat(from_wei(allowanceA))) {
+    } else if (parseFloat(_input ? _input : '0') > parseFloat(ethers.formatEther(allowanceA))) {
       // checks the lv-router02 contract's allowance on user's token input and decides if the contract needs an approval of user on their tokens
       setDisabled(false);
       setBtnState(2);
