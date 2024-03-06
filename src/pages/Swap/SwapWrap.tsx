@@ -155,8 +155,8 @@ const SwapWrap = () => {
       console.log('Swap confirmation success: ', data);
       setLoader(false);
       addToast('Swap confirmation success', {
-        appearance: 'success', // 오류 메시지 스타일
-        autoDismiss: true, // 자동 닫기
+        appearance: 'success',
+        autoDismiss: true,
       });
       // setModal(false)
     },
