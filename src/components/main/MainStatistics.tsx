@@ -59,7 +59,7 @@ function MainStatistics() {
   useEffect(() => {
     const interval = setInterval(fetchBlockData, 1000);
 
-    // Initial fetch
+    // Initial fetch4
     fetchBlockData();
     return () => clearInterval(interval);
   }, [fetchBlockData]);
