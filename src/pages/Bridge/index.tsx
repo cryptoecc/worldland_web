@@ -47,6 +47,7 @@ const Bridge = () => {
     const { data: tokenBalance } = useBalance({ address, token: inputSelect.address, watch: true });
     const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true, token: outputSelect.address });
 
+
     const { data: allowance } = useContractRead({
         address: inputSelect.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -60,6 +61,22 @@ const Bridge = () => {
             console.log({ error: data });
         },
     });
+
+    const { data: fixedFee } = useContractRead({
+        address: networkType,
+        abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
+        functionName: QUERY.FIXEDFEE,
+        args: [],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ FIXEDFEE: data })
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+
+
 
     const { data: approvalTx, write: sendApprove } = useContractWrite({
         address: inputSelect.address,

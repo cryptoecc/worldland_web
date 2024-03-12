@@ -6,9 +6,63 @@ export const abi = [
         name: '_feeRate',
         type: 'uint256',
       },
+      {
+        internalType: 'uint256',
+        name: '_fixedFee',
+        type: 'uint256',
+      },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'from',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'date',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'string',
+        name: 'tokenType',
+        type: 'string',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'nonce',
+        type: 'uint256',
+      },
+    ],
+    name: 'BurnToken',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -100,25 +154,6 @@ export const abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'previousOwner',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'newOwner',
-        type: 'address',
-      },
-    ],
-    name: 'OwnershipTransferred',
-    type: 'event',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
         indexed: false,
         internalType: 'address',
         name: 'from',
@@ -160,14 +195,27 @@ export const abi = [
         name: 'nonce',
         type: 'uint256',
       },
+    ],
+    name: 'LockToken',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
       {
         indexed: true,
-        internalType: 'enum BridgeBase.Step',
-        name: 'step',
-        type: 'uint8',
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
       },
     ],
-    name: 'TransferToken',
+    name: 'OwnershipTransferred',
     type: 'event',
   },
   {
@@ -208,7 +256,7 @@ export const abi = [
     ],
     name: 'burnToken',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -226,7 +274,7 @@ export const abi = [
     ],
     name: 'burnWETH',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -252,6 +300,19 @@ export const abi = [
   {
     inputs: [],
     name: 'feeRate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'fixedFee',
     outputs: [
       {
         internalType: 'uint256',
@@ -305,30 +366,30 @@ export const abi = [
     ],
     name: 'lockToken',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: 'address[]',
+        name: 'destinations',
+        type: 'address[]',
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
       },
       {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
+        internalType: 'uint256[]',
+        name: 'nonces',
+        type: 'uint256[]',
       },
       {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
+        internalType: 'address[]',
+        name: 'tokens',
+        type: 'address[]',
       },
       {
         internalType: 'bytes',
@@ -344,24 +405,24 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: 'address[]',
+        name: 'destinations',
+        type: 'address[]',
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
       },
       {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
+        internalType: 'uint256[]',
+        name: 'nonces',
+        type: 'uint256[]',
       },
       {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
+        internalType: 'address[]',
+        name: 'tokens',
+        type: 'address[]',
       },
       {
         internalType: 'bytes',
@@ -436,6 +497,19 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: 'uint256',
+        name: 'fee',
+        type: 'uint256',
+      },
+    ],
+    name: 'setFixedFee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'address',
         name: 'newOwner',
         type: 'address',
@@ -485,24 +559,24 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: 'address[]',
+        name: 'destinations',
+        type: 'address[]',
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
       },
       {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
+        internalType: 'uint256[]',
+        name: 'nonces',
+        type: 'uint256[]',
       },
       {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
+        internalType: 'address[]',
+        name: 'tokens',
+        type: 'address[]',
       },
       {
         internalType: 'bytes',
@@ -518,24 +592,24 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: 'address[]',
+        name: 'destinations',
+        type: 'address[]',
       },
       {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
       },
       {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
+        internalType: 'uint256[]',
+        name: 'nonces',
+        type: 'uint256[]',
       },
       {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
+        internalType: 'address[]',
+        name: 'tokens',
+        type: 'address[]',
       },
       {
         internalType: 'bytes',
@@ -546,30 +620,6 @@ export const abi = [
     name: 'unlockToken',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'userBalances',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
     type: 'function',
   },
   {
