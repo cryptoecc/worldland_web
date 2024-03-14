@@ -207,7 +207,8 @@ const Bridge = () => {
                         args: [
                             to_wei(input),
                             inputSelect.address
-                        ]
+                        ],
+                        value: fixedFee.toString()
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
@@ -226,6 +227,7 @@ const Bridge = () => {
                             inputSelect.token,
                             inputSelect.address
                         ],
+                        value: fixedFee.toString()
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
@@ -243,7 +245,8 @@ const Bridge = () => {
                             to_wei(input),
                             inputSelect.address,
                             inputSelect.token
-                        ]
+                        ],
+                        value: fixedFee.toString()
                     })
                 }
             }
