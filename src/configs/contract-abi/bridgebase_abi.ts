@@ -3,12 +3,32 @@ export const abi = [
     inputs: [
       {
         internalType: 'uint256',
-        name: '_feeRate',
+        name: '_bridgeFeeRate',
         type: 'uint256',
       },
       {
         internalType: 'uint256',
-        name: '_fixedFee',
+        name: '_networkFeeRate',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'networkFee_id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'contract_address',
+        type: 'address',
+      },
+      {
+        internalType: 'string',
+        name: 'networkFee_type',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'networkFee_amount',
         type: 'uint256',
       },
     ],
@@ -33,6 +53,12 @@ export const abi = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: 'bridgeFee',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: 'amount',
         type: 'uint256',
       },
@@ -50,14 +76,20 @@ export const abi = [
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'tokenType',
-        type: 'string',
+        internalType: 'uint256',
+        name: 'nonce',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'networkFee_contract_address',
+        type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'nonce',
+        name: 'networkFee_amount',
         type: 'uint256',
       },
     ],
@@ -82,6 +114,12 @@ export const abi = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: 'bridgeFee',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: 'amount',
         type: 'uint256',
       },
@@ -101,6 +139,18 @@ export const abi = [
         indexed: false,
         internalType: 'uint256',
         name: 'nonce',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'networkFee_contract_address',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'networkFee_amount',
         type: 'uint256',
       },
     ],
@@ -125,6 +175,12 @@ export const abi = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: 'bridgeFee',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: 'amount',
         type: 'uint256',
       },
@@ -144,6 +200,18 @@ export const abi = [
         indexed: false,
         internalType: 'uint256',
         name: 'nonce',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'networkFee_contract_address',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'networkFee_amount',
         type: 'uint256',
       },
     ],
@@ -168,6 +236,12 @@ export const abi = [
       {
         indexed: false,
         internalType: 'uint256',
+        name: 'bridgeFee',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
         name: 'amount',
         type: 'uint256',
       },
@@ -185,14 +259,20 @@ export const abi = [
       },
       {
         indexed: false,
-        internalType: 'string',
-        name: 'tokenType',
-        type: 'string',
+        internalType: 'uint256',
+        name: 'nonce',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'networkFee_contract_address',
+        type: 'address',
       },
       {
         indexed: false,
         internalType: 'uint256',
-        name: 'nonce',
+        name: 'networkFee_amount',
         type: 'uint256',
       },
     ],
@@ -232,11 +312,24 @@ export const abi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'bridgeFeeRate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        internalType: 'uint256',
+        name: 'bridgeCalcFee',
+        type: 'uint256',
       },
       {
         internalType: 'uint256',
@@ -248,11 +341,6 @@ export const abi = [
         name: 'token',
         type: 'address',
       },
-      {
-        internalType: 'string',
-        name: 'tokenType',
-        type: 'string',
-      },
     ],
     name: 'burnToken',
     outputs: [],
@@ -261,6 +349,11 @@ export const abi = [
   },
   {
     inputs: [
+      {
+        internalType: 'uint256',
+        name: 'bridgeCalcFee',
+        type: 'uint256',
+      },
       {
         internalType: 'uint256',
         name: 'amount',
@@ -275,6 +368,25 @@ export const abi = [
     name: 'burnWETH',
     outputs: [],
     stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'enum BridgeBase.NetworkFeeTypes',
+        name: 'feeType',
+        type: 'uint8',
+      },
+    ],
+    name: 'castEnum',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'pure',
     type: 'function',
   },
   {
@@ -298,51 +410,12 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'feeRate',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'fixedFee',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'address',
-        name: 'to',
+        name: '_address',
         type: 'address',
       },
-      {
-        internalType: 'address',
-        name: 'token',
-        type: 'address',
-      },
-    ],
-    name: 'lockETH',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
-    inputs: [
       {
         internalType: 'address',
         name: 'to',
@@ -353,15 +426,116 @@ export const abi = [
         name: 'amount',
         type: 'uint256',
       },
+    ],
+    name: 'extractLockedETH',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    name: 'extractLockedTokens',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'amountIn',
+        type: 'uint256',
+      },
+    ],
+    name: 'getBridgeFee',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'fee',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getNetworkfee',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'contract_address',
+        type: 'address',
+      },
       {
         internalType: 'string',
-        name: 'tokenType',
+        name: 'fee_type',
         type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'bridgeCalcFee',
+        type: 'uint256',
+      },
+    ],
+    name: 'lockETH',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'bridgeCalcFee',
+        type: 'uint256',
       },
       {
         internalType: 'address',
         name: 'token',
         type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
       },
     ],
     name: 'lockToken',
@@ -437,6 +611,47 @@ export const abi = [
   },
   {
     inputs: [],
+    name: 'networkFee',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'contract_address',
+        type: 'address',
+      },
+      {
+        internalType: 'string',
+        name: 'fee_type',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'networkFeeRate',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'owner',
     outputs: [
       {
@@ -475,6 +690,29 @@ export const abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'from',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'to',
+        type: 'uint256',
+      },
+      {
+        internalType: 'bool',
+        name: 'state',
+        type: 'bool',
+      },
+    ],
+    name: 'resetProcessedNonces',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'resume',
     outputs: [],
@@ -489,7 +727,7 @@ export const abi = [
         type: 'uint256',
       },
     ],
-    name: 'setFeeRate',
+    name: 'setBridgeFeeRate',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
@@ -498,11 +736,39 @@ export const abi = [
     inputs: [
       {
         internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: 'contract_address',
+        type: 'address',
+      },
+      {
+        internalType: 'string',
+        name: 'fee_type',
+        type: 'string',
+      },
+      {
+        internalType: 'uint256',
         name: 'fee',
         type: 'uint256',
       },
     ],
-    name: 'setFixedFee',
+    name: 'setNetworkFee',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'rate',
+        type: 'uint256',
+      },
+    ],
+    name: 'setNetworkFeeRate',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

@@ -82,6 +82,7 @@ export enum QUERY {
   OWNER = 'owner',
   BALANCES = 'balances',
   FIXEDFEE = 'fixedFee',
+  GETBRIDGEFEE = 'getBridgeFee',
 }
 
 export enum CHAINDS {

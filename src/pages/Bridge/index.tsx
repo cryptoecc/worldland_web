@@ -76,6 +76,18 @@ const Bridge = () => {
         },
     });
 
+    const { data: getBridgeFee } = useContractRead({
+        address: networkType,
+        abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
+        functionName: QUERY.GETBRIDGEFEE,
+        onSuccess(data: any) {
+            console.log({ FIXEDFEE: data })
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+
 
 
     const { data: approvalTx, write: sendApprove } = useContractWrite({
@@ -186,12 +198,15 @@ const Bridge = () => {
                     // low eth balance
                     return;
                 } else {
+                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
+                    let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
+                    console.log({ bridgeFee, sum })
                     sendBridge({
                         args: [
-                            address,
-                            inputSelect.address
+                            inputSelect.address,
+                            bridgeFee
                         ],
-                        value: parseEther(input)
+                        value: parseEther(sum)
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
@@ -203,12 +218,14 @@ const Bridge = () => {
                     sendApprove();
                     return;
                 } else {
+                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
                     sendBridge({
                         args: [
+                            bridgeFee,
                             to_wei(input),
                             inputSelect.address
                         ],
-                        value: fixedFee.toString()
+                        value: bridgeFee.toString()
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
