@@ -56,7 +56,7 @@ const Bridge = () => {
         args: [address, networkType],
         watch: true,
         onSuccess(data: any) {
-            console.log({ tokenBalanceA: data });
+            console.log({ tokenBalanceA: formatEther(data) });
         },
         onError(data: any) {
             console.log({ error: data });
@@ -70,33 +70,20 @@ const Bridge = () => {
         args: [address, networkType],
         watch: true,
         onSuccess(data: any) {
-            console.log({ networkFeeTransferAllowance: data });
+            console.log({ networkFeeTransferAllowance: formatEther(data) });
         },
         onError(data: any) {
             console.log({ error: data });
         },
     });
 
-    const { data: fixedFee } = useContractRead({
-        address: networkType,
-        abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
-        functionName: QUERY.FIXEDFEE,
-        args: [],
-        watch: true,
-        onSuccess(data: any) {
-            console.log({ FIXEDFEE: data })
-        },
-        onError(data: any) {
-            console.log({ error: data });
-        },
-    });
-
-    const { data: getBridgeFee } = useContractRead({
+    const { data: bridgeFee } = useContractRead({
         address: networkType,
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETBRIDGEFEE,
+        args: [parseEther(input)],
         onSuccess(data: any) {
-            console.log({ NETWORKFEE: data })
+            console.log({ BRIDGEFEE: formatEther(data) })
         },
         onError(data: any) {
             console.log({ error: data });
@@ -108,7 +95,8 @@ const Bridge = () => {
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETNETWORKFEE,
         onSuccess(data: any) {
-            console.log({ NETWORKFEE: data })
+            let parsed = data[3];
+            console.log({ NETWORKFEE: formatEther(parsed) })
         },
         onError(data: any) {
             console.log({ error: data });
@@ -234,115 +222,112 @@ const Bridge = () => {
 
     async function handleFunctionSelector() {
         try {
-            if (!isConnected) {
+            if (isConnected) {
+                const _networkFee = getNetworkFee[3];
+                if (chain?.id !== inputSelect.networkId) {
+                    // wrong network
+                    switchNetwork?.(inputSelect.networkId);
+                } else if (input === "0" || input === "") {
+                    // empty field
+                    return;
+                } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
+                    console.log({ sum: (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString() })
+                    let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
+                    if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
+                        // low eth balance
+                        return;
+                    } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                        // low network balance
+                        return;
+                    } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
+                        // low weth allowance
+                        sendApprove();
+                    } else {
+                        sendBridge({
+                            args: [
+                                inputSelect.address,
+                                bridgeFee
+                            ],
+                            value: parseEther(sum)
+                        })
+                    }
+                } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
+                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                        // low token balance
+                        return;
+                    } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                        // low network balance
+                        return;
+                    } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                        // low allowance
+                        sendApprove();
+                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                        // low allowance on network fee (weth)
+                        networkFeeTransferApprove();
+                    } else {
+                        sendBridge({
+                            args: [
+                                bridgeFee,
+                                to_wei(input),
+                                inputSelect.address
+                            ],
+                            value: bridgeFee.toString()
+                        })
+                    }
+                } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
+                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                        // low token balance
+                        return;
+                    } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                        // low network balance
+                        return;
+                    } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                        // low allowance
+                        sendApprove();
+                        return;
+                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                        // low allowance on network fee (weth)
+                        networkFeeTransferApprove();
+                    } else {
+                        sendBridge({
+                            args: [
+                                bridgeFee,
+                                inputSelect.address,
+                                parseEther(input),
+                            ],
+                            value: bridgeFee.toString()
+                        })
+                    }
+                } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
+                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                        // low token balance
+                        return;
+                    } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                        // low network balance
+                        return;
+                    } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
+                        // low allowance
+                        sendApprove();
+                        return;
+                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                        // low allowance on network fee (weth)
+                        networkFeeTransferApprove();
+                    } else {
+                        sendBridge({
+                            args: [
+                                address,
+                                to_wei(input),
+                                inputSelect.address,
+                                inputSelect.token
+                            ],
+                            value: bridgeFee.toString()
+                        })
+                    }
+                }
+            } else {
                 // metamask is not connected
                 open();
                 return;
-            } else if (chain?.id !== inputSelect.networkId) {
-                // wrong network
-                switchNetwork?.(inputSelect.networkId);
-            } else if (input === "0" || input === "") {
-                // empty field
-                return;
-            } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-                const _networkFee = getNetworkFee[3];
-                let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
-                let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
-                if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
-                    // low eth balance
-                    return;
-                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
-                    // low network balance
-                    return;
-                } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
-                    // low weth allowance
-                    sendApprove();
-                } else {
-                    sendBridge({
-                        args: [
-                            inputSelect.address,
-                            bridgeFee
-                        ],
-                        value: parseEther(sum)
-                    })
-                }
-            } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
-                const _networkFee = getNetworkFee[3];
-                if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
-                    // low token balance
-                    return;
-                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
-                    // low network balance
-                    return;
-                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
-                    // low allowance
-                    sendApprove();
-                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                    // low allowance on network fee (weth)
-                    networkFeeTransferApprove();
-                } else {
-                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
-                    sendBridge({
-                        args: [
-                            bridgeFee,
-                            to_wei(input),
-                            inputSelect.address
-                        ],
-                        value: bridgeFee.toString()
-                    })
-                }
-            } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
-                const _networkFee = getNetworkFee[3];
-                if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
-                    // low token balance
-                    return;
-                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
-                    // low network balance
-                    return;
-                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
-                    // low allowance
-                    sendApprove();
-                    return;
-                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                    // low allowance on network fee (weth)
-                    networkFeeTransferApprove();
-                } else {
-                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
-                    sendBridge({
-                        args: [
-                            bridgeFee,
-                            inputSelect.address,
-                            parseEther(input),
-                        ],
-                        value: bridgeFee.toString()
-                    })
-                }
-            } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
-                const _networkFee = getNetworkFee[3];
-                if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
-                    // low token balance
-                    return;
-                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
-                    // low network balance
-                    return;
-                } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
-                    // low allowance
-                    sendApprove();
-                    return;
-                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                    // low allowance on network fee (weth)
-                    networkFeeTransferApprove();
-                } else {
-                    sendBridge({
-                        args: [
-                            address,
-                            to_wei(input),
-                            inputSelect.address,
-                            inputSelect.token
-                        ],
-                        value: fixedFee.toString()
-                    })
-                }
             }
         } catch (err) {
             console.log(err);
