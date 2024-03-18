@@ -12,6 +12,7 @@ export enum ABI {
   LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
   BRIDGEBASE_ABI = 'BRIDGEBASE_ABI',
   LINEAR_TIMELOCK = 'LINEAR_TIMELOCK',
+  WRAPPEDETH_ABI = 'WRAPPEDETH_ABI',
 }
 
 export enum Field {
@@ -83,6 +84,7 @@ export enum QUERY {
   BALANCES = 'balances',
   FIXEDFEE = 'fixedFee',
   GETBRIDGEFEE = 'getBridgeFee',
+  GETNETWORKFEE = 'networkFee',
 }
 
 export enum CHAINDS {

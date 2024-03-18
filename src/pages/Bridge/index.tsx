@@ -46,6 +46,7 @@ const Bridge = () => {
 
     const { data: tokenBalance } = useBalance({ address, token: inputSelect.address, watch: true });
     const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true, token: outputSelect.address });
+    const { data: networkFeeBalance } = useBalance({ address, token: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS], watch: true });
 
 
     const { data: allowance } = useContractRead({
@@ -56,6 +57,20 @@ const Bridge = () => {
         watch: true,
         onSuccess(data: any) {
             console.log({ tokenBalanceA: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+
+    const { data: networkFeeTransferAllowance } = useContractRead({
+        address: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS],
+        abi: MAP_STR_ABI[ABI.WRAPPEDETH_ABI],
+        functionName: QUERY.ALLOWANCE,
+        args: [address, networkType],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ networkFeeTransferAllowance: data });
         },
         onError(data: any) {
             console.log({ error: data });
@@ -81,7 +96,19 @@ const Bridge = () => {
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETBRIDGEFEE,
         onSuccess(data: any) {
-            console.log({ FIXEDFEE: data })
+            console.log({ NETWORKFEE: data })
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+
+    const { data: getNetworkFee } = useContractRead({
+        address: networkType,
+        abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
+        functionName: QUERY.GETNETWORKFEE,
+        onSuccess(data: any) {
+            console.log({ NETWORKFEE: data })
         },
         onError(data: any) {
             console.log({ error: data });
@@ -93,6 +120,30 @@ const Bridge = () => {
     const { data: approvalTx, write: sendApprove } = useContractWrite({
         address: inputSelect.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: FUNCTION.APPROVE,
+        args: [
+            networkType,
+            to_wei('1000000000000')
+        ],
+        onSuccess() {
+            setInput("");
+            addToast(MESSAGES.TX_SENT, {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        },
+        onError(err: any) {
+            addToast(MESSAGES.TX_FAIL, {
+                appearance: 'error',
+                content: err?.shortMessage,
+                autoDismiss: true,
+            });
+        },
+    });
+
+    const { write: networkFeeTransferApprove } = useContractWrite({
+        address: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS],
+        abi: MAP_STR_ABI[ABI.WRAPPEDETH_ABI],
         functionName: FUNCTION.APPROVE,
         args: [
             networkType,
@@ -194,13 +245,19 @@ const Bridge = () => {
                 // empty field
                 return;
             } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-                if (parseFloat(ethBalance?.formatted as string) < parseFloat(input)) {
+                const _networkFee = getNetworkFee[3];
+                let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
+                let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
+                if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
                     // low eth balance
                     return;
+                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                    // low network balance
+                    return;
+                } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
+                    // low weth allowance
+                    sendApprove();
                 } else {
-                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
-                    let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
-                    console.log({ bridgeFee, sum })
                     sendBridge({
                         args: [
                             inputSelect.address,
@@ -210,13 +267,19 @@ const Bridge = () => {
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
+                const _networkFee = getNetworkFee[3];
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
+                    return;
+                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                    // low network balance
                     return;
                 } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                     // low allowance
                     sendApprove();
-                    return;
+                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                    // low allowance on network fee (weth)
+                    networkFeeTransferApprove();
                 } else {
                     let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
                     sendBridge({
@@ -229,32 +292,46 @@ const Bridge = () => {
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
+                const _networkFee = getNetworkFee[3];
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
+                    return;
+                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                    // low network balance
                     return;
                 } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                     // low allowance
                     sendApprove();
                     return;
+                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                    // low allowance on network fee (weth)
+                    networkFeeTransferApprove();
                 } else {
+                    let bridgeFee = getBridgeFee?.({ args: [parseEther(input)] });
                     sendBridge({
                         args: [
-                            address,
-                            to_wei(input),
-                            inputSelect.token,
-                            inputSelect.address
+                            bridgeFee,
+                            inputSelect.address,
+                            parseEther(input),
                         ],
-                        value: fixedFee.toString()
+                        value: bridgeFee.toString()
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
+                const _networkFee = getNetworkFee[3];
                 if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                     // low token balance
+                    return;
+                } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                    // low network balance
                     return;
                 } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                     // low allowance
                     sendApprove();
                     return;
+                } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                    // low allowance on network fee (weth)
+                    networkFeeTransferApprove();
                 } else {
                     sendBridge({
                         args: [
