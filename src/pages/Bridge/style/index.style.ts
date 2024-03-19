@@ -16,6 +16,12 @@ export const Container = styled.article<{ width?: string }>`
   user-select: none;
 `;
 
+export const LabelWrap = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 export const Label = styled.p`
   color: ${theme.colors.white80};
   font-size: 1.7rem;
@@ -82,6 +88,24 @@ export const Input = styled.input`
     margin: 0;
   }
 `;
+export const AddressInput = styled.input`
+  width: 90%;
+  background-color: transparent;
+  border: none;
+  color: ${theme.colors.black5};
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 400;
+
+  &&::placeholder {
+    color: ${theme.colors.white90};
+  }
+  &&::-webkit-inner-spin-button,
+  -webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`;
 
 export const MaxBtn = styled.button`
   border: none;
@@ -97,6 +121,12 @@ export const Chain = styled.div`
   justify-content: space-between;
   width: 100%;
   padding: 10px;
+`;
+
+export const Span = styled.span`
+  background-color: ${theme.colors.white90};
+  height: 1px;
+  width: 100%;
 `;
 
 export const ChainNameWrap = styled.div`

@@ -29,6 +29,7 @@ import { MESSAGES } from "utils/messages";
 const Bridge = () => {
     const { chain } = useNetwork();
     const { address, isConnected } = useAccount();
+    const [toAddress, setToAddress] = useState<string>("");
     const networkType = MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.BRIDGE];
     const { open } = useWeb3Modal();
     const { addToast } = useToasts();
@@ -160,6 +161,7 @@ const Bridge = () => {
         functionName: inputSelect.funcType,
         onSuccess() {
             setInput("");
+            setToAddress("");
             addToast(MESSAGES.TX_SENT, {
                 appearance: 'success',
                 autoDismiss: true,
@@ -231,7 +233,6 @@ const Bridge = () => {
                     // empty field
                     return;
                 } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-                    console.log({ sum: (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString() })
                     let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
                     if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
                         // low eth balance
@@ -245,6 +246,7 @@ const Bridge = () => {
                     } else {
                         sendBridge({
                             args: [
+                                toAddress,
                                 inputSelect.address,
                                 bridgeFee
                             ],
@@ -267,6 +269,7 @@ const Bridge = () => {
                     } else {
                         sendBridge({
                             args: [
+                                toAddress,
                                 bridgeFee,
                                 to_wei(input),
                                 inputSelect.address
@@ -291,6 +294,7 @@ const Bridge = () => {
                     } else {
                         sendBridge({
                             args: [
+                                toAddress,
                                 bridgeFee,
                                 inputSelect.address,
                                 parseEther(input),
@@ -315,7 +319,7 @@ const Bridge = () => {
                     } else {
                         sendBridge({
                             args: [
-                                address,
+                                toAddress,
                                 to_wei(input),
                                 inputSelect.address,
                                 inputSelect.token
@@ -349,6 +353,9 @@ const Bridge = () => {
 
     async function handleEvent(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value);
+    }
+    async function handleToEvent(e: ChangeEvent<HTMLInputElement>) {
+        setToAddress(e.target.value);
     }
 
     useEffect(() => {
@@ -533,6 +540,20 @@ const Bridge = () => {
                         <S.B>
                             Balance: <span>{outputSelect.balance}</span>
                         </S.B>
+                    </S.Chain>
+                    <S.Span />
+                    <S.Chain>
+                        {/* {createElement(outputSelect.networkIcon)} */}
+                        <S.B>
+                            To:
+                        </S.B>
+                        <S.AddressInput
+                            type="text"
+                            autoComplete="off"
+                            placeholder="0x000"
+                            value={toAddress}
+                            onChange={handleToEvent}
+                        />
                     </S.Chain>
                 </S.ParentWrap>
                 <S.Button disabled={disabled} onClick={handleFunctionSelector}>
