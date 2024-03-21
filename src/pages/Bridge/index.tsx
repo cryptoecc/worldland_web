@@ -564,10 +564,10 @@ const Bridge = () => {
                     <LocalGasStationIcon sx={{ fontSize: '30px' }} />
                     <S.GasPriceFieldWrap>
                         <p>
-                            Bridge Fee = 0.0001342ETH
+                            Bridge Fee = {putCommaAtPrice(formatEther(bridgeFee ?? '0'), 9)} ETH
                         </p>
                         <p>
-                            Network Fee = 0.0000334ETH
+                            Network Fee = {putCommaAtPrice(formatEther(getNetworkFee[3] ?? '0'), 9)} ETH
                         </p>
                     </S.GasPriceFieldWrap>
 
