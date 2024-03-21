@@ -11,6 +11,7 @@ export const Container = styled.article<{ width?: string }>`
   max-width: ${({ width }) => (width && width) || '27.5rem'};
   width: 100%;
   padding: 2rem;
+  /* padding-bottom: 0; */
   gap: 1rem;
   font-family: 'Inter', sans-serif;
   user-select: none;
@@ -200,4 +201,21 @@ export const ToggleIconWrap = styled.div`
   border: 1px solid ${theme.colors.white80};
   border-radius: 50%;
   cursor: pointer;
+`;
+
+export const GasPriceField = styled.section`
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+  color: #ffffff;
+  width: 100%;
+`;
+export const GasPriceFieldWrap = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  font-size: 13px;
+  gap: 2px;
 `;

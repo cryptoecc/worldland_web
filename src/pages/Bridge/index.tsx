@@ -25,6 +25,7 @@ import { useToasts } from 'react-toast-notifications';
 
 import { NETWORKS } from "configs/networks";
 import { MESSAGES } from "utils/messages";
+import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 
 const Bridge = () => {
     const { chain } = useNetwork();
@@ -41,7 +42,6 @@ const Bridge = () => {
     const [modal, setModal] = useState<boolean>(false);
     const [disabled, setDisabled] = useState<boolean>(false);
     const [btnState, setBtnState] = useState<number>(1);
-    const [chainToggleState, setChainToggleState] = useState<boolean>(false);
     const { data: ethBalance } = useBalance({ address, watch: true });
     const { data: otherChainEthBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true });
 
@@ -560,6 +560,18 @@ const Bridge = () => {
                     {handleBtnState(btnState, inputSelect)}
                 </S.Button>
                 {modal && <SelectList tokenList={thisChainTokenList} setInputSelect={handleSelectItem} modal={modal} handler={setModal} />}
+                <S.GasPriceField>
+                    <LocalGasStationIcon sx={{ fontSize: '30px' }} />
+                    <S.GasPriceFieldWrap>
+                        <p>
+                            Bridge Fee = 0.0001342ETH
+                        </p>
+                        <p>
+                            Network Fee = 0.0000334ETH
+                        </p>
+                    </S.GasPriceFieldWrap>
+
+                </S.GasPriceField>
             </S.Container>
         </Layout>
     )
