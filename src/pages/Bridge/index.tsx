@@ -1,6 +1,6 @@
 import * as S from "./style/index.style"
 import Layout from 'components/@common/Layout/Layout';
-import { useState, ChangeEvent, createElement, useEffect } from "react";
+import { useState, ChangeEvent, createElement, useEffect, useCallback } from "react";
 import { DownArrowIcon } from "assets";
 import BridgeModeToggleIcon from "assets/static/chain-assets/BridgeModeToggleIcon";
 import SelectList from "components/Bridge/SelectList";
@@ -26,6 +26,7 @@ import { useToasts } from 'react-toast-notifications';
 import { NETWORKS } from "configs/networks";
 import { MESSAGES } from "utils/messages";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
+import debounce from "lodash.debounce";
 
 const Bridge = () => {
     const { chain } = useNetwork();
@@ -48,6 +49,8 @@ const Bridge = () => {
     const { data: tokenBalance } = useBalance({ address, token: inputSelect.address, watch: true });
     const { data: otherChainTokenBalance } = useBalance({ chainId: outputSelect.networkId, address, watch: true, token: outputSelect.address });
     const { data: networkFeeBalance } = useBalance({ address, token: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS], watch: true });
+
+    const [debouncedBridgeFee, setDebouncedBridgeFee] = useState<string>("");
 
 
     const { data: allowance } = useContractRead({
@@ -78,11 +81,17 @@ const Bridge = () => {
         },
     });
 
+    const handleDebouncedBridgeFee = useCallback(
+        debounce((value: string) => {
+            setDebouncedBridgeFee(value);
+        }, 1000), []
+    )
+
     const { data: bridgeFee } = useContractRead({
         address: networkType,
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETBRIDGEFEE,
-        args: [parseEther(input)],
+        args: [parseEther(debouncedBridgeFee)],
         onSuccess(data: any) {
             console.log({ BRIDGEFEE: formatEther(data) })
         },
@@ -353,6 +362,7 @@ const Bridge = () => {
 
     async function handleEvent(e: ChangeEvent<HTMLInputElement>) {
         setInput(e.target.value);
+        handleDebouncedBridgeFee(e.target.value);
     }
     async function handleToEvent(e: ChangeEvent<HTMLInputElement>) {
         setToAddress(e.target.value);
