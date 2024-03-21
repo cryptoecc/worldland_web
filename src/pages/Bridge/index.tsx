@@ -105,8 +105,7 @@ const Bridge = () => {
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETNETWORKFEE,
         onSuccess(data: any) {
-            let parsed = data[3];
-            console.log({ NETWORKFEE: formatEther(parsed) })
+            console.log({ NETWORKFEE: data })
         },
         onError(data: any) {
             console.log({ error: data });
@@ -577,7 +576,7 @@ const Bridge = () => {
                             Bridge Fee = {putCommaAtPrice(formatEther(bridgeFee ?? '0'), 9)} ETH
                         </p>
                         <p>
-                            Network Fee = {putCommaAtPrice(formatEther(getNetworkFee[3] ?? '0'), 9)} ETH
+                            Network Fee = {putCommaAtPrice(formatEther(getNetworkFee[3] ?? '0'), 9)} {getNetworkFee[2]}
                         </p>
                     </S.GasPriceFieldWrap>
 

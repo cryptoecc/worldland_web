@@ -56,8 +56,8 @@
     "build": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "bd": "react-scripts build && scp -i ~/Downloads/worldland.foundation.pem -r build/. ubuntu@3.38.111.124:/var/www/html",
-    "deploy": "sudo scp -i ~/Downloads/worldland-foundation.pem -r build/. ubuntu@3.38.111.124:/var/www/html"
+    "bd": "react-scripts build && scp -i ~/Downloads/worldland.foundation.pem -r build/. ubuntu@54.180.31.172:/var/www/html",
+    "deploy": "sudo scp -i ~/Downloads/worldland-foundation.pem -r build/. ubuntu@54.180.31.172:/var/www/html"
   },
   "eslintConfig": {
     "extends": [

@@ -327,6 +327,11 @@ export const abi = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
+      {
         internalType: 'uint256',
         name: 'bridgeCalcFee',
         type: 'uint256',
@@ -349,6 +354,11 @@ export const abi = [
   },
   {
     inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'bridgeCalcFee',
@@ -475,35 +485,12 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'getNetworkfee',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'id',
-        type: 'uint256',
-      },
+    inputs: [
       {
         internalType: 'address',
-        name: 'contract_address',
+        name: 'to',
         type: 'address',
       },
-      {
-        internalType: 'string',
-        name: 'fee_type',
-        type: 'string',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
       {
         internalType: 'address',
         name: 'token',
@@ -522,6 +509,11 @@ export const abi = [
   },
   {
     inputs: [
+      {
+        internalType: 'address',
+        name: 'to',
+        type: 'address',
+      },
       {
         internalType: 'uint256',
         name: 'bridgeCalcFee',
