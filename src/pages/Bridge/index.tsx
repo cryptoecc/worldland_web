@@ -57,7 +57,7 @@ const Bridge = () => {
     const { data: networkFeeBalance } = useBalance({ address, token: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS], watch: true });
 
     const [debouncedBridgeFee, setDebouncedBridgeFee] = useState<string>("");
-    const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: "", bridgeFee: "", networkFeeType: "" });
+    const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: "0", bridgeFee: "0", networkFeeType: "" });
 
 
     const { data: allowance } = useContractRead({
