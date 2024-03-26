@@ -195,11 +195,10 @@ const Bridge = () => {
 
     useWaitForTransaction({
         hash: bridgeTx?.hash || approvalTx?.hash,
-        staleTime: 2_000,
         onSuccess() {
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
-                content: approvalTx?.hash && MESSAGES.TX_CONTENT,
+                content: bridgeTx?.hash && MESSAGES.TX_CONTENT,
                 autoDismiss: true,
             });
         },
@@ -249,6 +248,9 @@ const Bridge = () => {
                 } else if (input === "0" || input === "") {
                     // empty field
                     return;
+                } else if (!toAddress) {
+                    // empty to field
+                    return;
                 } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
                     let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
                     if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
@@ -258,7 +260,7 @@ const Bridge = () => {
                         // low network balance
                         return;
                     } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
-                        // low weth allowance
+                        // low weth/wwlc allowance
                         sendApprove();
                     } else {
                         sendBridge({
@@ -271,7 +273,10 @@ const Bridge = () => {
                         })
                     }
                 } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
-                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                    if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                        // low eth balance
+                        return;
+                    } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                         // low token balance
                         return;
                     } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
@@ -280,8 +285,8 @@ const Bridge = () => {
                     } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                         // low allowance
                         sendApprove();
-                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                        // low allowance on network fee (weth)
+                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(formatEther(_networkFee))) {
+                        // low allowance on network fee (weth/wwlc)
                         networkFeeTransferApprove();
                     } else {
                         sendBridge({
@@ -295,7 +300,10 @@ const Bridge = () => {
                         })
                     }
                 } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
-                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                    if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                        // low eth balance
+                        return;
+                    } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                         // low token balance
                         return;
                     } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
@@ -305,8 +313,8 @@ const Bridge = () => {
                         // low allowance
                         sendApprove();
                         return;
-                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                        // low allowance on network fee (weth)
+                    } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(formatEther(_networkFee))) {
+                        // low allowance on network fee (weth/wwlc)
                         networkFeeTransferApprove();
                     } else {
                         sendBridge({
@@ -320,7 +328,10 @@ const Bridge = () => {
                         })
                     }
                 } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
-                    if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+                    if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                        // low eth balance
+                        return;
+                    } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                         // low token balance
                         return;
                     } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
@@ -331,15 +342,15 @@ const Bridge = () => {
                         sendApprove();
                         return;
                     } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
-                        // low allowance on network fee (weth)
+                        // low allowance on network fee (weth/wwlc)
                         networkFeeTransferApprove();
                     } else {
                         sendBridge({
                             args: [
                                 toAddress,
+                                bridgeFee,
                                 to_wei(input),
                                 inputSelect.address,
-                                inputSelect.token
                             ],
                             value: bridgeFee.toString()
                         })
@@ -407,6 +418,7 @@ const Bridge = () => {
     }, [isConnected, chain?.id])
 
     useEffect(() => {
+        const _networkFee = getNetworkFee[3];
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -418,50 +430,98 @@ const Bridge = () => {
         } else if (input === "0" || input === "") {
             setDisabled(true);
             setBtnState(5);
+        } else if (!toAddress) {
+            setDisabled(true);
+            setBtnState(10);
         } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-            if (parseFloat(ethBalance?.formatted as string) < parseFloat(input)) {
+            let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
+            if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
                 // low eth balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                // low network balance
+                setDisabled(true);
+                setBtnState(11);
+            } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
+                // low weth/wwlc allowance
+                setDisabled(false);
+                setBtnState(12);
             } else {
                 setDisabled(false);
                 setBtnState(9);
             }
         } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
-            if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+            if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                // low eth balance
+                setDisabled(true)
+                setBtnState(13);
+            } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                // low network balance
+                setDisabled(true);
+                setBtnState(11);
             } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                 // low allowance
                 setDisabled(false);
                 setBtnState(2);
+            } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(formatEther(_networkFee))) {
+                // low allowance on network fee (weth/wwlc)
+                setDisabled(false);
+                setBtnState(12);
             } else {
                 setDisabled(false);
                 setBtnState(9);
             }
         } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
-            if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+            if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                // low eth balance
+                setDisabled(true)
+                setBtnState(13);
+            } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                // low network balance
+                setDisabled(true);
+                setBtnState(11);
             } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                 // low allowance
                 setDisabled(false);
                 setBtnState(2);
+            } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(formatEther(_networkFee))) {
+                // low allowance on network fee (weth/wwlc)
+                setDisabled(false);
+                setBtnState(12);
             } else {
                 setDisabled(false);
                 setBtnState(9);
             }
         } else if (inputSelect.funcType === FUNCTION.BURNTOKEN) {
-            if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
+            if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
+                // low eth balance
+                setDisabled(true)
+                setBtnState(13);
+            } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
+            } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                // low network balance
+                setDisabled(true);
+                setBtnState(11);
             } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
                 // low allowance
                 setDisabled(false);
                 setBtnState(2);
+            } else if (parseFloat(formatEther(networkFeeTransferAllowance)) < parseFloat(input)) {
+                // low allowance on network fee (weth/wwlc)
+                setDisabled(false);
+                setBtnState(12);
             } else {
                 setDisabled(false);
                 setBtnState(9);
@@ -474,7 +534,12 @@ const Bridge = () => {
         input,
         inputSelect,
         ethBalance?.formatted,
-        tokenBalance?.formatted
+        tokenBalance?.formatted,
+        toAddress,
+        bridgeFee,
+        getNetworkFee,
+        networkFeeTransferAllowance,
+        networkFeeBalance
     ])
 
     useEffect(() => {

@@ -47,7 +47,7 @@ export const bridgeSelectListETH: ListItemType[] = [
   },
   {
     id: 1,
-    token: 'wWLC',
+    token: 'WLC',
     tokenIcon: WldChainIcon,
     network: 'Sepolia',
     networkIcon: EthereumIcon,

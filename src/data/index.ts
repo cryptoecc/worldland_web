@@ -11,4 +11,8 @@ export const mapMessageToObject: any = {
   7: 'Switch network',
   8: (token: ListItemType) => `Switch network to ${token.network}`,
   9: 'Transfer',
+  10: 'Enter destination address!',
+  11: 'Insufficient network balance!',
+  12: 'Approve for network fee expenditure',
+  13: 'Insufficient balance for bridge fee!',
 };
