@@ -30,8 +30,8 @@ import debounce from "lodash.debounce";
 
 interface FEE_QUERY {
     networkFeeType: string;
-    networkFee: string;
-    bridgeFee: string;
+    networkFee: bigint;
+    bridgeFee: bigint;
 }
 
 const Bridge = () => {
@@ -57,7 +57,7 @@ const Bridge = () => {
     const { data: networkFeeBalance } = useBalance({ address, token: MAPNETWORKTOCHAINID[chain?.id ?? 11155111][CONTRACT_ADDRESSES.WETH_ADDRESS], watch: true });
 
     const [debouncedBridgeFee, setDebouncedBridgeFee] = useState<string>("");
-    const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: "0", bridgeFee: "0", networkFeeType: "" });
+    const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: BigInt(0), bridgeFee: BigInt(0), networkFeeType: "" });
 
 
     const { data: allowance } = useContractRead({
@@ -100,8 +100,7 @@ const Bridge = () => {
         functionName: QUERY.GETBRIDGEFEE,
         args: [parseEther(debouncedBridgeFee)],
         onSuccess(data: any) {
-            const parsed = putCommaAtPrice(formatEther(data), 9);
-            setFeeQuery((prev) => ({ ...prev, bridgeFee: parsed }));
+            setFeeQuery((prev) => ({ ...prev, bridgeFee: data }));
         },
         onError(data: any) {
             console.log({ error: data });
@@ -113,8 +112,7 @@ const Bridge = () => {
         abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
         functionName: QUERY.GETNETWORKFEE,
         onSuccess(data: any) {
-            const parsed = putCommaAtPrice(formatEther(data[3]), 9);
-            setFeeQuery((prev) => ({ ...prev, networkFee: parsed, networkFeeType: data[2] }));
+            setFeeQuery((prev) => ({ ...prev, networkFee: data[3], networkFeeType: data[2] }));
         },
         onError(data: any) {
             console.log({ error: data });
@@ -647,10 +645,10 @@ const Bridge = () => {
                     <LocalGasStationIcon sx={{ fontSize: '30px' }} />
                     <S.GasPriceFieldWrap>
                         <p>
-                            Bridge Fee = {feeQuery.bridgeFee} {chain?.id === NETWORKS.CHAIN_1 ? "ETH" : "WLC"}
+                            Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {chain?.id === NETWORKS.CHAIN_1 ? "ETH" : "WLC"}
                         </p>
                         <p>
-                            Network Fee = {feeQuery.networkFee} {feeQuery.networkFeeType}
+                            Network Fee = {putCommaAtPrice(formatEther(feeQuery.networkFee), 9)} {feeQuery.networkFeeType}
                         </p>
                     </S.GasPriceFieldWrap>
 
