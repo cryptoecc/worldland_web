@@ -193,7 +193,13 @@ const Bridge = () => {
 
     useWaitForTransaction({
         hash: bridgeTx?.hash || approvalTx?.hash,
+        staleTime: 2_000,
         onSuccess() {
+            addToast(MESSAGES.TX_SUCCESS, {
+                appearance: 'success',
+                content: bridgeTx?.hash && MESSAGES.TX_SUCCESS,
+                autoDismiss: true,
+            });
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
                 content: bridgeTx?.hash && MESSAGES.TX_CONTENT,
@@ -201,11 +207,13 @@ const Bridge = () => {
             });
         },
         onError(err: any) {
-            addToast(MESSAGES.TX_FAIL, {
-                appearance: 'error',
-                content: err?.shortMessage,
-                autoDismiss: true,
-            });
+            if (err?.name !== "TransactionNotFoundError") {
+                addToast(MESSAGES.TX_FAIL, {
+                    appearance: 'error',
+                    content: err?.shortMessage,
+                    autoDismiss: true,
+                });
+            }
         }
     })
 
@@ -239,7 +247,7 @@ const Bridge = () => {
     async function handleFunctionSelector() {
         try {
             if (isConnected) {
-                const _networkFee = getNetworkFee[3];
+                const _networkFee = feeQuery.networkFee;
                 if (chain?.id !== inputSelect.networkId) {
                     // wrong network
                     switchNetwork?.(inputSelect.networkId);
@@ -271,13 +279,14 @@ const Bridge = () => {
                         })
                     }
                 } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
+                    let sum = parseFloat(formatEther(_networkFee)) + parseFloat(input);
                     if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
                         // low eth balance
                         return;
                     } else if (parseFloat(tokenBalance?.formatted as string) < parseFloat(input)) {
                         // low token balance
                         return;
-                    } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+                    } else if (parseFloat(networkFeeBalance?.formatted as string) < sum) {
                         // low network balance
                         return;
                     } else if (parseFloat(formatEther(allowance)) < parseFloat(input)) {
@@ -416,7 +425,7 @@ const Bridge = () => {
     }, [isConnected, chain?.id])
 
     useEffect(() => {
-        const _networkFee = getNetworkFee[3];
+        const _networkFee = feeQuery.networkFee;
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -432,8 +441,8 @@ const Bridge = () => {
             setDisabled(true);
             setBtnState(10);
         } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-            let sum = (parseFloat(formatEther(bridgeFee)) + parseFloat(input)).toString();
-            if (parseFloat(ethBalance?.formatted as string) < parseFloat(sum)) {
+            let sum = parseFloat(formatEther(bridgeFee)) + parseFloat(input)
+            if (parseFloat(ethBalance?.formatted as string) < sum) {
                 // low eth balance
                 setDisabled(true);
                 setBtnState(1);
@@ -441,7 +450,7 @@ const Bridge = () => {
                 // low network balance
                 setDisabled(true);
                 setBtnState(11);
-            } else if (parseFloat(formatEther(allowance)) < parseFloat(sum)) {
+            } else if (parseFloat(formatEther(allowance)) < sum) {
                 // low weth/wwlc allowance
                 setDisabled(false);
                 setBtnState(12);
@@ -450,6 +459,7 @@ const Bridge = () => {
                 setBtnState(9);
             }
         } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
+            let sum = parseFloat(formatEther(_networkFee)) + parseFloat(input);
             if (parseFloat(ethBalance?.formatted as string) < parseFloat(formatEther(bridgeFee))) {
                 // low eth balance
                 setDisabled(true)
@@ -458,7 +468,7 @@ const Bridge = () => {
                 // low token balance
                 setDisabled(true);
                 setBtnState(1);
-            } else if (parseFloat(networkFeeBalance?.formatted as string) < parseFloat(formatEther(_networkFee))) {
+            } else if (parseFloat(networkFeeBalance?.formatted as string) < sum) {
                 // low network balance
                 setDisabled(true);
                 setBtnState(11);
@@ -537,7 +547,8 @@ const Bridge = () => {
         bridgeFee,
         getNetworkFee,
         networkFeeTransferAllowance,
-        networkFeeBalance
+        networkFeeBalance,
+        feeQuery
     ])
 
     useEffect(() => {
@@ -593,7 +604,7 @@ const Bridge = () => {
                             <span></span>
                         </S.TokenWrap>
                         <S.Input
-                            type="text"
+                            type="number"
                             pattern="^[0-9]*[.,]?[0.9]*$"
                             min="0.00001"
                             autoComplete="off"
@@ -648,7 +659,7 @@ const Bridge = () => {
                             Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {chain?.id === NETWORKS.CHAIN_1 ? "ETH" : "WLC"}
                         </p>
                         <p>
-                            Network Fee = {putCommaAtPrice(formatEther(feeQuery.networkFee), 9)} {feeQuery.networkFeeType}
+                            Network Fee = {putCommaAtPrice(formatEther(feeQuery?.networkFee), 9)} {feeQuery.networkFeeType}
                         </p>
                     </S.GasPriceFieldWrap>
 
