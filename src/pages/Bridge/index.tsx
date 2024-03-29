@@ -20,7 +20,7 @@ import { MAPNETWORKTOCHAINID } from "configs/contract_address_config";
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from "utils/enum";
 import { MAP_STR_ABI } from "configs/abis";
 import { formatEther, parseEther } from "viem";
-import { handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
+import { from_wei, handleBtnState, putCommaAtPrice, to_wei } from "utils/util";
 import { useToasts } from 'react-toast-notifications';
 
 import { NETWORKS } from "configs/networks";
@@ -197,14 +197,16 @@ const Bridge = () => {
         onSuccess() {
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
-                content: bridgeTx?.hash && MESSAGES.TX_SUCCESS,
+                content: MESSAGES.TX_SUCCESS,
                 autoDismiss: true,
             });
-            addToast(MESSAGES.TX_SUCCESS, {
-                appearance: 'success',
-                content: bridgeTx?.hash && MESSAGES.TX_CONTENT,
-                autoDismiss: true,
-            });
+            if (!approvalTx?.hash) {
+                addToast(MESSAGES.TX_SUCCESS, {
+                    appearance: 'success',
+                    content: MESSAGES.TX_CONTENT,
+                    autoDismiss: true,
+                });
+            }
         },
         onError(err: any) {
             if (err?.name !== "TransactionNotFoundError") {
@@ -236,9 +238,11 @@ const Bridge = () => {
 
     function handleSelectItem(item: ListItemType, index: number) {
         try {
-            const indexedItem = otherChainTokenList.find(el => index === el.id);
-            setInputSelect(item);
-            setOutputSelect(indexedItem as ListItemType);
+            if (item.id !== inputSelect.id) {
+                const indexedItem = otherChainTokenList.find(el => index === el.id);
+                setInputSelect(item);
+                setOutputSelect(indexedItem as ListItemType);
+            }
         } catch (err) {
             console.log(err)
         }
@@ -248,7 +252,7 @@ const Bridge = () => {
         try {
             if (isConnected) {
                 const _networkFee = feeQuery.networkFee;
-                let total = (parseFloat(formatEther(bridgeFee) + parseFloat(input ?? '0'))).toString();
+                let total = (parseFloat(formatEther(bridgeFee)) + parseFloat(input ?? '0')).toString();
                 if (chain?.id !== inputSelect.networkId) {
                     // wrong network
                     switchNetwork?.(inputSelect.networkId);
@@ -305,6 +309,7 @@ const Bridge = () => {
                         })
                     }
                 } else if (inputSelect.funcType === FUNCTION.LOCKTOKEN) {
+                    console.log({ input: parseFloat(input ?? '0'), total: total, bridgeFee: formatEther(bridgeFee) })
                     if (parseFloat(tokenBalance?.formatted as string) < parseFloat(total)) {
                         // low token balance
                         return;
@@ -418,7 +423,9 @@ const Bridge = () => {
 
     useEffect(() => {
         const _networkFee = feeQuery.networkFee;
-        let total = (parseFloat(formatEther(bridgeFee) + parseFloat(input ?? '0'))).toString();
+        let total = (parseFloat(from_wei(bridgeFee ?? '0')) + parseFloat(input ?? '0')).toString();
+        console.log({ total })
+        // let total = "0"
         if (!isConnected) {
             // metamask is not connected
             setDisabled(false);
@@ -434,7 +441,7 @@ const Bridge = () => {
             setDisabled(true);
             setBtnState(10);
         } else if (inputSelect.funcType === FUNCTION.LOCKETH) {
-            let sum = parseFloat(formatEther(bridgeFee)) + parseFloat(input ?? '0')
+            let sum = parseFloat(from_wei(bridgeFee)) + parseFloat(input ?? '0')
             if (parseFloat(ethBalance?.formatted as string) < sum) {
                 // low eth balance
                 setDisabled(true);
@@ -637,7 +644,7 @@ const Bridge = () => {
                     <LocalGasStationIcon sx={{ fontSize: '30px' }} />
                     <S.GasPriceFieldWrap>
                         <p>
-                            Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {chain?.id === NETWORKS.CHAIN_1 ? "ETH" : "WLC"}
+                            Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {inputSelect.token}
                         </p>
                         <p>
                             Network Fee = {putCommaAtPrice(formatEther(feeQuery?.networkFee), 9)} {feeQuery.networkFeeType}
