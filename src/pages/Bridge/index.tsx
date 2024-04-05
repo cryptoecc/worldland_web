@@ -27,6 +27,7 @@ import { NETWORKS } from "configs/networks";
 import { MESSAGES } from "utils/messages";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import debounce from "lodash.debounce";
+import Transactions from "./Transactions.tsx";
 
 interface FEE_QUERY {
     networkFeeType: string;
@@ -565,94 +566,96 @@ const Bridge = () => {
 
     return (
         <Layout>
-            <S.Container>
-                <S.Label>Bridge</S.Label>
-                <S.SubLabel>Transfer From</S.SubLabel>
-                <S.ParentWrap>
-                    <S.Chain>
-                        <S.ChainNameWrap>
-                            {createElement(inputSelect.networkIcon)}
-                            <S.B>
-                                {inputSelect.network}
-                            </S.B>
-                        </S.ChainNameWrap>
-                        <S.B>
-                            Balance: <span>{inputSelect.balance}</span>
-                        </S.B>
-                    </S.Chain>
-                    <S.InputWrapper>
-                        <S.TokenWrap onClick={() => setModal(prev => !prev)}>
-                            <S.SubTokenWrap>
-                                {createElement(inputSelect.tokenIcon)}
+            <S.Wrapper>
+                <S.Container>
+                    <S.Label>Bridge</S.Label>
+                    <S.SubLabel>Transfer From</S.SubLabel>
+                    <S.ParentWrap>
+                        <S.Chain>
+                            <S.ChainNameWrap>
+                                {createElement(inputSelect.networkIcon)}
                                 <S.B>
-                                    {inputSelect.token}
+                                    {inputSelect.network}
                                 </S.B>
-                            </S.SubTokenWrap>
-                            {createElement(DownArrowIcon)}
-                            <span></span>
-                        </S.TokenWrap>
-                        <S.Input
-                            type="number"
-                            pattern="^[0-9]*[.,]?[0.9]*$"
-                            min="0.00001"
-                            autoComplete="off"
-                            placeholder="0.0000"
-                            value={input}
-                            onChange={handleEvent}
-                        />
-                        <S.MaxBtn onClick={setInputToMax}>Max</S.MaxBtn>
-                    </S.InputWrapper>
-                </S.ParentWrap>
-                <S.ToggleIconHolder>
-                    <S.ToggleIconWrap onClick={toggleChain}>
-                        {createElement(BridgeModeToggleIcon)}
-                    </S.ToggleIconWrap>
-                </S.ToggleIconHolder>
-                <S.SubLabel>Transfer To</S.SubLabel>
-                <S.ParentWrap>
-                    <S.Chain>
-                        <S.ChainNameWrap>
-                            {createElement(outputSelect.networkIcon)}
+                            </S.ChainNameWrap>
                             <S.B>
-                                {outputSelect.network}
+                                Balance: <span>{inputSelect.balance}</span>
                             </S.B>
-                        </S.ChainNameWrap>
-                        <S.B>
-                            Balance: <span>{outputSelect.balance}</span>
-                        </S.B>
-                    </S.Chain>
-                    <S.Span />
-                    <S.Chain>
-                        {/* {createElement(outputSelect.networkIcon)} */}
-                        <S.B>
-                            To:
-                        </S.B>
-                        <S.AddressInput
-                            type="text"
-                            autoComplete="off"
-                            placeholder="0x000"
-                            value={toAddress}
-                            onChange={handleToEvent}
-                        />
-                    </S.Chain>
-                </S.ParentWrap>
-                <S.Button disabled={disabled} onClick={handleFunctionSelector}>
-                    {handleBtnState(btnState, inputSelect)}
-                </S.Button>
-                {modal && <SelectList tokenList={thisChainTokenList} setInputSelect={handleSelectItem} modal={modal} handler={setModal} />}
-                <S.GasPriceField>
-                    <LocalGasStationIcon sx={{ fontSize: '30px' }} />
-                    <S.GasPriceFieldWrap>
-                        <p>
-                            Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {inputSelect.token}
-                        </p>
-                        <p>
-                            Network Fee = {putCommaAtPrice(formatEther(feeQuery?.networkFee), 9)} {feeQuery.networkFeeType}
-                        </p>
-                    </S.GasPriceFieldWrap>
-
-                </S.GasPriceField>
-            </S.Container>
+                        </S.Chain>
+                        <S.InputWrapper>
+                            <S.TokenWrap onClick={() => setModal(prev => !prev)}>
+                                <S.SubTokenWrap>
+                                    {createElement(inputSelect.tokenIcon)}
+                                    <S.B>
+                                        {inputSelect.token}
+                                    </S.B>
+                                </S.SubTokenWrap>
+                                {createElement(DownArrowIcon)}
+                                <span></span>
+                            </S.TokenWrap>
+                            <S.Input
+                                type="number"
+                                pattern="^[0-9]*[.,]?[0.9]*$"
+                                min="0.00001"
+                                autoComplete="off"
+                                placeholder="0.0000"
+                                value={input}
+                                onChange={handleEvent}
+                            />
+                            <S.MaxBtn onClick={setInputToMax}>Max</S.MaxBtn>
+                        </S.InputWrapper>
+                    </S.ParentWrap>
+                    <S.ToggleIconHolder>
+                        <S.ToggleIconWrap onClick={toggleChain}>
+                            {createElement(BridgeModeToggleIcon)}
+                        </S.ToggleIconWrap>
+                    </S.ToggleIconHolder>
+                    <S.SubLabel>Transfer To</S.SubLabel>
+                    <S.ParentWrap>
+                        <S.Chain>
+                            <S.ChainNameWrap>
+                                {createElement(outputSelect.networkIcon)}
+                                <S.B>
+                                    {outputSelect.network}
+                                </S.B>
+                            </S.ChainNameWrap>
+                            <S.B>
+                                Balance: <span>{outputSelect.balance}</span>
+                            </S.B>
+                        </S.Chain>
+                        <S.Span />
+                        <S.Chain>
+                            {/* {createElement(outputSelect.networkIcon)} */}
+                            <S.B>
+                                To:
+                            </S.B>
+                            <S.AddressInput
+                                type="text"
+                                autoComplete="off"
+                                placeholder="0x000"
+                                value={toAddress}
+                                onChange={handleToEvent}
+                            />
+                        </S.Chain>
+                    </S.ParentWrap>
+                    <S.Button disabled={disabled} onClick={handleFunctionSelector}>
+                        {handleBtnState(btnState, inputSelect)}
+                    </S.Button>
+                    {modal && <SelectList tokenList={thisChainTokenList} setInputSelect={handleSelectItem} modal={modal} handler={setModal} />}
+                    <S.GasPriceField>
+                        <LocalGasStationIcon sx={{ fontSize: '30px' }} />
+                        <S.GasPriceFieldWrap>
+                            <p>
+                                Bridge Fee = {putCommaAtPrice(formatEther(feeQuery?.bridgeFee), 9)} {inputSelect.token}
+                            </p>
+                            {chain?.id === NETWORKS.CHAIN_2 && <p>
+                                Network Fee = {putCommaAtPrice(formatEther(feeQuery?.networkFee), 9)} {feeQuery.networkFeeType}
+                            </p>}
+                        </S.GasPriceFieldWrap>
+                    </S.GasPriceField>
+                </S.Container>
+                <Transactions />
+            </S.Wrapper>
         </Layout>
     )
 }

@@ -1,8 +1,15 @@
 import { styled } from 'styled-components';
 import { theme } from 'style/theme';
 
-export const Container = styled.article<{ width?: string }>`
+export const Wrapper = styled.section`
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+`;
+
+export const Container = styled.article<{ width?: string }>`
   background-color: ${theme.colors.black75};
   border-radius: 20px;
   display: flex;
@@ -205,7 +212,7 @@ export const ToggleIconWrap = styled.div`
 
 export const GasPriceField = styled.section`
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
   gap: 2px;
   color: #ffffff;
