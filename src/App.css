@@ -1,6 +1,10 @@
 * {
-  font-family: 'Nunito Sans', sans-serif;
   user-select: none;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 body::-webkit-scrollbar {

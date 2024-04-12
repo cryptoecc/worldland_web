@@ -37,6 +37,7 @@ interface FEE_QUERY {
 }
 
 export type TX = {
+    id: number;
     date: string;
     txHash: string;
 }
@@ -69,7 +70,7 @@ const Bridge = () => {
 
     const [debouncedBridgeFee, setDebouncedBridgeFee] = useState<string>("");
     const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: BigInt(0), bridgeFee: BigInt(0), networkFeeType: "" });
-    const [transactions, setTransactions] = useState<TXOBJ>({ chain_1: [{ date: '', txHash: '' }], chain_2: [{ date: '', txHash: '' }] });
+    const [transactions, setTransactions] = useState<TXOBJ>({ chain_1: [], chain_2: [] });
 
 
     const { data: allowance } = useContractRead({
@@ -206,7 +207,8 @@ const Bridge = () => {
     useWaitForTransaction({
         hash: bridgeTx?.hash || approvalTx?.hash,
         staleTime: 2_000,
-        onSuccess() {
+        async onSuccess() {
+            await fetchTransactions();
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
                 content: MESSAGES.TX_SUCCESS,
@@ -220,8 +222,10 @@ const Bridge = () => {
                 });
             }
         },
-        onError(err: any) {
+        async onError(err: any) {
+            await fetchTransactions();
             if (err?.name !== "TransactionNotFoundError") {
+                await fetchTransactions();
                 addToast(MESSAGES.TX_FAIL, {
                     appearance: 'error',
                     content: err?.shortMessage,
@@ -264,12 +268,12 @@ const Bridge = () => {
         try {
             const txs = await secondaryProvider.get(`transactions/${address}`);
             const { list } = txs?.data;
-            let txs_chain_1 = [];
-            let txs_chain_2 = [];
+            let txs_chain_1: TX[] = [];
+            let txs_chain_2: TX[] = [];
             if (list.length > 0) {
                 for (let i = 0; i < list.length; i++) {
-                    txs_chain_1[i] = { date: list[i].created_at, txHash: list[i].tx_hash_c1 };
-                    txs_chain_2[i] = { date: list[i].created_at, txHash: list[i].tx_hash_c2 };
+                    txs_chain_1[i] = { id: list[i].id, date: list[i].created_at, txHash: list[i].tx_hash_c1 };
+                    txs_chain_2[i] = { id: list[i].id, date: list[i].created_at, txHash: list[i].tx_hash_c2 };
                 }
                 setTransactions({ chain_1: txs_chain_1, chain_2: txs_chain_2 });
             }
@@ -390,6 +394,7 @@ const Bridge = () => {
                         })
                     }
                 }
+                fetchTransactions();
             } else {
                 // metamask is not connected
                 open();
@@ -686,7 +691,7 @@ const Bridge = () => {
                 </S.Container>
                 <S.TxWrap>
                     <Transactions name="Sepolia Testnet Transactions" transactions={transactions.chain_1} url="https://sepolia.etherscan.io/tx" />
-                    <Transactions name="Worldland Testnet Transactions" transactions={transactions.chain_2} url="https://testscan.worldland.foundation" />
+                    <Transactions name="Worldland Testnet Transactions" transactions={transactions.chain_2} url="https://testscan.worldland.foundation/tx" />
                 </S.TxWrap>
             </S.Wrapper>
         </Layout>

@@ -17,28 +17,34 @@ interface IProps {
 
 export default function Transactions({ name, transactions, url }: IProps) {
 
-    return (
-        <TableContainer component={Paper} sx={{ height: '350px' }}>
+    return transactions.length > 0 && (
+        <TableContainer component={Paper} sx={{ maxHeight: '350px', height: '100%' }}>
+            <h1 style={{ padding: '10px', fontFamily: "Nunito Sans, sans-serif", fontWeight: '600', backgroundColor: "#bdbdbd" }}>{name}</h1>
             <Table sx={{ minWidth: 650, backgroundColor: "#D0D0D0" }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>{name}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Transaction hash</TableCell>
+                        <TableCell sx={{ fontWeight: '600', }}>Id</TableCell>
+                        <TableCell sx={{ fontWeight: '600', }}>Date</TableCell>
+                        <TableCell sx={{ fontWeight: '600', }}>Transaction hash</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {transactions.length > 0 && transactions.map((row, i) => (
+                    {transactions.map((row, i) => (
                         <TableRow
                             key={i}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
+                            <TableCell sx={{ width: '20px' }} component="th" scope="row">
+                                {row?.id}
+                            </TableCell>
                             <TableCell component="th" scope="row">
                                 {dayjs(row?.date).format('YYYY-MM-DD hh:mm:ss a')}
                             </TableCell>
-                            <Link target="_blank" to={url + `/${row?.txHash}`}><TableCell sx={{ color: '#000000', textDecoration: 'underline', '&:hover': { color: '#ff0707' } }} align="right">{row?.txHash}</TableCell></Link>
+                            <Link target="_blank" to={url + `/${row?.txHash}`}>
+                                <TableCell sx={{ width: '100%', color: '#000000', textDecoration: 'underline', '&:hover': { color: '#ff0707' } }} align="right">
+                                    {row?.txHash ? row?.txHash : 'Tx hash is not available!'}
+                                </TableCell>
+                            </Link>
                         </TableRow>
                     ))}
                 </TableBody>
