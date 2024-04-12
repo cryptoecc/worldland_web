@@ -28,11 +28,21 @@ import { MESSAGES } from "utils/messages";
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import debounce from "lodash.debounce";
 import Transactions from "./Transactions.tsx";
+import { secondaryProvider } from "configs/axios";
 
 interface FEE_QUERY {
     networkFeeType: string;
     networkFee: bigint;
     bridgeFee: bigint;
+}
+
+export type TX = {
+    date: string;
+    txHash: string;
+}
+interface TXOBJ {
+    chain_1: TX[];
+    chain_2: TX[];
 }
 
 const Bridge = () => {
@@ -59,6 +69,7 @@ const Bridge = () => {
 
     const [debouncedBridgeFee, setDebouncedBridgeFee] = useState<string>("");
     const [feeQuery, setFeeQuery] = useState<FEE_QUERY>({ networkFee: BigInt(0), bridgeFee: BigInt(0), networkFeeType: "" });
+    const [transactions, setTransactions] = useState<TXOBJ>({ chain_1: [{ date: '', txHash: '' }], chain_2: [{ date: '', txHash: '' }] });
 
 
     const { data: allowance } = useContractRead({
@@ -249,6 +260,24 @@ const Bridge = () => {
         }
     }
 
+    async function fetchTransactions() {
+        try {
+            const txs = await secondaryProvider.get(`transactions/${address}`);
+            const { list } = txs?.data;
+            let txs_chain_1 = [];
+            let txs_chain_2 = [];
+            if (list.length > 0) {
+                for (let i = 0; i < list.length; i++) {
+                    txs_chain_1[i] = { date: list[i].created_at, txHash: list[i].tx_hash_c1 };
+                    txs_chain_2[i] = { date: list[i].created_at, txHash: list[i].tx_hash_c2 };
+                }
+                setTransactions({ chain_1: txs_chain_1, chain_2: txs_chain_2 });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     async function handleFunctionSelector() {
         try {
             if (isConnected) {
@@ -394,6 +423,7 @@ const Bridge = () => {
 
     useEffect(() => {
         if (isConnected) {
+            fetchTransactions();
             switch (chain?.id) {
                 case NETWORKS.CHAIN_1:
                     setInputSelect(bridgeSelectListETH[0]);
@@ -654,7 +684,10 @@ const Bridge = () => {
                         </S.GasPriceFieldWrap>
                     </S.GasPriceField>
                 </S.Container>
-                <Transactions />
+                <S.TxWrap>
+                    <Transactions name="Sepolia Testnet Transactions" transactions={transactions.chain_1} url="https://sepolia.etherscan.io/tx" />
+                    <Transactions name="Worldland Testnet Transactions" transactions={transactions.chain_2} url="https://testscan.worldland.foundation" />
+                </S.TxWrap>
             </S.Wrapper>
         </Layout>
     )

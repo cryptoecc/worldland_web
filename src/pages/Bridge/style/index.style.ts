@@ -24,6 +24,14 @@ export const Container = styled.article<{ width?: string }>`
   user-select: none;
 `;
 
+export const TxWrap = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+`;
+
 export const LabelWrap = styled.section`
   display: flex;
   align-items: center;

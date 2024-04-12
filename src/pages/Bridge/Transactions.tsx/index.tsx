@@ -5,29 +5,24 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { TX } from '../index';
+import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
-function createData(
-    name: string,
-    calories: string,
-) {
-    return { name, calories };
+interface IProps {
+    name: string;
+    transactions: TX[];
+    url: string;
 }
 
-const rows = [
-    createData('2024.04.04', '0x5ca5716f2fd11fbc4382f82ceb79d3dc2873656a8ddf7229833b44e7bdfcf58e'),
-    createData('2024.04.04', '0x5ca5716f2fd11fbc4382f82ceb79d3dc2873656a8ddf7229833b44e7bdfcf58e'),
-    createData('2024.04.04', '0x5ca5716f2fd11fbc4382f82ceb79d3dc2873656a8ddf7229833b44e7bdfcf58e'),
-    createData('2024.04.04', '0x5ca5716f2fd11fbc4382f82ceb79d3dc2873656a8ddf7229833b44e7bdfcf58e'),
+export default function Transactions({ name, transactions, url }: IProps) {
 
-];
-
-export default function Transactions() {
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ height: '350px' }}>
             <Table sx={{ minWidth: 650, backgroundColor: "#D0D0D0" }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Sepolia Testnet Transactions</TableCell>
+                        <TableCell>{name}</TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell>Date</TableCell>
@@ -35,15 +30,15 @@ export default function Transactions() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
+                    {transactions.length > 0 && transactions.map((row, i) => (
                         <TableRow
-                            key={row.name}
+                            key={i}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
                             <TableCell component="th" scope="row">
-                                {row.name}
+                                {dayjs(row?.date).format('YYYY-MM-DD hh:mm:ss a')}
                             </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
+                            <Link target="_blank" to={url + `/${row?.txHash}`}><TableCell sx={{ color: '#000000', textDecoration: 'underline', '&:hover': { color: '#ff0707' } }} align="right">{row?.txHash}</TableCell></Link>
                         </TableRow>
                     ))}
                 </TableBody>
