@@ -10,8 +10,8 @@ const Main = () => {
     <>
       <MainDashboard />
       <MainStatistics />
+      <MainCodeWord />
       <MainAreaChart />
-      {/* <MainCodeWord /> */}
       <MainData />
       <MainPartner />
     </>

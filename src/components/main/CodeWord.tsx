@@ -8,16 +8,11 @@ const MainCodeWord = () => {
 
   return (
     <ChartContainer>
-      <DetailDescription>CodeWord</DetailDescription>
+      <DetailDescription>The number of nodes is 10^y</DetailDescription>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={codeWord}>
           <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}일`} />
-          <YAxis
-            dataKey="codeword_difficulty"
-            tick={{ fontSize: 14 }}
-            tickFormatter={(value) => `${value}`}
-            domain={[120, 160]}
-          />
+          <YAxis dataKey="data" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}`} domain={[0, 6]} />
           <CartesianGrid stroke="none" />
           <Tooltip />
           <Legend />
@@ -29,7 +24,7 @@ const MainCodeWord = () => {
           </defs>
           <Line
             type="monotone"
-            dataKey="codeword_difficulty"
+            dataKey="data"
             stroke="silver" // 파란색으로 변경
             strokeWidth={3.5}
             dot={false}
@@ -43,7 +38,7 @@ const MainCodeWord = () => {
 
       <DetailDescription>
         {/* Active Nodes : Node Counts that have successfully mined more than once on the Worldland Network in 2 Month. */}
-        CodeWord : Validated solution to the cryptopuzzle for this block.
+        {/* CodeWord : Validated solution to the cryptopuzzle for this block. */}
       </DetailDescription>
       <br />
     </ChartContainer>

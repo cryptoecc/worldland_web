@@ -15,7 +15,7 @@ const getCodeWord = gql`
     codeWord {
       id
       date
-      codeword_difficulty
+      data
     }
   }
 `;
