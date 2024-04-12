@@ -214,14 +214,14 @@ const HamburgerBtn = () => {
           {menuState.community && (
             <Dropdown>
               <div className="user-menu">
-                <a
+                {/* <a
                   href="https://demo.snapshot.org/#/worldlandtest.eth#/worldlandtest.eth"
                   className="user"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   DAO
-                </a>
+                </a> */}
                 <a
                   href="https://medium.com/@worldland-official"
                   className="user"
