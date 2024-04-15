@@ -33,7 +33,7 @@ const MainAreaChart = () => {
 
   return (
     <ChartContainer>
-      <DetailDescription>Active Nodes</DetailDescription>
+      <DetailDescription>Active Nodes Wallets</DetailDescription>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={nodeCount}>
           <XAxis dataKey="date" tick={{ fontSize: 12 }} tickFormatter={(value) => `${value}`} />
@@ -62,7 +62,8 @@ const MainAreaChart = () => {
       <br />
 
       <DetailDescription>
-        Active Nodes : Active nodes are a number of nodes which have successfully mined at least once in seven days.
+        Active Nodes Wallets : These wallets beloning to the nodes which have successully minded at least once within
+        the last seven-day period.
         {/* Active Nodes : The number of mining nodes on the Worldland network. */}
       </DetailDescription>
       <br />
