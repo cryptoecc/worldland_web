@@ -8,7 +8,7 @@ const MainCodeWord = () => {
 
   return (
     <ChartContainer>
-      <DetailDescription>The number of nodes is 10^y</DetailDescription>
+      <DetailDescription>The estimated number of mining nodes is 10^y based on difficulty.</DetailDescription>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={codeWord}>
           <XAxis dataKey="date" tick={{ fontSize: 14 }} tickFormatter={(value) => `${value}일`} />
