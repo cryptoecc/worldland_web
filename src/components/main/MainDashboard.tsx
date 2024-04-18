@@ -27,7 +27,8 @@ const MainDashboard = () => {
           <ButtonContainer>
             <LearnBtn to="https://worldland.foundation/learn">Learn</LearnBtn>
             <DocsBtn to="https://docs.worldland.foundation/">Docs</DocsBtn>
-            <PdfBtn href="/WorldLand_Flier_V2_Word_English.pdf" download={'WorldLand_Flier.pdf'}>
+            {/* <PdfBtn href="/WorldLand_Flier_V2_Word_English.pdf" download={'WorldLand_Flier.pdf'}> */}
+            <PdfBtn href="/WorldLand_Whitepaper_fv1.pdf" download={'WorldLand_Whitepaper.pdf'}>
               About Us
             </PdfBtn>
           </ButtonContainer>
