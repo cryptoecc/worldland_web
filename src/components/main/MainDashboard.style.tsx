@@ -135,6 +135,8 @@ const ButtonContainer = styled.div`
 
 const LearnBtn = styled(Link)`
   display: flex;
+  width: 145px;
+  text-align: center;
   padding: 12px 24px;
   flex-direction: column;
   border-radius: 6px;
@@ -156,6 +158,8 @@ const LearnBtn = styled(Link)`
 
 const DocsBtn = styled(Link)`
   display: flex;
+  width: 145px;
+  text-align: center;
   padding: 12px 24px;
   flex-direction: column;
   border-radius: 6px;
@@ -178,10 +182,36 @@ const DocsBtn = styled(Link)`
 
 const PdfBtn = styled.a`
   display: flex;
+  width: 145px;
+  text-align: center;
   padding: 12px 24px;
   flex-direction: column;
   border-radius: 6px;
   background: #f4f4f4;
+  font-family: 'Inter';
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+  text-decoration: none; /* Add this to remove underline */
+
+  &:hover {
+    background-color: ${theme.colors.white80};
+    color: ${theme.colors.white};
+    transition:
+      color 0.3s,
+      background 0.3s;
+  }
+`;
+
+const WhiteBtn = styled.a`
+  display: flex;
+  width: 145px;
+  text-align: center;
+  padding: 12px 24px;
+  flex-direction: column;
+  border-radius: 6px;
+  border: 1px solid #f4f4f4;
+  color: #f4f4f4;
   font-family: 'Inter';
   font-size: 16px;
   font-weight: 600;
@@ -209,4 +239,5 @@ export {
   DocsBtn,
   LearnBtn,
   PdfBtn,
+  WhiteBtn,
 };

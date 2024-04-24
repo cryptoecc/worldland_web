@@ -10,6 +10,7 @@ import {
   DocsBtn,
   LearnBtn,
   PdfBtn,
+  WhiteBtn,
 } from './MainDashboard.style';
 
 const MainDashboard = () => {
@@ -28,11 +29,15 @@ const MainDashboard = () => {
             <LearnBtn to="https://worldland.foundation/learn">Learn</LearnBtn>
             <DocsBtn to="https://docs.worldland.foundation/">Docs</DocsBtn>
             {/* <PdfBtn href="/WorldLand_Flier_V2_Word_English.pdf" download={'WorldLand_Flier.pdf'}> */}
-            <PdfBtn href="/WorldLand_Whitepaper_fv1.pdf" download={'WorldLand_Whitepaper.pdf'}>
+            <PdfBtn href="/WorldLand_Flier.pdf" download={'WorldLand_Flier.pdf'}>
               About Us
             </PdfBtn>
+            <WhiteBtn href="/WorldLand_Whitepaper.pdf" download={'WorldLand_Whitepaper.pdf'}>
+              White Paper
+            </WhiteBtn>
           </ButtonContainer>
         </TextContainer>
+
         <VideoContainer>
           <Video autoPlay loop muted playsInline>
             <source src="/videos/MainVideo.mp4" />
