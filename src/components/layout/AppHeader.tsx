@@ -25,7 +25,6 @@ const HeaderWrapper = styled.header`
   align-items: center;
   user-select: none;
   width: 100%;
- 
 
   ${maxQuery.tablet} {
     flex-direction: row;
