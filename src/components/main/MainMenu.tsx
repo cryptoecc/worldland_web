@@ -158,10 +158,10 @@ const MainMenu = () => {
           <CommunityDropdown className="community" data-isvisible={activeMenu === 'Community'}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <SpaceLink
-                // href="https://demo.snapshot.org/#/worldlandtest.eth#/worldlandtest.eth"
-                // target="_blank"
+                href="https://dao.worldland.foundation"
+                target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => handleLinkClick('서비스 준비중입니다.')} // DAO Vote 버튼 클릭 시 handleLinkClick 함수 실행
+                // onClick={() => handleLinkClick('서비스 준비중입니다.')} // DAO Vote 버튼 클릭 시 handleLinkClick 함수 실행
               >
                 <Strong>DAO Vote</Strong>
               </SpaceLink>

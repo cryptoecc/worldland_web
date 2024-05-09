@@ -117,6 +117,7 @@ const ButtonContainer = styled.div`
   display: flex;
   gap: 16px;
   justify-content: center;
+  align-items: center;
   order: 1;
   margin-top: 20px;
 
@@ -205,7 +206,7 @@ const PdfBtn = styled.a`
 
 const WhiteBtn = styled.a`
   display: flex;
-  width: 145px;
+  width: 150px;
   text-align: center;
   padding: 12px 24px;
   flex-direction: column;
