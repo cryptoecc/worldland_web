@@ -201,7 +201,7 @@ const AppEvent = () => {
 
   // 하드포크 D-day까지의 남은 시간 계산
   const calculateTimeLeft = async () => {
-    const targetBlock = 2456000;
+    const targetBlock = 2525000;
     const blocksPerDay = 10022;
     const secondsPerDay = 24 * 60 * 60;
     const latestBlockNumber = await web3.eth.getBlockNumber();
