@@ -5,7 +5,7 @@ import { theme } from 'style/theme';
 import { web3 } from 'components/web3/useWeb3';
 
 const EventContainer = styled.div`
-  /* position: fixed; */
+  position: fixed;
   width: 100%;
   margin-top: 60px;
   display: flex;
@@ -29,7 +29,7 @@ const EventContainer = styled.div`
 `;
 
 const EventContainer2 = styled.div`
-  /* position: fixed; */
+  position: fixed;
   width: 100%;
   margin-top: 65px;
   display: flex;

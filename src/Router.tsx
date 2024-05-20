@@ -19,10 +19,8 @@ import AddLiquidity from 'pages/Pool/AddLiquidity';
 import Contact from 'pages/Contact';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
-import Admin from 'pages/Admin';
-import AdminBoard from 'pages/Admin/AdminBoard';
-import Airdrop from 'pages/Airdrop';
-import User from 'pages/Airdrop/User';
+import Timelock from 'pages/Timelock';
+import User from 'pages/Timelock/User';
 import ProtectedRoute from 'pages/ProtectedRoute';
 
 const Router = () => {
@@ -55,8 +53,8 @@ const Router = () => {
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.ADMIN}`, element: <ProtectedRoute /> },
-        { path: `${PATH.AIRDROP_LIST}`, element: <Airdrop /> },
-        { path: `${PATH.AIRDROP_USER}`, element: <User /> },
+        { path: `${PATH.TIMELOCK_LIST}`, element: <Timelock /> },
+        { path: `${PATH.TIMELOCK_USER}`, element: <User /> },
       ],
     },
   ]);

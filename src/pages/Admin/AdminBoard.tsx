@@ -60,6 +60,7 @@ export const initialContractObj = {
   timestampSet: false,
   availAmount: '0',
   userBalance: '0',
+  userNftBalance: '0'
 };
 
 const Container = styled.section`
@@ -145,28 +146,25 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     createData('Contract Balance', contract?.balance + ' WL'),
     createData(
       'Initial Timestamp',
-      `${contract?.initialTimestamp} ${
-        contract.initialTimestamp
-          ? contract?.initialTimestamp === '-'
-            ? ''
-            : '(' + dayjs(contract.initialTimestamp).fromNow() + ')'
-          : ''
+      `${contract?.initialTimestamp} ${contract.initialTimestamp
+        ? contract?.initialTimestamp === '-'
+          ? ''
+          : '(' + dayjs(contract.initialTimestamp).fromNow() + ')'
+        : ''
       }`,
     ),
     createData(
       'Lock Time Ending',
-      `${contract?.cliffEdge} ${
-        contract.cliffEdge ? (contract?.cliffEdge === '-' ? '' : '(' + dayjs(contract.cliffEdge).fromNow() + ')') : ''
+      `${contract?.cliffEdge} ${contract.cliffEdge ? (contract?.cliffEdge === '-' ? '' : '(' + dayjs(contract.cliffEdge).fromNow() + ')') : ''
       }`,
     ),
     createData(
       'Final Release Time Ending',
-      `${contract?.releaseEdge} ${
-        contract.releaseEdge
-          ? contract?.releaseEdge === '-'
-            ? ''
-            : '(' + dayjs(contract.releaseEdge).fromNow() + ')'
-          : ''
+      `${contract?.releaseEdge} ${contract.releaseEdge
+        ? contract?.releaseEdge === '-'
+          ? ''
+          : '(' + dayjs(contract.releaseEdge).fromNow() + ')'
+        : ''
       }`,
     ),
     createData('Timestamp Status', _timestampSet),

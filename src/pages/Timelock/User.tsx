@@ -20,10 +20,12 @@ import { useParams } from "react-router-dom";
 import { Button } from '@mui/material';
 import { MESSAGES } from 'utils/messages';
 import { useToasts } from 'react-toast-notifications';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 
 interface UserInfo extends Contract {
     availAmount?: string;
     userBalance?: string;
+    userNftBalance: string;
 }
 
 
@@ -46,6 +48,8 @@ const User = () => {
     const rows = [
         createData('Contract Owner', contract?.owner),
         createData('Timelock Contract Address', contract_address as string),
+        createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
+        createData('NFT Ownership', contract?.userNftBalance),
         createData('Contract Balance', contract?.balance + ' WL'),
         createData('My assigned balance in the contract', contract?.userBalance + ' WL'),
         createData('Available amount to withdraw', contract?.availAmount + ' WL'),
@@ -55,11 +59,29 @@ const User = () => {
         createData('Timestamp Status', _timestampSet)
     ]
     useContractRead({
+        address: MAPNETTOADDRESS.ERC721_WNFTMINTER,
+        abi: MAP_STR_ABI[ABI.ERC721_WNFTMINTER],
+        functionName: QUERY.BALANCEOF,
+        watch: true,
+        onSuccess(data: string) {
+            setContract((prev) => ({ ...prev, userNftBalance: data }));
+        },
+    });
+    useContractRead({
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
         functionName: QUERY.OWNER,
         onSuccess(data: string) {
             setContract((prev) => ({ ...prev, owner: data }));
+        },
+    });
+    useContractRead({
+        address: contract_address as `0x${string}`,
+        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+        functionName: QUERY.TIMESTAMPISSET,
+        watch: true,
+        onSuccess(data: boolean) {
+            setContract((prev) => ({ ...prev, timestampSet: data }));
         },
     });
     useContractRead({
@@ -191,7 +213,7 @@ const User = () => {
         <Container>
             <Content>
                 <Description>
-                    <h1>Airdrop page | Linear Timelock Smart Contract</h1>
+                    <h1>Linear Timelock Smart Contract</h1>
                     <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
                 </Description>
                 <CustomTable rows={rows} />

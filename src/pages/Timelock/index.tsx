@@ -24,7 +24,7 @@ const rows = [
     createData('Merit Awardees', '0x1c174eeC2da7Ad57A9D551436fbA5f918b53fEA0', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
 ];
 
-export default function Airdrop() {
+export default function Timelock() {
     const navigate = useNavigate();
     return (
         <Container>
@@ -49,7 +49,7 @@ export default function Airdrop() {
                             <TableRow
                                 key={i}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 }, 'td, th': { cursor: 'pointer' }, ':hover': { backgroundColor: '#f4f4f4' } }}
-                                onClick={() => navigate(`/airdrop/timelock-contracts/${row.address}`)}
+                                onClick={() => navigate(`/timelock-contracts/${row.address}`)}
                             >
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell component="th" scope="row">

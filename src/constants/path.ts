@@ -20,6 +20,6 @@ export const PATH = {
   CONTACT: '/contact',
   CHART: '/chart',
   ADMIN: '/wl-admin',
-  AIRDROP_LIST: '/airdrop/timelock-contracts',
-  AIRDROP_USER: '/airdrop/timelock-contracts/:contract_address',
+  TIMELOCK_LIST: '/timelock-contracts',
+  TIMELOCK_USER: '/timelock-contracts/:contract_address',
 };
