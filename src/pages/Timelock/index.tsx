@@ -21,7 +21,7 @@ function createData(
 }
 
 const rows = [
-    createData('Merit Awardees', '0x1c174eeC2da7Ad57A9D551436fbA5f918b53fEA0', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
+    createData('Merit Awardees', '0xB4353C722190Af1cB50f6373907754675F59d70a', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
 ];
 
 export default function Timelock() {
