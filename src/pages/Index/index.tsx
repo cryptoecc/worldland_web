@@ -7,7 +7,7 @@ const Index = () => {
   return (
     <>
       <AppHeader />
-      <AppEvent />
+      {/* <AppEvent /> */}
       <Outlet />
       <AppFooter />
     </>
