@@ -33,6 +33,7 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import { EPS } from 'constants/api-routes';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 export interface Contract {
   balance: string;
   owner: string;
@@ -172,15 +173,17 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     },
   });
 
+  // main contract ERC20 balance check
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.CONTRACTBALANCE,
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: QUERY.BALANCEOF,
+    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK],
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }));
-    },
-  });
+      setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
+    }
+  })
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -212,10 +215,10 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   });
 
   const { data: txWLDeposited, write: depositWL } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: FUNCTION.DEPOSITWL,
-    value: parseEther(inputAmount),
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: FUNCTION.TRANSFER,
+    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK, parseEther(inputAmount)],
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',

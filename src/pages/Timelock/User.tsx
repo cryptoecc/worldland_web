@@ -69,6 +69,17 @@ const User = () => {
         createData('My Lock Time Duration', `${userData?.cliffEdge} ${userData.cliffEdge ? userData?.cliffEdge === '-' ? "" : "(" + dayjs(userData.cliffEdge).fromNow() + ")" : ""}`),
         createData('My Vesting Time Duration', `${userData?.releaseEdge} ${userData.releaseEdge ? userData?.releaseEdge === '-' ? "" : "(" + dayjs(userData.releaseEdge).fromNow() + ")" : ""}`),
     ]
+    // main contract ERC20 balance check
+    useContractRead({
+        address: MAPNETTOADDRESS.ERC20_WWLC,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: QUERY.BALANCEOF,
+        args: [contract_address],
+        watch: true,
+        onSuccess(data) {
+            setUserData((prev) => ({ ...prev, balance: from_wei(data?.toString()) }))
+        }
+    })
     useContractRead({
         address: MAPNETTOADDRESS.ERC721_WNFTMINTER,
         abi: MAP_STR_ABI[ABI.ERC721_WNFTMINTER],
@@ -76,7 +87,6 @@ const User = () => {
         args: [address],
         watch: true,
         onSuccess(data: string) {
-            console.log({ NFTOWNERSHIP: data })
             setUserData((prev) => ({ ...prev, userNftBalance: data.toString() }));
         },
     });

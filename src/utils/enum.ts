@@ -59,6 +59,7 @@ export enum FUNCTION {
   TOKEN0 = 'token0',
   TOKEN1 = 'token1',
   TOTALSUPPLY = 'totalSupply',
+  TRANSFER = 'transfer',
   GETRESERVES = 'getReserves',
   LOCKETH = 'lockETH',
   BURNWETH = 'burnWETH',
