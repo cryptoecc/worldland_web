@@ -50,3 +50,45 @@ export function handleBtnState(state: number, token?: ListItemType | null) {
 export function testInput(val: string) {
   return /^[0-9]*[.,]?[0-9]*$/.test(val);
 }
+
+// 홀수 자리 마스킹
+export const replaceOddIndexCharacters = (inputStr: string): string => {
+  let newStr: string = '';
+
+  for (let i = 0; i < inputStr.length; i++) {
+    if (i % 2 == 1) {
+      newStr += '*';
+    } else {
+      newStr += inputStr.charAt(i);
+    }
+  }
+
+  return newStr;
+};
+
+// email 규칙 체크
+export const validateEmail = (email: string): boolean => {
+  const regExp =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regExp.test(String(email).toLowerCase());
+};
+
+// 8자 이상, 영문, 숫자, 특수문자를 최소 한가지씩 조합
+export const validatePassword = (pw: string): boolean => {
+  const regExp = /(?=.*[0-9]{1,})(?=.*[~`!@#$%\^&*()-+=]{1,})(?=.*[a-zA-Z]{1,}).{8,}$/;
+
+  return regExp.test(pw); // 형식에 맞는 경우 true 리턴
+};
+
+export const validatePIN = (pin: string): boolean => {
+  const regExp = /[0-9]{6,6}$/;
+
+  return regExp.test(pin); // 형식에 맞는 경우 true 리턴
+};
+
+// 숫자
+export const validateOnlyNumber = (pin: string): boolean => {
+  const regExp = /^[0-9]*$/;
+
+  return regExp.test(pin); // 형식에 맞는 경우 true 리턴
+};
