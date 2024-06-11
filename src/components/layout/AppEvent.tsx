@@ -201,7 +201,7 @@ const AppEvent = () => {
 
   // 하드포크 D-day까지의 남은 시간 계산
   const calculateTimeLeft = async () => {
-    const targetBlock = 2525000;
+    const targetBlock = 2520000;
     const blocksPerDay = 10022;
     const secondsPerDay = 24 * 60 * 60;
     const latestBlockNumber = await web3.eth.getBlockNumber();
@@ -250,7 +250,7 @@ const AppEvent = () => {
       <EventContainer2>
         <EventBox>
           <Text2>The Annapurna Hardfork has been completed!</Text2>
-          <LastButton href="https://worldland-official.medium.com/worldland-annapurna-hard-fork-notice-da6c3166087d">
+          <LastButton href="https://worldland-official.medium.com/important-node-required-update-annapurna-hardfork-block-changed-a031dbd26a3a">
             Get Latest Node
             <span style={{ fontSize: '18px', marginTop: '10px', fontWeight: '500' }}> → </span>
           </LastButton>
@@ -275,8 +275,8 @@ const AppEvent = () => {
             </TimeLeft>
           </DTime>
           <ButtonDiv>
-            <Button href="https://worldland-official.medium.com/worldland-annapurna-hard-fork-notice-da6c3166087d">
-              About Annapurna
+            <Button href="https://worldland-official.medium.com/important-node-required-update-annapurna-hardfork-block-changed-a031dbd26a3a">
+              Get Latest Node
             </Button>
           </ButtonDiv>
         </TimeDiv>
