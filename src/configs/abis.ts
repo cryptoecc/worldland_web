@@ -15,6 +15,7 @@ import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 
 //linear-timelock abi
 import { abi as LINEAR_TIMELOCK } from './contract-abi/timelock_abi';
+import { abi as ERC721_WNFTMINTER } from './contract-abi/erc721_wnftminter_abi';
 
 export const MAP_STR_ABI = {
   ETHEREUM_BRIDGE_ABI,
@@ -29,4 +30,5 @@ export const MAP_STR_ABI = {
   LVSWAPV2_PAIR,
   BRIDGEBASE_ABI,
   LINEAR_TIMELOCK,
+  ERC721_WNFTMINTER,
 };

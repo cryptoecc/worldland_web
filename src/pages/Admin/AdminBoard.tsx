@@ -33,14 +33,11 @@ import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import { EPS } from 'constants/api-routes';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 export interface Contract {
   balance: string;
-  cliffEdge: string;
-  releaseEdge: string;
-  initialTimestamp: string;
   owner: string;
   isAllIncomingDepositsFinalised: boolean;
-  timestampSet: boolean;
 }
 
 export interface UserData {
@@ -52,14 +49,8 @@ export interface UserData {
 
 export const initialContractObj = {
   balance: '0',
-  cliffEdge: '',
-  releaseEdge: '',
-  initialTimestamp: '',
   owner: '',
   isAllIncomingDepositsFinalised: false,
-  timestampSet: false,
-  availAmount: '0',
-  userBalance: '0',
 };
 
 const Container = styled.section`
@@ -136,40 +127,10 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   const [contract, setContract] = useState<Contract>(initialContractObj);
   const [modals, setModals] = useState<Modals>({ modal0: false, modal1: false });
   const { addToast } = useToasts();
-  const navigate = useNavigate();
-
-  let _timestampSet = contract.timestampSet ? 'Has been set up!' : 'Is not set!';
   const rows = [
     createData('Contract Owner', contract?.owner),
     createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]),
     createData('Contract Balance', contract?.balance + ' WL'),
-    createData(
-      'Initial Timestamp',
-      `${contract?.initialTimestamp} ${
-        contract.initialTimestamp
-          ? contract?.initialTimestamp === '-'
-            ? ''
-            : '(' + dayjs(contract.initialTimestamp).fromNow() + ')'
-          : ''
-      }`,
-    ),
-    createData(
-      'Lock Time Ending',
-      `${contract?.cliffEdge} ${
-        contract.cliffEdge ? (contract?.cliffEdge === '-' ? '' : '(' + dayjs(contract.cliffEdge).fromNow() + ')') : ''
-      }`,
-    ),
-    createData(
-      'Final Release Time Ending',
-      `${contract?.releaseEdge} ${
-        contract.releaseEdge
-          ? contract?.releaseEdge === '-'
-            ? ''
-            : '(' + dayjs(contract.releaseEdge).fromNow() + ')'
-          : ''
-      }`,
-    ),
-    createData('Timestamp Status', _timestampSet),
   ];
 
   function handleRemoveAuthToken() {
@@ -211,55 +172,18 @@ const AdminBoard = ({ token, setToken }: IProps) => {
       setContract((prev) => ({ ...prev, owner: data }));
     },
   });
-  useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.TIMESTAMPISSET,
-    watch: true,
-    onSuccess(data: boolean) {
-      setContract((prev) => ({ ...prev, timestampSet: data }));
-    },
-  });
 
+  // main contract ERC20 balance check
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.INITIALTIMESTAMP,
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: QUERY.BALANCEOF,
+    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK],
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
-    },
-  });
-
-  useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.CLIFFEDGE,
-    watch: true,
-    onSuccess(data) {
-      setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
-    },
-  });
-
-  useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.RELEASEEDGE,
-    watch: true,
-    onSuccess(data) {
-      setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }));
-    },
-  });
-
-  useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: QUERY.CONTRACTBALANCE,
-    watch: true,
-    onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }));
-    },
-  });
+      setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
+    }
+  })
 
   useContractRead({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
@@ -291,10 +215,10 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   });
 
   const { data: txWLDeposited, write: depositWL } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-    functionName: FUNCTION.DEPOSITWL,
-    value: parseEther(inputAmount),
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: FUNCTION.TRANSFER,
+    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK, parseEther(inputAmount)],
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
@@ -335,13 +259,6 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         addToast(MESSAGES.TX_FAIL, {
           appearance: 'error',
           content: MESSAGES.LOW_CONTRACT_BALANCE,
-          autoDismiss: true,
-        });
-        setModals((prev) => ({ ...prev, modal0: false }));
-      } else if (!contract.timestampSet) {
-        addToast(MESSAGES.TX_FAIL, {
-          appearance: 'error',
-          content: MESSAGES.NO_TIMESTAMP,
           autoDismiss: true,
         });
         setModals((prev) => ({ ...prev, modal0: false }));
@@ -386,7 +303,6 @@ const AdminBoard = ({ token, setToken }: IProps) => {
             Deposit WL
           </Button>
         </BtnWrap>
-        <SetTimestamp isTimestampSet={contract.timestampSet} />
         <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
         <BtnWrap>
           <Button

@@ -19,10 +19,8 @@ import AddLiquidity from 'pages/Pool/AddLiquidity';
 import Contact from 'pages/Contact';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
-import Admin from 'pages/Admin';
-import AdminBoard from 'pages/Admin/AdminBoard';
-import Airdrop from 'pages/Airdrop';
-import User from 'pages/Airdrop/User';
+import Timelock from 'pages/Timelock';
+import User from 'pages/Timelock/User';
 import ProtectedRoute from 'pages/ProtectedRoute';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
@@ -60,13 +58,8 @@ const Router = () => {
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.ADMIN}`, element: <ProtectedRoute /> },
-        { path: `${PATH.AIRDROP_LIST}`, element: <Airdrop /> },
-        { path: `${PATH.AIRDROP_USER}`, element: <User /> },
-        { path: `${PATH.LOGIN}`, element: <Login /> },
-        { path: `${PATH.REGISTER}`, element: <Register /> },
-        { path: `${PATH.CUSTOM}`, element: <CustomizedSteppers /> },
-        { path: `${PATH.FORGOT_PASSWORD}`, element: <ForgotPassword2 /> },
-        { path: `${PATH.FORGOT_EMAIL}`, element: <ForgotEmail2 /> },
+        { path: `${PATH.TIMELOCK_LIST}`, element: <Timelock /> },
+        { path: `${PATH.TIMELOCK_USER}`, element: <User /> },
       ],
     },
   ]);

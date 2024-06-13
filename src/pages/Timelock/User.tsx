@@ -20,10 +20,25 @@ import { useParams } from "react-router-dom";
 import { Button } from '@mui/material';
 import { MESSAGES } from 'utils/messages';
 import { useToasts } from 'react-toast-notifications';
+import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+
+const userInitialData = {
+    ...initialContractObj,
+    availAmount: '0',
+    userBalance: '0',
+    userNftBalance: '0',
+    initialTimestamp: '',
+    cliffEdge: '',
+    releaseEdge: ''
+}
 
 interface UserInfo extends Contract {
     availAmount?: string;
     userBalance?: string;
+    userNftBalance: string;
+    initialTimestamp: string;
+    cliffEdge: string;
+    releaseEdge: string;
 }
 
 
@@ -40,74 +55,58 @@ const User = () => {
     const { address } = useAccount();
     const { addToast } = useToasts();
     const { contract_address } = useParams();
-    const [contract, setContract] = useState<UserInfo>(initialContractObj)
+    const [userData, setUserData] = useState<UserInfo>(userInitialData);
     const [disabled, setDisabled] = useState<boolean>(true);
-    let _timestampSet = contract.timestampSet ? 'Has been set up!' : "Is not set!"
     const rows = [
-        createData('Contract Owner', contract?.owner),
+        createData('Contract Owner', userData?.owner),
         createData('Timelock Contract Address', contract_address as string),
-        createData('Contract Balance', contract?.balance + ' WL'),
-        createData('My assigned balance in the contract', contract?.userBalance + ' WL'),
-        createData('Available amount to withdraw', contract?.availAmount + ' WL'),
-        createData('Initial Timestamp', `${contract?.initialTimestamp} ${contract.initialTimestamp ? contract?.initialTimestamp === '-' ? "" : "(" + dayjs(contract.initialTimestamp).fromNow() + ")" : ""}`),
-        createData('Lock Time Ending', `${contract?.cliffEdge} ${contract.cliffEdge ? contract?.cliffEdge === '-' ? "" : "(" + dayjs(contract.cliffEdge).fromNow() + ")" : ""}`),
-        createData('Final Release Time Ending', `${contract?.releaseEdge} ${contract.releaseEdge ? contract?.releaseEdge === '-' ? "" : "(" + dayjs(contract.releaseEdge).fromNow() + ")" : ""}`),
-        createData('Timestamp Status', _timestampSet)
+        createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
+        createData('NFT Ownership', userData?.userNftBalance),
+        createData('Contract Balance', userData?.balance + ' WL'),
+        createData('My assigned balance in the contract', userData?.userBalance + ' WL'),
+        createData('Available amount to withdraw', userData?.availAmount + ' WL'),
+        createData('Initial Timestamp', `${userData?.initialTimestamp} ${userData.initialTimestamp ? userData?.initialTimestamp === '-' ? "" : "(" + dayjs(userData.initialTimestamp).fromNow() + ")" : ""}`),
+        createData('My Lock Time Duration', `${userData?.cliffEdge} ${userData.cliffEdge ? userData?.cliffEdge === '-' ? "" : "(" + dayjs(userData.cliffEdge).fromNow() + ")" : ""}`),
+        createData('My Vesting Time Duration', `${userData?.releaseEdge} ${userData.releaseEdge ? userData?.releaseEdge === '-' ? "" : "(" + dayjs(userData.releaseEdge).fromNow() + ")" : ""}`),
     ]
+    // main contract ERC20 balance check
+    useContractRead({
+        address: MAPNETTOADDRESS.ERC20_WWLC,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: QUERY.BALANCEOF,
+        args: [contract_address],
+        watch: true,
+        onSuccess(data) {
+            setUserData((prev) => ({ ...prev, balance: from_wei(data?.toString()) }))
+        }
+    })
+    useContractRead({
+        address: MAPNETTOADDRESS.ERC721_WNFTMINTER,
+        abi: MAP_STR_ABI[ABI.ERC721_WNFTMINTER],
+        functionName: QUERY.BALANCEOF,
+        args: [address],
+        watch: true,
+        onSuccess(data: string) {
+            setUserData((prev) => ({ ...prev, userNftBalance: data.toString() }));
+        },
+    });
     useContractRead({
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
         functionName: QUERY.OWNER,
         onSuccess(data: string) {
-            setContract((prev) => ({ ...prev, owner: data }));
+            setUserData((prev) => ({ ...prev, owner: data }));
         },
     });
     useContractRead({
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: QUERY.TIMESTAMPISSET,
+        functionName: QUERY.TIMEPERIODS,
+        args: [address],
         watch: true,
-        onSuccess(data: boolean) {
-            setContract((prev) => ({ ...prev, timestampSet: data }));
-        },
-    });
-    useContractRead({
-        address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: QUERY.INITIALTIMESTAMP,
-        watch: true,
-        onSuccess(data) {
-            setContract((prev) => ({ ...prev, initialTimestamp: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-        }
-    })
-
-    useContractRead({
-        address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: QUERY.CLIFFEDGE,
-        watch: true,
-        onSuccess(data) {
-            setContract((prev) => ({ ...prev, cliffEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-        }
-    })
-
-    useContractRead({
-        address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: QUERY.RELEASEEDGE,
-        watch: true,
-        onSuccess(data) {
-            setContract((prev) => ({ ...prev, releaseEdge: data ? dayjs.unix(Number(data)).format(timeFormat) : '-' }))
-        }
-    })
-
-    useContractRead({
-        address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
-        functionName: QUERY.CONTRACTBALANCE,
-        watch: true,
-        onSuccess(data) {
-            setContract((prev) => ({ ...prev, balance: from_wei(data as string) ? from_wei(data as string) : '0' }))
+        onSuccess(data: any) {
+            const [_cliffEdge, _releaseEdge, _initialTimestamp] = data;
+            setUserData((prev) => ({ ...prev, initialTimestamp: _initialTimestamp ? dayjs.unix(Number(_initialTimestamp)).format(timeFormat) : '-', cliffEdge: _cliffEdge ? dayjs.unix(Number(_cliffEdge)).format(timeFormat) : '-', releaseEdge: _releaseEdge ? dayjs.unix(Number(_releaseEdge)).format(timeFormat) : '-', }))
         }
     })
     useContractRead({
@@ -117,7 +116,7 @@ const User = () => {
         args: [address],
         watch: true,
         onSuccess(data) {
-            setContract((prev) => ({ ...prev, userBalance: from_wei(data as string) ? from_wei(data as string) : '0' }))
+            setUserData((prev) => ({ ...prev, userBalance: from_wei(data as string) ? from_wei(data as string) : '0' }))
         }
     })
     useContractRead({
@@ -127,7 +126,7 @@ const User = () => {
         args: [address],
         watch: true,
         onSuccess(data) {
-            setContract((prev) => ({ ...prev, availAmount: from_wei(data as string) ? from_wei(data as string) : '0' }))
+            setUserData((prev) => ({ ...prev, availAmount: from_wei(data as string) ? from_wei(data as string) : '0' }))
             if (Number(from_wei(data as string)) > 0) {
                 setDisabled(false);
             } else {
@@ -174,7 +173,7 @@ const User = () => {
 
     async function handleWithdraw() {
         try {
-            if (Number(contract.availAmount) > 0) {
+            if (Number(userData.availAmount) > 0) {
                 withdraw();
             } else {
                 addToast(MESSAGES.NO_AVAIL_AMOUNT, {
@@ -191,8 +190,8 @@ const User = () => {
         <Container>
             <Content>
                 <Description>
-                    <h1>Airdrop page | Linear Timelock Smart Contract</h1>
-                    <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
+                    <h1>Linear Timelock Smart Contract</h1>
+                    <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the userData!</p>
                 </Description>
                 <CustomTable rows={rows} />
                 <BtnWrap>
@@ -211,6 +210,7 @@ const Container = styled.section`
     justify-content: center;
     height: 100vh;
     font-family: 'Nunito Sans', sans-serif;
+    padding-top: 50px;
 `
 
 const Content = styled.div`

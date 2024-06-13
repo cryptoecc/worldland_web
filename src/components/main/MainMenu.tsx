@@ -14,6 +14,7 @@ import {
   Learn,
   Contack,
   MenuItemWrapper,
+  SpaceSpanLink,
 } from './MainMenu.style';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -85,6 +86,11 @@ const MainMenu = () => {
                     <Strong>Run node</Strong>
                   </SpaceLink>
                   <AddNetworkButton />
+                  <SpaceSpanLink>
+                    <Link to="/timelock-contracts" target="_blank">
+                      <Strong>Timelock Contracts</Strong>
+                    </Link>
+                  </SpaceSpanLink>
                 </div>
               </div>
               <Divider></Divider>
@@ -161,7 +167,7 @@ const MainMenu = () => {
                 href="https://dao.worldland.foundation"
                 target="_blank"
                 rel="noopener noreferrer"
-                // onClick={() => handleLinkClick('서비스 준비중입니다.')} // DAO Vote 버튼 클릭 시 handleLinkClick 함수 실행
+              // onClick={() => handleLinkClick('서비스 준비중입니다.')} // DAO Vote 버튼 클릭 시 handleLinkClick 함수 실행
               >
                 <Strong>DAO Vote</Strong>
               </SpaceLink>

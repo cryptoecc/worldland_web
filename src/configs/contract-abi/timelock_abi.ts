@@ -1,6 +1,17 @@
 export const abi = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_nftContract',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
+        name: '_erc20_contract_address',
+        type: 'address',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
@@ -111,23 +122,20 @@ export const abi = [
         name: 'amounts',
         type: 'uint256[]',
       },
-    ],
-    name: 'bulkDepositTokens',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'cliffEdge',
-    outputs: [
       {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
+        internalType: 'int256[]',
+        name: 'cliffTimePeriods',
+        type: 'int256[]',
+      },
+      {
+        internalType: 'int256[]',
+        name: 'releaseTimePeriods',
+        type: 'int256[]',
       },
     ],
-    stateMutability: 'view',
+    name: 'bulkDepositTokensFeaturingTimestamp',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -155,17 +163,20 @@ export const abi = [
         name: 'amount',
         type: 'uint256',
       },
+      {
+        internalType: 'int256',
+        name: 'cliffTimePeriod',
+        type: 'int256',
+      },
+      {
+        internalType: 'int256',
+        name: 'releaseTimePeriod',
+        type: 'int256',
+      },
     ],
     name: 'depositTokens',
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'depositWL',
-    outputs: [],
-    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -196,12 +207,12 @@ export const abi = [
   },
   {
     inputs: [],
-    name: 'initialTimestamp',
+    name: 'nftContract',
     outputs: [
       {
-        internalType: 'uint256',
+        internalType: 'contract IERC721',
         name: '',
-        type: 'uint256',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -221,12 +232,28 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'releaseEdge',
+    inputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    name: 'timePeriods',
     outputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'cliffEdge',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'releaseEdge',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'initialTimestamp',
         type: 'uint256',
       },
     ],
@@ -234,31 +261,13 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'int256',
-        name: '_cliffTimePeriod',
-        type: 'int256',
-      },
-      {
-        internalType: 'int256',
-        name: '_releaseTimePeriod',
-        type: 'int256',
-      },
-    ],
-    name: 'setTimestamp',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
     inputs: [],
-    name: 'timestampSet',
+    name: 'tokenContract',
     outputs: [
       {
-        internalType: 'bool',
+        internalType: 'contract IERC20',
         name: '',
-        type: 'bool',
+        type: 'address',
       },
     ],
     stateMutability: 'view',
