@@ -19,7 +19,7 @@ export const PATH = {
   ADD: '/pool/add-liquidity',
   CONTACT: '/contact',
   CHART: '/chart',
-  ADMIN: '/wl-admin',
+  ADMIN: '/admin',
   TIMELOCK_LIST: '/timelock-contracts',
   TIMELOCK_USER: '/timelock-contracts/:contract_address',
 };
