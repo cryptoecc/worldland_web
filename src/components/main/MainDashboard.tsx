@@ -32,7 +32,7 @@ const MainDashboard = () => {
             <PdfBtn href="/WorldLand_Flier.pdf" download={'WorldLand_Flier.pdf'}>
               About Us
             </PdfBtn>
-            <WhiteBtn href="/WorldLand_Whitepaper.pdf" download={'WorldLand_Whitepaper.pdf'}>
+            <WhiteBtn href="/WorldLand_Whitepaper_V2.pdf" download={'WorldLand_Whitepaper_V2.pdf'}>
               WhitePaper
             </WhiteBtn>
           </ButtonContainer>
