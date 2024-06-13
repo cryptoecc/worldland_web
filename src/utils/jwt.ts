@@ -1,6 +1,3 @@
-import { AxiosError } from 'axios';
-import { provider } from 'configs/axios';
-
 const isTokenExpired = (token: any) => {
   if (!token) return true;
   const payload = JSON.parse(atob(token.split('.')[1]));
@@ -8,7 +5,7 @@ const isTokenExpired = (token: any) => {
   return payload.exp < now;
 };
 
-export const CheckJwt = async () => {
+export const checkJWT = async () => {
   const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {

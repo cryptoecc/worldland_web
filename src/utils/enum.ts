@@ -12,6 +12,7 @@ export enum ABI {
   LVSWAPV2_PAIR = 'LVSWAPV2_PAIR',
   BRIDGEBASE_ABI = 'BRIDGEBASE_ABI',
   LINEAR_TIMELOCK = 'LINEAR_TIMELOCK',
+  ERC721_WNFTMINTER = 'ERC721_WNFTMINTER',
 }
 
 export enum Field {
@@ -40,6 +41,7 @@ export enum CONTRACT_ADDRESSES {
   ERC20_ABI = 'ERC20_ABI',
   BRIDGE = 'BRIDGE',
   LINEAR_TIMELOCK = 'LINEAR_TIMELOCK',
+  ERC721_WNFTMINTER = 'ERC721_WNFTMINTER',
 }
 
 export enum FUNCTION {
@@ -57,13 +59,14 @@ export enum FUNCTION {
   TOKEN0 = 'token0',
   TOKEN1 = 'token1',
   TOTALSUPPLY = 'totalSupply',
+  TRANSFER = 'transfer',
   GETRESERVES = 'getReserves',
   LOCKETH = 'lockETH',
   BURNWETH = 'burnWETH',
   LOCKTOKEN = 'lockToken',
   BURNTOKEN = 'burnToken',
   SETTIMESTAMP = 'setTimestamp',
-  BULKDEPOSITTOKENS = 'bulkDepositTokens',
+  BULKDEPOSITTOKENSFEATURINGTIMESTAMP = 'bulkDepositTokensFeaturingTimestamp',
   FINALIZE = 'finalizeAllIncomingDeposits',
   DEPOSITWL = 'depositWL',
   WITHDRAW = 'transferTimeLockedTokensAfterTimePeriod',
@@ -77,7 +80,7 @@ export enum QUERY {
   GETAVAILAMOUNT = 'getAvailAmount',
   CLIFFEDGE = 'cliffEdge',
   RELEASEEDGE = 'releaseEdge',
-  INITIALTIMESTAMP = 'initialTimestamp',
+  TIMEPERIODS = 'timePeriods',
   ISFINALISED = 'allIncomingDepositsFinalised',
   OWNER = 'owner',
   BALANCES = 'balances',

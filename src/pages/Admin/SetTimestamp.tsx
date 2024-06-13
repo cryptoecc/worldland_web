@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import {
@@ -23,9 +23,17 @@ import { Button } from '@mui/material';
 import { useToasts } from 'react-toast-notifications';
 import { MESSAGES } from 'utils/messages';
 
-type ITimestamp = {
-    lockPeriod: string | null;
-    releasePeriod: string | null;
+
+type Receiver = {
+    receiveAddress: string;
+    totalAmount: string;
+    lockTime: string;
+    vestTime: string;
+};
+interface IProps {
+    index: number;
+    time: Receiver;
+    setTime: (index: number, field: keyof Receiver, value: string | null) => void;
 }
 const Container = styled.div`
   display: flex;
@@ -58,10 +66,7 @@ const H1 = styled.h1`
 `;
 
 
-const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
-    const navigate = useNavigate();
-    const [time, setTime] = useState<ITimestamp>({ lockPeriod: '', releasePeriod: '' });
-    const [disabled, setDisabled] = useState<boolean>(true);
+const SetTimestamp = ({ index, time, setTime }: IProps) => {
     const { addToast } = useToasts();
 
     const { data: tx, write } = useContractWrite({
@@ -103,24 +108,16 @@ const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (time.lockPeriod === '' || time.releasePeriod === '') {
+        if (time.lockTime === '' || time.vestTime === '') {
             return;
         } else {
             const now = dayjs().unix();
-            let calcLockPeriod = dayjs(time.lockPeriod).unix() - now;
-            let calcReleasePeriod = dayjs(time.releasePeriod).unix() - now;
+            let calcLockPeriod = dayjs(time.lockTime).unix() - now;
+            let calcReleasePeriod = dayjs(time.vestTime).unix() - now;
             console.log({ calcLockPeriod, calcReleasePeriod })
             write?.({ args: [calcLockPeriod, calcReleasePeriod] })
         }
     };
-
-    useEffect(() => {
-        if (!time.lockPeriod || !time.releasePeriod || isTimestampSet) {
-            setDisabled(true)
-        } else {
-            setDisabled(false);
-        }
-    }, [time.lockPeriod, time.releasePeriod, isTimestampSet])
 
     return (
         <Container>
@@ -128,22 +125,17 @@ const SetTimestamp = ({ isTimestampSet }: { isTimestampSet: boolean }) => {
                 <InputWrap>
                     <H1>Timestamp</H1>
                     <DateTimePicker
-                        disabled={isTimestampSet}
                         label="Lock Period"
-                        value={time.lockPeriod}
-                        onChange={(newValue) => setTime((prev) => ({ ...prev, lockPeriod: newValue }))}
+                        value={time.lockTime}
+                        onChange={(newValue) => setTime(index, 'lockTime', newValue)}
                     />
                     <DateTimePicker
-                        disabled={isTimestampSet}
-                        label="Release Period"
-                        value={time.releasePeriod}
-                        onChange={(newValue) => setTime((prev) => ({ ...prev, releasePeriod: newValue }))}
+                        label="Vesting Period"
+                        value={time.vestTime}
+                        onChange={(newValue) => setTime(index, 'vestTime', newValue)}
                     />
                 </InputWrap>
             </LocalizationProvider>
-            <BtnWrap>
-                <Button sx={{ width: '100%' }} disabled={disabled} onClick={handleSubmit} variant="contained">Submit</Button>
-            </BtnWrap>
         </Container>
     );
 };

@@ -1,7 +1,7 @@
 import Admin from 'pages/Admin';
 import AdminBoard from 'pages/Admin/AdminBoard';
 import { useEffect, useState } from 'react';
-// import { CheckJwt } from "utils/jwt";
+// import { checkJWT } from "utils/jwt";
 
 const ProtectedRoute = () => {
     const [_authToken, setAuthToken] = useState<string | null>('');
@@ -14,7 +14,7 @@ const ProtectedRoute = () => {
         return payload.exp < now;
     };
 
-    const CheckJwt = async () => {
+    const checkJWT = async () => {
         const token = localStorage.getItem('token');
 
         if (!token || isTokenExpired(token)) {
@@ -46,7 +46,7 @@ const ProtectedRoute = () => {
     };
 
     useEffect(() => {
-        CheckJwt();
+        checkJWT();
     }, []);
     return authToken || _authToken ? (
         <AdminBoard token={_authToken ?? authToken} setToken={setAuthToken} />
