@@ -9,7 +9,7 @@ import AppEvent from 'components/layout/AppEvent';
 const Main = () => {
   return (
     <>
-      <AppEvent />
+      {/* <AppEvent /> */}
       <MainDashboard />
       <MainStatistics />
       <MainCodeWord />
