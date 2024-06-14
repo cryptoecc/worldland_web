@@ -117,7 +117,7 @@ const MainMenu = () => {
                   <SpaceLink href="https://docs.worldland.foundation/" target="_blank" rel="noopener noreferrer">
                     <Strong>Docs</Strong>
                   </SpaceLink>
-                  <SpaceLink href="https://github.com/cryptoecc/ETH-ECC" target="_blank" rel="noopener noreferrer">
+                  <SpaceLink href="https://github.com/cryptoecc/WorldLand" target="_blank" rel="noopener noreferrer">
                     <Strong>GitHub</Strong>
                   </SpaceLink>
                 </div>
