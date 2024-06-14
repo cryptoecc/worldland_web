@@ -570,7 +570,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
             <Typography variant="h6" gutterBottom>
               가입이 완료되었습니다!
             </Typography>
-            <Button variant="contained" color="primary" component="a" href="/auth/auth2/login">
+            <Button variant="contained" color="primary" component="a" href="/login">
               로그인 하러 가기
             </Button>
           </Box>

@@ -27,4 +27,5 @@ export const PATH = {
   CUSTOM: '/test',
   FORGOT_PASSWORD: '/auth/forgot-password',
   FORGOT_EMAIL: '/auth/forgot-email',
+  PROFILE_INFORMATION: '/apps/profile/:pageid',
 };
