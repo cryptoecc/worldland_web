@@ -36,14 +36,6 @@ const MainMenu = () => {
     setActiveDropdown(false);
   };
 
-  const handleLinkClick = (message: string) => {
-    alert('서비스 준비중입니다.');
-  };
-
-  const Eventpath = () => {
-    window.open('https://open.kakao.com/o/gK0OM0zf', '_blank');
-  };
-
   return (
     <Menu>
       <MenuItemWrapper>
@@ -51,21 +43,6 @@ const MainMenu = () => {
           <Link to={'/learn'}>
             <Learn>Learn</Learn>
           </Link>
-          {/* <Dropdown data-isvisible={activeMenu === 'Learn'}>
-            <div style={{ display: 'flex', margin: '20px 0' }}>
-              <AiOutlineGlobal style={{ color: '#f9a109', paddingRight: '5px' }} /> HERE TO LEARN
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SpaceLink href="https://www.worldland.space/">
-                <Strong>BlockChain and WorldLand</Strong>
-                <div>The basics on all things WorldLand and web3.</div>
-              </SpaceLink>
-              <SpaceLink href="https://www.worldland.space/Learn/">
-                <Strong>Intro to WorldLand</Strong>
-                <div>Introduction : What is WorldLand</div>
-              </SpaceLink>
-            </div>
-          </Dropdown> */}
         </MenuItem>
         <MenuItem
           isSelected={activeMenu === 'User' ? true : undefined}
@@ -102,11 +79,6 @@ const MainMenu = () => {
                           <SlightStrong>Award Distributer</SlightStrong>
                         </Link>
                       </List>
-                      {/* <List>
-                        <Link to="/timelock-contracts/sale" target="_blank">
-                          <SlightStrong>Token Sale</SlightStrong>
-                        </Link>
-                      </List> */}
                     </UnorderedList>
                   </TimelockSectionWrap>
                 </div>
@@ -114,9 +86,6 @@ const MainMenu = () => {
               <Divider></Divider>
               <div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {/* <SpaceLink onClick={() => handleLinkClick('서비스 준비중입니다.')}>
-                    <Strong>Bridge</Strong>
-                  </SpaceLink> */}
                   <SpaceLink href="https://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
@@ -185,13 +154,10 @@ const MainMenu = () => {
                 href="https://dao.worldland.foundation"
                 target="_blank"
                 rel="noopener noreferrer"
-              // onClick={() => handleLinkClick('서비스 준비중입니다.')} // DAO Vote 버튼 클릭 시 handleLinkClick 함수 실행
               >
                 <Strong>DAO Vote</Strong>
               </SpaceLink>
-              {/* <SpaceLink>
-                <Strong>Help Center</Strong>
-              </SpaceLink> */}
+
               <SpaceLink href="https://medium.com/@worldland-official" target="_blank" rel="noopener noreferrer">
                 <Strong>Medium</Strong>
               </SpaceLink>

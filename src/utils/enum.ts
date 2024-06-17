@@ -69,6 +69,7 @@ export enum FUNCTION {
   BULKDEPOSITTOKENSFEATURINGTIMESTAMP = 'bulkDepositTokensFeaturingTimestamp',
   FINALIZE = 'finalizeAllIncomingDeposits',
   DEPOSITWL = 'depositWL',
+  WITHDRAWWL = 'withdrawEth',
   WITHDRAW = 'transferTimeLockedTokensAfterTimePeriod',
 }
 

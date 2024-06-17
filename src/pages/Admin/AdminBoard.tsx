@@ -34,6 +34,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import { EPS } from 'constants/api-routes';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import TxConfirmModal from 'components/main/TxConfirmModal';
+import TxProcessModal from 'components/main/TxProcessModal';
 export interface Contract {
   balance: string;
   owner: string;
@@ -91,7 +93,7 @@ const BtnWrap = styled.div`
   justify-content: flex-end;
   flex-direction: column;
   width: 100%;
-  gap: 10px;
+  gap: 20px;
 `;
 
 const TableWrap = styled.div`
@@ -118,6 +120,12 @@ type Modals = {
   modal1: boolean;
 };
 
+type TxDetails = {
+  type: string;
+  function: (() => void);
+}
+
+
 const AdminBoard = ({ token, setToken }: IProps) => {
   dayjs.extend(relativeTime);
   const [adminId, setAdminId] = useState<string | undefined>('');
@@ -126,7 +134,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   const [inputAmount, setInputAmount] = useState<string>('');
   const [contract, setContract] = useState<Contract>(initialContractObj);
   const [modals, setModals] = useState<Modals>({ modal0: false, modal1: false });
+  const [txModal, setTxModal] = useState<Modals>({ modal0: false, modal1: false });
   const { addToast } = useToasts();
+  const [currentTxData, setCurrentTxData] = useState<TxDetails>({ type: '', function: () => { } })
   const rows = [
     createData('Contract Owner', contract?.owner),
     createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK]),
@@ -185,8 +195,9 @@ const AdminBoard = ({ token, setToken }: IProps) => {
 
   useBalance({
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+    watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: data?.value.toString() }))
+      setContract((prev) => ({ ...prev, balance: data?.value ? from_wei(data?.value.toString()) : data?.value.toString() }))
     }
   })
 
@@ -261,6 +272,28 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     },
   });
 
+  const { write: withdrawWL } = useContractWrite({
+    address: MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK,
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    functionName: FUNCTION.WITHDRAWWL,
+    args: [parseEther(inputAmount)],
+    value: parseEther('0'),
+    onSuccess() {
+      addToast(MESSAGES.TX_SENT, {
+        appearance: 'success',
+        autoDismiss: true,
+      });
+      setInputAmount('');
+    },
+    onError(err: any) {
+      addToast(MESSAGES.TX_FAIL, {
+        appearance: 'error',
+        content: err?.shortMessage,
+        autoDismiss: true,
+      });
+    },
+  });
+
   useWaitForTransaction({
     hash: txFinalized?.hash || txWLDeposited?.hash,
     async onSuccess() {
@@ -269,6 +302,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         content: txWLDeposited?.hash ? MESSAGES.TRANSFER_SUCCESS : MESSAGES.FINALIZED,
         autoDismiss: true,
       });
+      setTxModal(prev => ({ ...prev, modal1: false }));
     },
     onError(err: any) {
       addToast(MESSAGES.TX_FAIL, {
@@ -276,6 +310,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
+      setTxModal(prev => ({ ...prev, modal1: false }));
     },
   });
 
@@ -323,10 +358,18 @@ const AdminBoard = ({ token, setToken }: IProps) => {
           <Button
             sx={{ width: '100%' }}
             disabled={contract?.isAllIncomingDepositsFinalised}
-            onClick={() => depositWL()}
+            onClick={() => { setTxModal(prev => ({ ...prev, modal0: true })); setCurrentTxData({ type: 'deposit', function: depositWL }) }}
             variant="contained"
           >
-            Deposit WL
+            Deposit
+          </Button>
+          <Button
+            sx={{ width: '100%' }}
+            disabled={contract?.isAllIncomingDepositsFinalised}
+            onClick={() => { setTxModal(prev => ({ ...prev, modal0: true })); setCurrentTxData({ type: 'withdraw', function: withdrawWL }) }}
+            variant="contained"
+          >
+            Withdraw
           </Button>
         </BtnWrap>
         <AddReceiver isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
@@ -359,7 +402,20 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         setModal={() => setModals((prev) => ({ ...prev, modal1: false }))}
         exec={handleRemoveAuthToken}
       />
-    </Container>
+      <TxConfirmModal
+        header={`Confirm ${currentTxData.type} of ${inputAmount} WLC`}
+        content={`Sending funds to the contract`}
+        open={txModal.modal0}
+        setModal={setTxModal}
+        exec={currentTxData.function}
+      />
+      <TxProcessModal
+        header={`${currentTxData.type.slice(0, 1).toUpperCase() + currentTxData.type.slice(1)} of ${inputAmount} WLC is confirmed`}
+        content={`Awaiting transaction...`}
+        open={txModal.modal1}
+      />
+
+    </Container >
   );
 };
 

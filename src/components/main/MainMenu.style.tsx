@@ -9,8 +9,6 @@ const Menu = styled.div`
   width: 100%;
   max-width: 550px;
   justify-content: space-between;
-  /* height: 25px; */
-  height: 100vh;
   align-items: center;
   cursor: pointer;
 
@@ -27,7 +25,6 @@ const MenuItemWrapper = styled.div`
 `;
 
 const MenuItem = styled.div<{ isSelected?: boolean }>`
-  /* margin: 0px 25px; */
   position: relative;
   transition: color 0.3s ease-in-out;
   align-items: center;
