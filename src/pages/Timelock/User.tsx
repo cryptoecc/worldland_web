@@ -66,8 +66,8 @@ const User = () => {
         createData('My assigned balance in the contract', userData?.userBalance + ' WL'),
         createData('Available amount to withdraw', userData?.availAmount + ' WL'),
         createData('Initial Timestamp', `${userData?.initialTimestamp} ${userData.initialTimestamp ? userData?.initialTimestamp === '-' ? "" : "(" + dayjs(userData.initialTimestamp).fromNow() + ")" : ""}`),
-        createData('My Lock Time Duration', `${userData?.cliffEdge} ${userData.cliffEdge ? userData?.cliffEdge === '-' ? "" : "(" + dayjs(userData.cliffEdge).fromNow() + ")" : ""}`),
-        createData('My Vesting Time Duration', `${userData?.releaseEdge} ${userData.releaseEdge ? userData?.releaseEdge === '-' ? "" : "(" + dayjs(userData.releaseEdge).fromNow() + ")" : ""}`),
+        createData('My Lock Time Ending', `${userData?.cliffEdge} ${userData.cliffEdge ? userData?.cliffEdge === '-' ? "" : "(" + dayjs(userData.cliffEdge).fromNow() + ")" : ""}`),
+        createData('My Vesting Time Ending', `${userData?.releaseEdge} ${userData.releaseEdge ? userData?.releaseEdge === '-' ? "" : "(" + dayjs(userData.releaseEdge).fromNow() + ")" : ""}`),
     ]
     if (userData.isAllIncomingDepositsFinalised) {
         const slice1 = rows.slice(0, 2);
@@ -86,6 +86,14 @@ const User = () => {
     //         setUserData((prev) => ({ ...prev, balance: from_wei(data?.toString()) }))
     //     }
     // })
+    useBalance({
+        address: contract_address as `0x${string}`,
+        watch: true,
+        onSuccess(data) {
+            setUserData((prev) => ({ ...prev, balance: data?.value ? from_wei(data?.value.toString()) : data?.value.toString() }))
+        }
+    })
+
     useContractRead({
         address: MAPNETTOADDRESS.ERC721_WNFTMINTER,
         abi: MAP_STR_ABI[ABI.ERC721_WNFTMINTER],

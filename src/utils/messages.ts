@@ -6,7 +6,8 @@ export const MESSAGES = {
   TX_CONTENT: 'Transactions are stored and batch executed each 15 seconds!',
   CHAIN_CHANGE: (name: string) => `Metamask network changed to ${name}!`,
   DEPOSIT_SUCCESS: 'Bulk deposit successfully completed!',
-  TRANSFER_SUCCESS: 'Deposit is complete!',
+  TRANSFER_SUCCESS: 'Deposit is completed!',
+  WITHDRAWAL_SUCCESS: 'Withdraw is completed!',
   TIMESTAMP_SET: 'Timestamp has successfully been set!',
   LOGIN_SUCCESS: (user: string) => `Successfully logged in as ${user}`,
 

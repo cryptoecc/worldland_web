@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { checkJWT } from 'utils/jwt';
 import { Button } from '@mui/material';
@@ -69,7 +69,19 @@ const Input = styled.input`
   max-width: 300px;
 `;
 
-const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetchDaoInfo: () => void }) => {
+type TxDetails = {
+  header: string;
+  content: string;
+  subContent: string;
+  function: () => void;
+}
+
+type Modals = {
+  modal0: boolean;
+  modal1: boolean;
+};
+
+const AddReceiver = ({ setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: { setModal: React.Dispatch<React.SetStateAction<Modals>>; setCurrentTxData: React.Dispatch<React.SetStateAction<TxDetails>>; isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
   const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[], lockTime: string[], vestTime: string[] }>({ receivers: [], amounts: [], lockTime: [], vestTime: [] });
   const { addToast } = useToasts();
@@ -100,6 +112,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         content: MESSAGES.DEPOSIT_SUCCESS,
         autoDismiss: true,
       });
+      setModal(prev => ({ ...prev, modal1: false }));
       let parsedAmounts = [];
       for (let i = 0; i < txObj.amounts.length; i++) {
         parsedAmounts[i] = from_wei(txObj.amounts[i]);
@@ -114,6 +127,7 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
         content: err?.shortMessage,
         autoDismiss: true,
       });
+      setModal(prev => ({ ...prev, modal1: false }));
     },
   });
 
@@ -133,80 +147,89 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
     setReceivers(filteredReceivers);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    try {
-      e.preventDefault();
-      checkJWT();
-      let _receivers: string[] = [];
-      let _amounts: string[] = [];
-      let _cliffEdge: string[] = [];
-      let _releaseEdge: string[] = [];
-      let empty_fields = [];
-      const now = dayjs().unix();
-      for (let i = 0; i < receivers.length; i++) {
-        _receivers[i] = receivers[i].receiveAddress;
-        _amounts[i] = to_wei(receivers[i].totalAmount);
-        _cliffEdge[i] = (dayjs(receivers[i].lockTime).unix() - now).toString();
-        _releaseEdge[i] = (dayjs(receivers[i].vestTime).unix() - now).toString();
-        if (_receivers[i] === '' || _amounts[i] === '' || _cliffEdge[i] === '' || _releaseEdge[i] === '') empty_fields[i] = _receivers[i];
-      }
-      if (_receivers.length > 0 && _amounts.length > 0) {
-        if (empty_fields.length > 0) {
-          addToast(MESSAGES.SUBMISSION_ERROR, {
-            appearance: 'error',
-            content: MESSAGES.EMPTY_FIELD,
-            autoDismiss: true,
-          });
-        } else {
-          bulkDepositFeaturingTimestamp?.({ args: [_receivers, _amounts, _cliffEdge, _releaseEdge] });
-          setTxObj({ receivers: _receivers, amounts: _amounts, lockTime: _cliffEdge, vestTime: _releaseEdge });
-        }
-      } else {
+  function handleOpenModal() {
+    setModal(prev => ({ ...prev, modal0: true }));
+    setCurrentTxData({ header: `Confirm transaction`, content: 'Adding WLC receivers to the Timelock contract', subContent: `Adding WLC receivers to the Timelock contract`, function: handleSubmit })
+  }
+
+  const handleSubmit = () => {
+    checkJWT();
+    let _receivers: string[] = [];
+    let _amounts: string[] = [];
+    let _cliffEdge: string[] = [];
+    let _releaseEdge: string[] = [];
+    let empty_fields = [];
+    const now = dayjs().unix();
+    for (let i = 0; i < receivers.length; i++) {
+      _receivers[i] = receivers[i].receiveAddress;
+      _amounts[i] = to_wei(receivers[i].totalAmount);
+      _cliffEdge[i] = (dayjs(receivers[i].lockTime).unix() - now).toString();
+      _releaseEdge[i] = (dayjs(receivers[i].vestTime).unix() - now).toString();
+      if (_receivers[i] === '' || _amounts[i] === '' || _cliffEdge[i] === '' || _releaseEdge[i] === '') empty_fields[i] = _receivers[i];
+    }
+    if (_receivers.length > 0 && _amounts.length > 0) {
+      if (empty_fields.length > 0) {
         addToast(MESSAGES.SUBMISSION_ERROR, {
           appearance: 'error',
-          content: MESSAGES.NO_RECEIVER,
+          content: MESSAGES.EMPTY_FIELD,
           autoDismiss: true,
         });
+      } else {
+        bulkDepositFeaturingTimestamp?.({ args: [_receivers, _amounts, _cliffEdge, _releaseEdge] });
+        setTxObj({ receivers: _receivers, amounts: _amounts, lockTime: _cliffEdge, vestTime: _releaseEdge });
       }
-
-    } catch (err) {
-      console.log(err)
+    } else {
+      addToast(MESSAGES.SUBMISSION_ERROR, {
+        appearance: 'error',
+        content: MESSAGES.NO_RECEIVER,
+        autoDismiss: true,
+      });
     }
   };
+
+  function checkEmptyField() {
+    for (let i of receivers) {
+      for (let j of Object.values(i)) {
+        if (!j) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 
   return (
     <Container>
       <H1>Add Receivers</H1>
-      <form onSubmit={handleSubmit}>
-        {receivers.map((receiver, index) => (
-          <Wrap key={index}>
-            <InputRow>
-              <Input
-                type="text"
-                value={receiver.receiveAddress}
-                onChange={(e) => updateField(index, 'receiveAddress', e.target.value)}
-                placeholder="Wallet Address"
-              />
-              <Input
-                type="text"
-                value={receiver.totalAmount}
-                onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
-                placeholder="Total Amount"
-              />
-              <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>
-                -
-              </Button>
-            </InputRow>
-            <SetTimestamp index={index} time={receiver} setTime={updateField} />
-          </Wrap>
-        ))}
-        <Button sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>
-          +
-        </Button>
-        <Button disabled={isFinalised} sx={{ width: '100%', margin: '10px 0 0' }} variant="contained" type="submit">
-          Submit
-        </Button>
-      </form>
+      {receivers.map((receiver, index) => (
+        <Wrap key={index}>
+          <InputRow>
+            <Input
+              type="text"
+              value={receiver.receiveAddress}
+              onChange={(e) => updateField(index, 'receiveAddress', e.target.value)}
+              placeholder="Wallet Address"
+            />
+            <Input
+              type="text"
+              value={receiver.totalAmount}
+              onChange={(e) => updateField(index, 'totalAmount', e.target.value)}
+              placeholder="Total Amount"
+            />
+            <Button disabled={receivers.length === 1} variant="contained" onClick={() => removeReceiverField(index)}>
+              -
+            </Button>
+          </InputRow>
+          <SetTimestamp index={index} time={receiver} setTime={updateField} />
+        </Wrap>
+      ))}
+      <Button disabled={checkEmptyField()} sx={{ width: '100%' }} variant="contained" onClick={addReceiverField}>
+        +
+      </Button>
+      <Button disabled={checkEmptyField() || isFinalised} sx={{ width: '100%', margin: '10px 0 0' }} onClick={handleOpenModal} variant="contained" type="submit">
+        Submit
+      </Button>
     </Container>
   );
 };
