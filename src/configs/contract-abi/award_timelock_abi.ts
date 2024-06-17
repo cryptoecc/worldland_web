@@ -1,17 +1,6 @@
 export const abi = [
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_nftContract',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: '_erc20_contract_address',
-        type: 'address',
-      },
-    ],
+    inputs: [],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
@@ -152,31 +141,10 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'recipient',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'int256',
-        name: 'cliffTimePeriod',
-        type: 'int256',
-      },
-      {
-        internalType: 'int256',
-        name: 'releaseTimePeriod',
-        type: 'int256',
-      },
-    ],
-    name: 'depositTokens',
+    inputs: [],
+    name: 'depositWL',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -200,19 +168,6 @@ export const abi = [
         internalType: 'uint256',
         name: 'avail',
         type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'nftContract',
-    outputs: [
-      {
-        internalType: 'contract IERC721',
-        name: '',
-        type: 'address',
       },
     ],
     stateMutability: 'view',
@@ -261,19 +216,6 @@ export const abi = [
     type: 'function',
   },
   {
-    inputs: [],
-    name: 'tokenContract',
-    outputs: [
-      {
-        internalType: 'contract IERC20',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [
       {
         internalType: 'contract IERC20',
@@ -301,7 +243,7 @@ export const abi = [
     ],
     name: 'transferTimeLockedTokensAfterTimePeriod',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {
@@ -314,7 +256,7 @@ export const abi = [
     ],
     name: 'withdrawEth',
     outputs: [],
-    stateMutability: 'nonpayable',
+    stateMutability: 'payable',
     type: 'function',
   },
   {

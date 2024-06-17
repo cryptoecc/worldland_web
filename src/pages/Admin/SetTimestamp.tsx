@@ -70,8 +70,8 @@ const SetTimestamp = ({ index, time, setTime }: IProps) => {
     const { addToast } = useToasts();
 
     const { data: tx, write } = useContractWrite({
-        address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-        abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+        address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
         functionName: FUNCTION.SETTIMESTAMP,
         onSuccess() {
             addToast(MESSAGES.TX_SENT, {

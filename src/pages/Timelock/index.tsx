@@ -7,7 +7,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { WLD_ADDRESSES } from 'configs/contract_addresses';
+
 
 function createData(
     name: string,
@@ -21,15 +23,16 @@ function createData(
 }
 
 const rows = [
-    createData('Merit Awardees', '0xB4353C722190Af1cB50f6373907754675F59d70a', '100 WL', '1 day ago', '1 day ago', '1 day ago'),
+    createData('Merit Awardees', WLD_ADDRESSES.AWARD_LINEAR_TIMELOCK, '100 WL', '1 day ago', '1 day ago', '1 day ago'),
 ];
 
 export default function Timelock() {
     const navigate = useNavigate();
+    const { type } = useParams();
     return (
         <Container>
             <Description>
-                <h1>Linear Timelock Contract List</h1>
+                <h1>Linear Timelock Contract List (Award Distributer)</h1>
                 <p>Click on a specific contract to see if you hold a position</p>
             </Description>
             <TableContainer sx={{ maxWidth: '1200px' }} component={Paper}>
@@ -49,7 +52,7 @@ export default function Timelock() {
                             <TableRow
                                 key={i}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 }, 'td, th': { cursor: 'pointer' }, ':hover': { backgroundColor: '#f4f4f4' } }}
-                                onClick={() => navigate(`/timelock-contracts/${row.address}`)}
+                                onClick={() => navigate(`/timelock-contracts/${type}/${row.address}`)}
                             >
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell component="th" scope="row">

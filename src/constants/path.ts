@@ -20,6 +20,6 @@ export const PATH = {
   CONTACT: '/contact',
   CHART: '/chart',
   ADMIN: '/admin',
-  TIMELOCK_LIST: '/timelock-contracts',
-  TIMELOCK_USER: '/timelock-contracts/:contract_address',
+  TIMELOCK_LIST: '/timelock-contracts/:type',
+  TIMELOCK_USER: '/timelock-contracts/:type/:contract_address',
 };

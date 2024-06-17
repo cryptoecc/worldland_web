@@ -129,7 +129,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   const { addToast } = useToasts();
   const rows = [
     createData('Contract Owner', contract?.owner),
-    createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK]),
+    createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK]),
     createData('Contract Balance', contract?.balance + ' WL'),
   ];
 
@@ -146,8 +146,6 @@ const AdminBoard = ({ token, setToken }: IProps) => {
           Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
         },
       });
-
-      console.log(response.data);
       setAdminId(response.data.id);
     } catch (error) {
       console.error('Error fetching', error);
@@ -165,29 +163,36 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   };
 
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
     functionName: QUERY.OWNER,
     onSuccess(data: string) {
       setContract((prev) => ({ ...prev, owner: data }));
     },
   });
 
-  // main contract ERC20 balance check
-  useContractRead({
-    address: MAPNETTOADDRESS.ERC20_WWLC,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: QUERY.BALANCEOF,
-    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK],
-    watch: true,
+  // // main contract ERC20 balance check
+  // useContractRead({
+  //   address: MAPNETTOADDRESS.ERC20_WWLC,
+  //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
+  //   functionName: QUERY.BALANCEOF,
+  //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK],
+  //   watch: true,
+  //   onSuccess(data) {
+  //     setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
+  //   }
+  // })
+
+  useBalance({
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
+      setContract((prev) => ({ ...prev, balance: data?.value.toString() }))
     }
   })
 
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
     functionName: QUERY.ISFINALISED,
     watch: true,
     onSuccess(data: boolean) {
@@ -196,8 +201,8 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   });
 
   const { data: txFinalized, write: finalize } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
     functionName: FUNCTION.FINALIZE,
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
@@ -214,11 +219,32 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     },
   });
 
+  // const { data: txWLDeposited, write: depositWL } = useContractWrite({
+  //   address: MAPNETTOADDRESS.ERC20_WWLC,
+  //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
+  //   functionName: FUNCTION.TRANSFER,
+  //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK, parseEther(inputAmount)],
+  //   onSuccess() {
+  //     addToast(MESSAGES.TX_SENT, {
+  //       appearance: 'success',
+  //       autoDismiss: true,
+  //     });
+  //     setInputAmount('');
+  //   },
+  //   onError(err: any) {
+  //     addToast(MESSAGES.TX_FAIL, {
+  //       appearance: 'error',
+  //       content: err?.shortMessage,
+  //       autoDismiss: true,
+  //     });
+  //   },
+  // });
+
   const { data: txWLDeposited, write: depositWL } = useContractWrite({
-    address: MAPNETTOADDRESS.ERC20_WWLC,
-    abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    functionName: FUNCTION.TRANSFER,
-    args: [MAPNETTOADDRESS.LINEAR_TIMELOCK, parseEther(inputAmount)],
+    address: MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK,
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    functionName: FUNCTION.DEPOSITWL,
+    value: parseEther(inputAmount),
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
@@ -283,7 +309,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   return (
     <Container>
       <Content>
-        <H1>Linear Timelock Smart Contract Period Setting</H1>
+        <H1>Linear Timelock Smart Contract Settings</H1>
         <CustomTable rows={rows} />
         <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>

@@ -9,8 +9,10 @@ const Menu = styled.div`
   width: 100%;
   max-width: 550px;
   justify-content: space-between;
-  height: 25px;
+  /* height: 25px; */
+  height: 100vh;
   align-items: center;
+  cursor: pointer;
 
   ${maxQuery.tablet} {
     display: none;
@@ -115,12 +117,42 @@ const SpaceLink = styled.a`
     border-color 0.3s ease-in-out,
     background-color 0.3s ease-in-out;
   line-height: 25px;
+  cursor: pointer;
 
   &:hover {
     background-color: #1e1e1e;
     font-weight: bold;
   }
 `;
+
+const TimelockSectionWrap = styled.section`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 5px;
+`
+
+const UnorderedList = styled.ul<{ active: boolean }>`
+  display: ${({ active }) => active ? 'flex' : 'hidden'};
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  list-style-type: disc;
+  gap: 10px;
+  list-style-position: outside;
+  padding-left: 42px;
+  /* transition: opacity 0.3s visibility 0.3s ease-in-out; */
+  transition: opacity 0.3s ease-in-out;
+  opacity: ${({ active }) => active ? 1 : 0};
+  visibility: ${({ active }) => active ? '' : 'hidden'};
+`
+const List = styled.li`
+  width: 100%;
+  font-size: 12px;
+  text-indent: -20px;
+`
 
 const SpaceSpanLink = styled.span`
   text-decoration: none;
@@ -139,13 +171,20 @@ const SpaceSpanLink = styled.span`
 `;
 
 const Strong = styled.div`
-  color: white;
+  color: #ffffff;
   font-weight: bold;
   padding: 0 20px;
   display: flex;
   gap: 8px;
   align-items: center;
-  /* padding-top: 2px; */
+`;
+
+const SlightStrong = styled.p`
+  color: #ffffff;
+  padding: 0 20px;
+  &:hover {
+    color: #b6b6b6;
+  }
 `;
 
 const Network = styled.div`
@@ -199,4 +238,8 @@ export {
   Divider,
   Contack,
   StyledLink,
+  SlightStrong,
+  UnorderedList,
+  TimelockSectionWrap,
+  List
 };

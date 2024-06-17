@@ -15,6 +15,10 @@ import {
   Contack,
   MenuItemWrapper,
   SpaceSpanLink,
+  SlightStrong,
+  UnorderedList,
+  TimelockSectionWrap,
+  List,
 } from './MainMenu.style';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -25,9 +29,11 @@ import axios from 'axios';
 
 const MainMenu = () => {
   const [activeMenu, setActiveMenu] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
 
   const handleMenuClick = (menu: any) => {
     setActiveMenu(activeMenu === menu ? null : menu);
+    setActiveDropdown(false);
   };
 
   const handleLinkClick = (message: string) => {
@@ -86,11 +92,23 @@ const MainMenu = () => {
                     <Strong>Run node</Strong>
                   </SpaceLink>
                   <AddNetworkButton />
-                  <SpaceSpanLink>
-                    <Link to="/timelock-contracts" target="_blank">
+                  <TimelockSectionWrap>
+                    <SpaceSpanLink onClick={(e) => { e.stopPropagation(); setActiveDropdown(prev => !prev) }}>
                       <Strong>Timelock Contracts</Strong>
-                    </Link>
-                  </SpaceSpanLink>
+                    </SpaceSpanLink>
+                    <UnorderedList active={activeDropdown}>
+                      <List>
+                        <Link to="/timelock-contracts/award" target="_blank">
+                          <SlightStrong>Award Distributer</SlightStrong>
+                        </Link>
+                      </List>
+                      {/* <List>
+                        <Link to="/timelock-contracts/sale" target="_blank">
+                          <SlightStrong>Token Sale</SlightStrong>
+                        </Link>
+                      </List> */}
+                    </UnorderedList>
+                  </TimelockSectionWrap>
                 </div>
               </div>
               <Divider></Divider>

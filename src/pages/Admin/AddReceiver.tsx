@@ -75,8 +75,8 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
   const { addToast } = useToasts();
 
   const { data: tx, write: bulkDepositFeaturingTimestamp } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
     functionName: FUNCTION.BULKDEPOSITTOKENSFEATURINGTIMESTAMP,
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
@@ -179,8 +179,8 @@ const AddReceiver = ({ isFinalised, fetchDaoInfo }: { isFinalised: boolean; fetc
       <H1>Add Receivers</H1>
       <form onSubmit={handleSubmit}>
         {receivers.map((receiver, index) => (
-          <Wrap>
-            <InputRow key={index}>
+          <Wrap key={index}>
+            <InputRow>
               <Input
                 type="text"
                 value={receiver.receiveAddress}
