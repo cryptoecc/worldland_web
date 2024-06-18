@@ -97,6 +97,7 @@ const AddReceiver = ({ setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: 
       });
     },
     onError(err: any) {
+      setModal(prev => ({ ...prev, modal1: false }));
       addToast(MESSAGES.TX_FAIL, {
         appearance: 'error',
         content: err?.shortMessage,

@@ -20,7 +20,8 @@ import Contact from 'pages/Contact';
 import SwapPage from './pages/Swap/SwapPage';
 import Bridge from 'pages/Bridge';
 import Timelock from 'pages/Timelock';
-import User from 'pages/Timelock/User';
+import UserAward from 'pages/Timelock/User_award';
+import UserSale from 'pages/Timelock/User_sale';
 import ProtectedRoute from 'pages/ProtectedRoute';
 import Login from 'pages/Login';
 import Register from 'pages/Register';
@@ -59,7 +60,8 @@ const Router = () => {
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.ADMIN}`, element: <ProtectedRoute /> },
         { path: `${PATH.TIMELOCK_LIST}`, element: <Timelock /> },
-        { path: `${PATH.TIMELOCK_USER}`, element: <User /> },
+        { path: `${PATH.TIMELOCK_USER_AWARD}`, element: <UserAward /> },
+        { path: `${PATH.TIMELOCK_USER_SALE}`, element: <UserSale /> },
       ],
     },
   ]);

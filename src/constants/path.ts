@@ -21,5 +21,6 @@ export const PATH = {
   CHART: '/chart',
   ADMIN: '/admin',
   TIMELOCK_LIST: '/timelock-contracts/:type',
-  TIMELOCK_USER: '/timelock-contracts/:type/:contract_address',
+  TIMELOCK_USER_AWARD: '/timelock-contracts/award/:contract_address',
+  TIMELOCK_USER_SALE: '/timelock-contracts/sale/:contract_address',
 };

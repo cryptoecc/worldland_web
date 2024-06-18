@@ -10,7 +10,7 @@ import {
 } from 'wagmi';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { from_wei } from 'utils/util';
+import { from_wei, putCommaAtPrice } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { Contract, initialContractObj } from 'pages/Admin/AdminBoard';
@@ -21,12 +21,15 @@ import { Button } from '@mui/material';
 import { MESSAGES } from 'utils/messages';
 import { useToasts } from 'react-toast-notifications';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
+import TxConfirmModal from 'components/main/TxConfirmModal';
+import TxProcessModal from 'components/main/TxProcessModal';
 
 const userInitialData = {
     ...initialContractObj,
     availAmount: '0',
     userBalance: '0',
     userNftBalance: '0',
+    walletBalance: '0',
     initialTimestamp: '',
     cliffEdge: '',
     releaseEdge: ''
@@ -35,6 +38,7 @@ const userInitialData = {
 interface UserInfo extends Contract {
     availAmount?: string;
     userBalance?: string;
+    walletBalance: string;
     userNftBalance: string;
     initialTimestamp: string;
     cliffEdge: string;
@@ -49,6 +53,18 @@ function createData(
     return { name, value };
 }
 
+type Modals = {
+    modal0: boolean;
+    modal1: boolean;
+};
+
+type TxDetails = {
+    header: string;
+    content: string;
+    subContent: string;
+    function: () => void;
+}
+
 const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
 const User = () => {
     dayjs.extend(relativeTime);
@@ -57,14 +73,17 @@ const User = () => {
     const { type, contract_address } = useParams();
     const [userData, setUserData] = useState<UserInfo>(userInitialData);
     const [disabled, setDisabled] = useState<boolean>(true);
+    const [txModal, setTxModal] = useState<Modals>({ modal0: false, modal1: false });
+    const [currentTxData, setCurrentTxData] = useState<TxDetails>({ header: '', content: '', subContent: '', function: () => { } })
     let rows = [
         createData('Contract Owner', userData?.owner),
         createData('Timelock Contract Address', contract_address as string),
-        // createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
-        // createData('NFT Ownership', userData?.userNftBalance),
-        createData('Contract Balance', userData?.balance + ' WL'),
-        createData('My assigned balance in the contract', userData?.userBalance + ' WL'),
-        createData('Available amount to withdraw', userData?.availAmount + ' WL'),
+        createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
+        createData('NFT Ownership', userData?.userNftBalance),
+        createData('Contract Balance', putCommaAtPrice(userData?.balance ?? '0', 4) + ' WL'),
+        createData('My assigned balance in the contract', putCommaAtPrice(userData?.userBalance ?? '0', 4) + ' WL'),
+        createData('Available amount to withdraw', putCommaAtPrice(userData?.availAmount ?? '0', 4) + ' WL'),
+        createData('My wallet balance', putCommaAtPrice(userData?.walletBalance ?? '0', 4) + ' WL'),
         createData('Initial Timestamp', `${userData?.initialTimestamp} ${userData.initialTimestamp ? userData?.initialTimestamp === '-' ? "" : "(" + dayjs(userData.initialTimestamp).fromNow() + ")" : ""}`),
         createData('My Lock Time Ending', `${userData?.cliffEdge} ${userData.cliffEdge ? userData?.cliffEdge === '-' ? "" : "(" + dayjs(userData.cliffEdge).fromNow() + ")" : ""}`),
         createData('My Vesting Time Ending', `${userData?.releaseEdge} ${userData.releaseEdge ? userData?.releaseEdge === '-' ? "" : "(" + dayjs(userData.releaseEdge).fromNow() + ")" : ""}`),
@@ -72,25 +91,30 @@ const User = () => {
     if (userData.isAllIncomingDepositsFinalised) {
         const slice1 = rows.slice(0, 2);
         const slice2 = rows.slice(2);
-        slice1.push(createData('Contract State', 'Frozen ❄️'));
+        slice1.push(createData('Admin-Contract interaction', 'Locked 🔒'));
         rows = slice1.concat(slice2);
     }
-    // // main contract ERC20 balance check
-    // useContractRead({
-    //     address: MAPNETTOADDRESS.ERC20_WWLC,
-    //     abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    //     functionName: QUERY.BALANCEOF,
-    //     args: [contract_address],
-    //     watch: true,
-    //     onSuccess(data) {
-    //         setUserData((prev) => ({ ...prev, balance: from_wei(data?.toString()) }))
-    //     }
-    // })
-    useBalance({
-        address: contract_address as `0x${string}`,
+    /// @dev main contract ERC20 balance check
+    useContractRead({
+        address: MAPNETTOADDRESS.ERC20_WWLC,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: QUERY.BALANCEOF,
+        args: [contract_address],
         watch: true,
         onSuccess(data) {
-            setUserData((prev) => ({ ...prev, balance: data?.value ? from_wei(data?.value.toString()) : data?.value.toString() }))
+            console.log({ DATA: data })
+            setUserData((prev) => ({ ...prev, balance: data ? from_wei(data?.toString()) : '0' }))
+        }
+    })
+
+    useContractRead({
+        address: MAPNETTOADDRESS.ERC20_WWLC,
+        abi: MAP_STR_ABI[ABI.ERC20_ABI],
+        functionName: QUERY.BALANCEOF,
+        args: [address],
+        watch: true,
+        onSuccess(data) {
+            setUserData((prev) => ({ ...prev, walletBalance: from_wei(data?.toString()) }))
         }
     })
 
@@ -106,7 +130,7 @@ const User = () => {
     });
     useContractRead({
         address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: QUERY.OWNER,
         onSuccess(data: string) {
             setUserData((prev) => ({ ...prev, owner: data }));
@@ -114,7 +138,7 @@ const User = () => {
     });
     useContractRead({
         address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: QUERY.TIMEPERIODS,
         args: [address],
         watch: true,
@@ -125,22 +149,22 @@ const User = () => {
     })
     useContractRead({
         address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: QUERY.BALANCES,
         args: [address],
         watch: true,
         onSuccess(data) {
-            setUserData((prev) => ({ ...prev, userBalance: from_wei(data as string) ? from_wei(data as string) : '0' }))
+            setUserData((prev) => ({ ...prev, userBalance: data ? from_wei(data as string) : '0' }))
         }
     })
     useContractRead({
         address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: QUERY.GETAVAILAMOUNT,
         args: [address],
         watch: true,
         onSuccess(data) {
-            setUserData((prev) => ({ ...prev, availAmount: from_wei(data as string) ? from_wei(data as string) : '0' }))
+            setUserData((prev) => ({ ...prev, availAmount: data ? from_wei(data as string) : '0' }))
             if (Number(from_wei(data as string)) > 0) {
                 setDisabled(false);
             } else {
@@ -150,7 +174,7 @@ const User = () => {
     })
     const { data: txWithdrawn, write: withdraw } = useContractWrite({
         address: contract_address as `0x${string}`,
-        abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+        abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: FUNCTION.WITHDRAW,
         args: [address],
         onSuccess() {
@@ -160,6 +184,7 @@ const User = () => {
             });
         },
         onError(err: any) {
+            setTxModal(prev => ({ ...prev, modal1: false }));
             addToast(MESSAGES.TX_FAIL, {
                 appearance: 'error',
                 content: err?.shortMessage,
@@ -171,12 +196,14 @@ const User = () => {
     useWaitForTransaction({
         hash: txWithdrawn?.hash,
         async onSuccess() {
+            setTxModal(prev => ({ ...prev, modal1: false }));
             addToast(MESSAGES.TX_SUCCESS, {
                 appearance: 'success',
                 autoDismiss: true,
             });
         },
         onError(err: any) {
+            setTxModal(prev => ({ ...prev, modal1: false }));
             addToast(MESSAGES.TX_FAIL, {
                 appearance: 'error',
                 content: err?.shortMessage,
@@ -190,12 +217,14 @@ const User = () => {
             if (Number(userData.availAmount) > 0) {
                 withdraw();
             } else {
+                setTxModal(prev => ({ ...prev, modal1: false }));
                 addToast(MESSAGES.NO_AVAIL_AMOUNT, {
                     appearance: 'error',
                     autoDismiss: true,
                 });
             }
         } catch (err) {
+            setTxModal(prev => ({ ...prev, modal1: false }));
             console.log(err);
         }
     }
@@ -204,14 +233,26 @@ const User = () => {
         <Container>
             <Content>
                 <Description>
-                    <h1>Linear Timelock Smart Contract {type === 'award' ? '(Award Distributer)' : '(Token Sale)'}</h1>
-                    <p>Coin distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
+                    <h1>Linear Timelock Smart Contract (Token Sale)</h1>
+                    <p>Token distribution is executed linearly and depends on user calling withdraw function. <br /> The total amount is automatically calculated based on the time remaining and your <br /> balance in the contract!</p>
                 </Description>
                 <CustomTable rows={rows} />
                 <BtnWrap>
-                    <Button onClick={handleWithdraw} disabled={disabled} sx={{ width: '100%', }} variant="contained">Withdraw available amount</Button>
+                    <Button onClick={() => { setTxModal(prev => ({ ...prev, modal0: true })); setCurrentTxData({ header: `Confirm the withdrawal of ${putCommaAtPrice(userData?.userBalance ?? '0', 4)} WLC from the contract`, content: 'Action can not be undone', subContent: `Withdrawing funds from the contract...`, function: handleWithdraw }) }} disabled={disabled} sx={{ width: '100%', }} variant="contained">Withdraw available amount</Button>
                 </BtnWrap>
             </Content>
+            <TxConfirmModal
+                header={currentTxData.header}
+                content={currentTxData.content}
+                open={txModal.modal0}
+                setModal={setTxModal}
+                exec={currentTxData.function}
+            />
+            <TxProcessModal
+                header={currentTxData.subContent}
+                content={`Awaiting transaction...`}
+                open={txModal.modal1}
+            />
         </Container>
     )
 }

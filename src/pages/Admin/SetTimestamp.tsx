@@ -106,19 +106,6 @@ const SetTimestamp = ({ index, time, setTime }: IProps) => {
         }
     })
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (time.lockTime === '' || time.vestTime === '') {
-            return;
-        } else {
-            const now = dayjs().unix();
-            let calcLockPeriod = dayjs(time.lockTime).unix() - now;
-            let calcReleasePeriod = dayjs(time.vestTime).unix() - now;
-            console.log({ calcLockPeriod, calcReleasePeriod })
-            write?.({ args: [calcLockPeriod, calcReleasePeriod] })
-        }
-    };
-
     return (
         <Container>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -17,7 +17,7 @@ import {
 import { WLD_ADDRESSES } from 'configs/contract_addresses';
 import { ABI, CONTRACT_ADDRESSES, FUNCTION, QUERY } from 'utils/enum';
 import { MAP_STR_ABI } from 'configs/abis';
-import { from_wei } from 'utils/util';
+import { from_wei, putCommaAtPrice } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Button from '@mui/material/Button';
@@ -200,7 +200,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: data?.value ? from_wei(data?.value.toString()) : data?.value.toString() }))
+      setContract((prev) => ({ ...prev, balance: data?.value ? putCommaAtPrice(from_wei(data?.value.toString()), 4) : data?.value.toString() }))
     }
   })
 
@@ -225,6 +225,7 @@ const AdminBoard = ({ token, setToken }: IProps) => {
       });
     },
     onError(err: any) {
+      setTxModal(prev => ({ ...prev, modal1: false }));
       addToast(MESSAGES.TX_FAIL, {
         appearance: 'error',
         content: err?.shortMessage,
@@ -339,8 +340,11 @@ const AdminBoard = ({ token, setToken }: IProps) => {
       } else {
         finalize?.();
         setModals((prev) => ({ ...prev, modal0: false }));
+        setCurrentTxData({ header: '', content: '', subContent: `Finalizing the admin interaction with the contract...`, function: () => { } });
+        setTxModal(prev => ({ ...prev, modal1: true }));
       }
     } catch (err: any) {
+      setTxModal(prev => ({ ...prev, modal1: false }));
       addToast(MESSAGES.TX_FAIL, {
         appearance: 'error',
         content: err?.shortMessage,

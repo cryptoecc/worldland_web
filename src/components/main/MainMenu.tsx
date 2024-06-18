@@ -79,6 +79,11 @@ const MainMenu = () => {
                           <SlightStrong>Award Distributer</SlightStrong>
                         </Link>
                       </List>
+                      <List>
+                        <Link to="/timelock-contracts/sale" target="_blank">
+                          <SlightStrong>Token Sale</SlightStrong>
+                        </Link>
+                      </List>
                     </UnorderedList>
                   </TimelockSectionWrap>
                 </div>

@@ -15,6 +15,7 @@ import { abi as LVSWAPV2_PAIR } from './contract-abi/lvswapV2Pair_abi';
 
 //linear-timelock abi
 import { abi as AWARD_LINEAR_TIMELOCK } from './contract-abi/award_timelock_abi';
+import { abi as SALE_LINEAR_TIMELOCK } from './contract-abi/sale_timelock_abi';
 import { abi as ERC721_WNFTMINTER } from './contract-abi/erc721_wnftminter_abi';
 
 export const MAP_STR_ABI = {
@@ -30,5 +31,6 @@ export const MAP_STR_ABI = {
   LVSWAPV2_PAIR,
   BRIDGEBASE_ABI,
   AWARD_LINEAR_TIMELOCK,
+  SALE_LINEAR_TIMELOCK,
   ERC721_WNFTMINTER,
 };

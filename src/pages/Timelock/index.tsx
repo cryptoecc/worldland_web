@@ -13,26 +13,24 @@ import { WLD_ADDRESSES } from 'configs/contract_addresses';
 
 function createData(
     name: string,
-    address: string,
-    balance: string,
-    initial_timestamp: string | number,
-    lock_ending: string | number,
-    release_ending: string | number,
+    address: string
 ) {
-    return { name, address, balance, initial_timestamp, lock_ending, release_ending };
+    return { name, address };
 }
 
 const rows = [
-    createData('Merit Awardees', WLD_ADDRESSES.AWARD_LINEAR_TIMELOCK, '100 WL', '1 day ago', '1 day ago', '1 day ago'),
+    createData('Merit Awardees', WLD_ADDRESSES.AWARD_LINEAR_TIMELOCK),
 ];
 
 export default function Timelock() {
     const navigate = useNavigate();
-    const { type } = useParams();
+    const { type } = useParams<{ type: string }>();
+
+
     return (
         <Container>
             <Description>
-                <h1>Linear Timelock Contract List (Award Distributer)</h1>
+                <h1>Linear Timelock Contract List ({type === 'award' ? 'Award Distributer' : 'Token Sale'})</h1>
                 <p>Click on a specific contract to see if you hold a position</p>
             </Description>
             <TableContainer sx={{ maxWidth: '1200px' }} component={Paper}>
@@ -41,10 +39,6 @@ export default function Timelock() {
                         <TableRow sx={{ 'td, th': { fontWeight: 'bold' } }}>
                             <TableCell>Contract name</TableCell>
                             <TableCell>Address</TableCell>
-                            <TableCell align="right">Balance</TableCell>
-                            <TableCell align="right">Initial timestamp</TableCell>
-                            <TableCell align="right">Lock Time Ending</TableCell>
-                            <TableCell align="right">Final Release Time Ending</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -58,10 +52,6 @@ export default function Timelock() {
                                 <TableCell component="th" scope="row">
                                     {row.address}
                                 </TableCell>
-                                <TableCell align="right">{row.balance}</TableCell>
-                                <TableCell align="right">{row.initial_timestamp}</TableCell>
-                                <TableCell align="right">{row.lock_ending}</TableCell>
-                                <TableCell align="right">{row.release_ending}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
