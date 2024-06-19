@@ -13,6 +13,7 @@ import MobileProfile from '../../../components/profile/change-mobile';
 import NicknameProfile from '../../../components/profile/change-nickname';
 import PasswordProfile from '../../../components/profile/change-password';
 import WalletProfile from '../../../components/profile/change-wallet';
+import InitUser from 'pages/authentication/initUser';
 
 const ProfileSub = () => {
   const params = useParams();
@@ -48,6 +49,7 @@ const ProfileSub = () => {
               borderRight: 1,
               borderColor: 'divider',
               height: '100%',
+              backgroundColor: '#333',
             }}
           >
             <MenuProfile />
@@ -55,7 +57,7 @@ const ProfileSub = () => {
         </Grid>
 
         <Grid item xs={12} md={9}>
-          <Card sx={{ p: 4 }}>
+          <Card sx={{ p: 4, backgroundColor: '#333' }}>
             {pageid === 'personal-information' && <InfoProfile />}
             {pageid === 'change-email' && <EmailProfile />}
             {pageid === 'change-mobile' && <MobileProfile />}

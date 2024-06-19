@@ -2,7 +2,10 @@ import React, { FC, useState, useEffect, CSSProperties } from 'react';
 import { useParams, Link } from 'react-router-dom';
 // import Link from "next/link";
 import { Box, MenuItem, Typography } from '@mui/material';
-import { Person, Email, PhoneIphone, Badge, Password, AccountBalanceWallet } from '@mui/icons-material';
+import { Person, Email, PhoneIphone, Badge, Password, AccountBalanceWallet, Logout } from '@mui/icons-material';
+import LogoutBtn from 'pages/authentication/logout';
+import { red } from '@mui/material/colors';
+import useLogout from 'pages/authentication/logout/logoutfcn';
 
 interface MenuProfileProps {
   onCloseDrawer?: () => void;
@@ -13,6 +16,8 @@ const MenuProfile: FC<MenuProfileProps> = ({ onCloseDrawer }) => {
   const params = useParams();
   const pageid = params?.pageid as string;
 
+  const logout = useLogout(); // 훅 호출
+
   useEffect(() => {
     if (pageid) {
       setCurrentPageId(pageid);
@@ -21,7 +26,9 @@ const MenuProfile: FC<MenuProfileProps> = ({ onCloseDrawer }) => {
 
   const handleMenuClick = (pageId: string) => {
     setCurrentPageId(pageId);
-    if (onCloseDrawer) {
+    if (pageId === 'logout') {
+      logout();
+    } else if (onCloseDrawer) {
       onCloseDrawer();
     }
   };
@@ -57,22 +64,29 @@ const MenuProfile: FC<MenuProfileProps> = ({ onCloseDrawer }) => {
       pageId: 'change-wallet',
       icon: <AccountBalanceWallet />,
     },
+    {
+      label: '로그아웃',
+      pageId: 'logout',
+      icon: <Logout />,
+    },
   ];
 
   return (
-    <Box sx={{ width: 250, p: 2, marginTop: '50px', height: '100%' }}>
-      <Box>
-        {menuItems.map((item) => (
-          <Link key={item.pageId} to={`/apps/profile/${item.pageId}`}>
-            <MenuItem selected={currentPageId === item.pageId} onClick={() => handleMenuClick(item.pageId)}>
-              {item.icon}
-              <Typography variant="body1" sx={{ ml: 2 }}>
-                {item.label}
-              </Typography>
-            </MenuItem>
-          </Link>
-        ))}
-      </Box>
+    <Box sx={{ width: 250, p: 2, height: '100%', backgroundColor: '#333' }}>
+      {menuItems.map((item) => (
+        <Link key={item.pageId} to={item.pageId !== 'logout' ? `/apps/profile/${item.pageId}` : '#'} replace>
+          <MenuItem
+            selected={currentPageId === item.pageId}
+            onClick={() => handleMenuClick(item.pageId)}
+            sx={{ color: '#d3d3d3' }}
+          >
+            {item.icon}
+            <Typography variant="body1" sx={{ ml: 2 }}>
+              {item.label}
+            </Typography>
+          </MenuItem>
+        </Link>
+      ))}
     </Box>
   );
 };

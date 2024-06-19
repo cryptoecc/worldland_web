@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Card, Typography, Grid, Divider, useMediaQuery } from '@mui/material';
 
 //graphql
@@ -8,8 +8,17 @@ import { useQuery } from '@apollo/client';
 //redux-toolkit
 import { AppState } from '../../store/store';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import TokenService from 'utils/TokenService';
+import { AuthPayLoad } from 'types/AuthPayload';
+import {
+  loadInit as loadInitAction,
+  userId as userIdAction,
+  userEmail as userEmailAction,
+  userMobile as userMobileAction,
+  userLevel as userLevelAction,
+} from '../../store/user/UserSlice';
 
 const LvUserByUserIdQuery = gql`
   query lvUserByUserId($userId: String) {
@@ -47,11 +56,24 @@ interface RetData {
   lvUserByUserId: UserInfo;
 }
 
+const InitLvAccessTokenMutation = gql`
+  mutation InitLvAccessToken($value: String!) {
+    initLvAccessToken(value: $value) {
+      token
+      userId
+      userEmail
+      userMobile
+      userLevel
+    }
+  }
+`;
+
 const InfoProfile = () => {
   const isSmallScreen = useMediaQuery('(max-width:1350px)');
 
   const user = useSelector((state: AppState) => state.userReducer);
   const userId = user.userId;
+  console.log('123', user);
 
   const dispatch = useDispatch();
   const router = useNavigate();
@@ -59,6 +81,47 @@ const InfoProfile = () => {
   const gotoChange = (pageId: string) => {
     router(`/apps/profile/${pageId}`);
   };
+
+  // const [initLvAccessToken, {}] = useMutation(InitLvAccessTokenMutation);
+
+  // //user info 초기 load
+  // useEffect(() => {
+  //   //const refToken = Boolean(localStorage.getItem("peta_ref_id"));
+  //   const refToken = localStorage.getItem('worldland_ref_id') === 'true' ? true : false;
+  //   console.log('InitUser refToken:', refToken);
+  //   console.log(user.loadInit);
+  //   if (!user.loadInit && refToken) {
+  //     initLvAccessToken()
+  //       .then((res) => {
+  //         const authPayload: AuthPayLoad = res.data.initLvAccessToken;
+  //         console.log('InitUser authPayload:', authPayload);
+  //         if (authPayload.token) {
+  //           TokenService.set(authPayload.token);
+  //           dispatch(userIdAction(authPayload.userName));
+  //           dispatch(userEmailAction(authPayload.userEmail));
+  //           dispatch(userMobileAction(authPayload.userMobile));
+  //           dispatch(userLevelAction(authPayload.userLevel));
+  //         }
+  //       })
+  //       .catch((res) => {
+  //         localStorage.removeItem('worldland_ref_id'); //refresh token 존재 여부 초기화
+  //         /*           const errors = res.graphQLErrors.map((error: any) => {
+  //           message.info({
+  //             content: error.message,
+  //             icon: <RiErrorWarningLine className="remix-icon" />,
+  //           });
+  //           console.log(error.message);
+  //         }); */
+  //       })
+  //       .finally(() => {
+  //         dispatch(loadInitAction(true));
+  //         console.log('InitUser refreshAccessToken user.loadInit <set true>');
+  //       });
+  //   } else {
+  //     dispatch(loadInitAction(true));
+  //     console.log('InitUser user.loadInit <set true>');
+  //   }
+  // }, []);
 
   const { loading, error, data, refetch } = useQuery<RetData>(LvUserByUserIdQuery, {
     fetchPolicy: 'cache-and-network',
@@ -69,6 +132,7 @@ const InfoProfile = () => {
     return <div>Loading ...</div>;
   }
   if (error) {
+    console.log(userId);
     console.log('personal-infomation useQuery error:', error);
     return <div>Error: {error.message}</div>;
   }

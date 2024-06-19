@@ -16,45 +16,49 @@ import TokenService from 'utils/TokenService';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
 //import { NextPage } from "next";
 
-const RefreshAccessTokenMutation = gql`
-  mutation RefreshAccessToken {
-    refreshAccessToken {
+const InitLvAccessTokenMutation = gql`
+  mutation InitLvAccessToken($value: String!) {
+    initLvAccessToken(value: $value) {
       token
-      userNo
-      userName
+      userId
       userEmail
       userMobile
       userLevel
     }
   }
 `;
-
 const InitUser: React.FC = () => {
   const user = useAppSelector((state) => state.userReducer);
   const dispatch = useAppDispatch();
-  const [refreshAccessToken, { error, data }] = useMutation(RefreshAccessTokenMutation);
+  const [initLvAccessToken, { error, data }] = useMutation(InitLvAccessTokenMutation);
 
   //user info 초기 load
   useEffect(() => {
     //const refToken = Boolean(localStorage.getItem("peta_ref_id"));
-    const refToken = localStorage.getItem('peta_ref_id') === 'true' ? true : false;
+    const oldToken = TokenService.get();
+    const refToken = localStorage.getItem('worldland_ref_id') === 'true' ? true : false;
     console.log('InitUser refToken:', refToken);
-
+    console.log(user.loadInit);
     if (!user.loadInit && refToken) {
-      refreshAccessToken()
+      initLvAccessToken({
+        variables: {
+          value: oldToken == undefined ? '' : oldToken,
+        },
+      })
         .then((res) => {
-          const authPayload: AuthPayLoad = res.data.refreshAccessToken;
+          const authPayload: AuthPayLoad = res.data.initLvAccessToken;
           console.log('InitUser authPayload:', authPayload);
           if (authPayload.token) {
             TokenService.set(authPayload.token);
-            dispatch(userIdAction(authPayload.userName));
+            dispatch(userIdAction(authPayload.userId));
             dispatch(userEmailAction(authPayload.userEmail));
             dispatch(userMobileAction(authPayload.userMobile));
             dispatch(userLevelAction(authPayload.userLevel));
           }
         })
         .catch((res) => {
-          localStorage.removeItem('peta_ref_id'); //refresh token 존재 여부 초기화
+          console.log('여기~');
+          localStorage.removeItem('worldland_ref_id'); //refresh token 존재 여부 초기화
           /*           const errors = res.graphQLErrors.map((error: any) => {
             message.info({
               content: error.message,

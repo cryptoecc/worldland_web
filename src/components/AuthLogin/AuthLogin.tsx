@@ -177,9 +177,9 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       setOpen(true);
       return;
     }
-
-    localStorage.setItem('peta_login_tab', '1');
-
+    console.log('여기?');
+    localStorage.setItem('worldland_login_tab', '1');
+    console.log('됨?');
     //정보 초기화
     TokenService.remove();
     dispatch(userId(undefined));
@@ -195,13 +195,14 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
     })
       .then((res) => {
         const authPayload: AuthPayLoad = res.data.lvloginEmail;
+        console.log('로그인: ', authPayload);
         TokenService.set(authPayload.token);
         dispatch(userId(authPayload.userId));
         dispatch(userEmail(authPayload.userEmail));
         dispatch(userMobile(authPayload.userMobile));
         dispatch(userLevel(authPayload.userLevel));
 
-        localStorage.setItem('peta_ref_id', 'true'); //refresh token 존재 여부
+        localStorage.setItem('worldland_ref_id', 'true'); //refresh token 존재 여부
         if (authPayload.userLevel === '99999' || 'VIP' || 'USER') {
           router('/');
         } else {

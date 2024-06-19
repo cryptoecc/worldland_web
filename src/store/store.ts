@@ -20,19 +20,18 @@ const rootReducer = combineReducers({
   central,
 });
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['userReducer', 'emailReducer'], // persist가 필요한 특정 리듀서를 지정
-};
+// const persistConfig = {
+//   key: 'root',
+//   storage,
+//   whitelist: ['userReducer', 'emailReducer'], // persist가 필요한 특정 리듀서를 지정
+// };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production',
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }).concat(thunk),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }),
 });
 
 // {
