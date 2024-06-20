@@ -13,12 +13,33 @@ const httpLink = () => {
   let link: HttpLink;
 
   link = new HttpLink({
-    uri: process.env.REACT_APP_API_ENDPOINT,
+    uri: 'https://be.worldland.foundation/api/graphql',
     credentials: 'include',
   });
 
   return link;
 };
+
+// const httpLink2 = () => {
+//   let link: HttpLink;
+
+//   link = new HttpLink({
+//     uri: 'https://be.worldland.foundation/graphql',
+//     credentials: 'include',
+//   });
+
+//   return link;
+// };
+
+const endpoint1 = new HttpLink({
+  uri: 'https://be.worldland.foundation/api/graphql',
+  credentials: 'include',
+});
+
+const endpoint2 = new HttpLink({
+  uri: 'https://be.worldland.foundation/graphql',
+  credentials: 'include',
+});
 
 const authLink = setContext((_, { headers }) => {
   // const user = useSelector((state: AppState) => state.userReducer);
@@ -121,7 +142,18 @@ const linkOnError = onError(({ graphQLErrors, operation, forward }) => {
 });
 
 const apolloClient = new ApolloClient({
-  link: concat(linkOnError, concat(authLink, httpLink())),
+  // link: concat(linkOnError, concat(authLink, httpLink())),
+  link: concat(
+    linkOnError,
+    concat(
+      authLink,
+      ApolloLink.split(
+        (operation) => operation.getContext().clientName === 'endpoint2',
+        endpoint2, //if above
+        endpoint1,
+      ),
+    ),
+  ),
   //link: concat(authLink, httpLink()),
   //link: httpLink(),
   cache: new InMemoryCache(),
