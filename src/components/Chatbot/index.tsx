@@ -45,7 +45,7 @@ const LV_USER_QUERY = gql`
 `;
 
 const Chatbot = () => {
-  const { loading, error, data } = useQuery(LV_USER_QUERY);
+  //   const { loading, error, data } = useQuery(LV_USER_QUERY);
 
   const loggedInUserId = useAppSelector((state) => state.userReducer.userId);
   //   const user = useSelector((state: AppState) => state.userReducer);
@@ -65,7 +65,6 @@ const Chatbot = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
           'X-User-Id': loggedInUserId,
         },
         credentials: 'include',
@@ -81,8 +80,8 @@ const Chatbot = () => {
     }
   };
 
-  if (loading) return <p>로딩 중...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  //   if (loading) return <p>로딩 중...</p>;
+  //   if (error) return <p>Error: {error.message}</p>;
 
   return (
     <button onClick={handleRedirect} style={{ color: 'white', fontWeight: '700', gap: '8px', fontSize: '15px' }}>

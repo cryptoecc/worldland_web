@@ -38,7 +38,6 @@ const endpoint1 = new HttpLink({
 
 const endpoint2 = new HttpLink({
   uri: 'https://be.worldland.foundation/graphql',
-  credentials: 'include',
 });
 
 const authLink = setContext((_, { headers }) => {
