@@ -344,7 +344,7 @@ const AuthForgotEmail = () => {
               이메일 조회 결과
             </Typography>
             <Typography sx={{ color: '#d3d3d3' }}>{data?.lvUserByMobile?.email}</Typography>
-            <Button variant="contained" color="primary" component="a" href="/auth/auth2/login">
+            <Button variant="contained" color="primary" component="a" href="/api/login">
               해당 이메일로 로그인 하러 가기
             </Button>
           </Box>

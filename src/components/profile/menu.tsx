@@ -74,7 +74,7 @@ const MenuProfile: FC<MenuProfileProps> = ({ onCloseDrawer }) => {
   return (
     <Box sx={{ width: 250, p: 2, height: '100%', backgroundColor: '#333' }}>
       {menuItems.map((item) => (
-        <Link key={item.pageId} to={item.pageId !== 'logout' ? `/apps/profile/${item.pageId}` : '#'} replace>
+        <Link key={item.pageId} to={item.pageId !== 'logout' ? `/api/apps/profile/${item.pageId}` : '#'} replace>
           <MenuItem
             selected={currentPageId === item.pageId}
             onClick={() => handleMenuClick(item.pageId)}

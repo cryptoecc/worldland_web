@@ -206,7 +206,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
         if (authPayload.userLevel === '99999' || 'VIP' || 'USER') {
           router('/');
         } else {
-          router('/auth/register');
+          router('/api/auth/register');
         }
       })
       .catch((res) => {
@@ -251,7 +251,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           <Stack justifyContent="space-between" direction="row" alignItems="center" my="2">
             <Typography
               component="a"
-              href="/auth/forgot-email"
+              href="/api/auth/forgot-email"
               fontWeight="500"
               sx={{ color: '#abb0f2' }}
               fontSize={14}
@@ -260,7 +260,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             </Typography>
             <Typography
               component="a"
-              href="/auth/forgot-password"
+              href="/api/auth/forgot-password"
               fontWeight="500"
               sx={{ color: '#abb0f2' }}
               fontSize={14}
@@ -288,7 +288,7 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
           </Typography>
           <Typography
             component="a"
-            href="/auth/register"
+            href="/api/auth/register"
             fontWeight="500"
             sx={{
               color: '#abb0f2',

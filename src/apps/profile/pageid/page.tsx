@@ -32,7 +32,7 @@ const ProfileSub = () => {
           pageid === 'change-wallet'
         )
       ) {
-        router('/apps/profile/personal-information');
+        router('/api/apps/profile/personal-information');
       }
     }
   }, [pageid, router]);

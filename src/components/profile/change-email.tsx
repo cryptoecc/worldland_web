@@ -75,7 +75,7 @@ const EmailProfile = () => {
         setOpen(true);
         setTimeout(() => {
           setOpen(false);
-          router('/apps/profile/personal-information');
+          router('/api/apps/profile/personal-information');
         }, 2000);
       } else {
         setAlertMessage(result.retMsg);

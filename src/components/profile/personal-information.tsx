@@ -79,7 +79,7 @@ const InfoProfile = () => {
   const router = useNavigate();
 
   const gotoChange = (pageId: string) => {
-    router(`/apps/profile/${pageId}`);
+    router(`/api/apps/profile/${pageId}`);
   };
 
   // const [initLvAccessToken, {}] = useMutation(InitLvAccessTokenMutation);

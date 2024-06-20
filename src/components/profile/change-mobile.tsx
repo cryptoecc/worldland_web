@@ -90,7 +90,7 @@ const MobileProfile = () => {
         setOpen(true);
         setTimeout(() => {
           setOpen(false);
-          router('/apps/profile/personal-information');
+          router('/api/apps/profile/personal-information');
         }, 3000);
       } else {
         setAlertMessage(result.retMsg);
