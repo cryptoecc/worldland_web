@@ -245,7 +245,7 @@ const AuthForgotPassword = () => {
       case 0:
         return (
           <Stack mt={4} spacing={2}>
-            <FormLabel htmlFor="email" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="email" sx={{ color: 'black' }}>
               Email Address
             </FormLabel>
             <Box display="flex" justifyContent="space-between">
@@ -257,7 +257,7 @@ const AuthForgotPassword = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 sx={{
                   input: {
-                    color: '#d3d3d3',
+                    color: 'black',
                     borderRadius: '4px',
                     border: '1px solid #ccc',
                     height: '10px',
@@ -269,7 +269,7 @@ const AuthForgotPassword = () => {
                 {pinText}
               </Button>
             </Box>
-            <FormLabel htmlFor="verify-code" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="verify-code" sx={{ color: 'black' }}>
               Verify Code
             </FormLabel>
             <TextField
@@ -280,7 +280,7 @@ const AuthForgotPassword = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
               sx={{
                 input: {
-                  color: '#d3d3d3',
+                  color: 'black',
                   borderRadius: '4px',
                   border: '1px solid #ccc',
                   height: '10px',
@@ -302,7 +302,7 @@ const AuthForgotPassword = () => {
       case 1:
         return (
           <Stack mt={4} spacing={2}>
-            <FormLabel htmlFor="newPassword" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="newPassword" sx={{ color: 'black' }}>
               New Password
             </FormLabel>
             <TextField
@@ -314,14 +314,14 @@ const AuthForgotPassword = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
               sx={{
                 input: {
-                  color: '#d3d3d3',
+                  color: 'black',
                   borderRadius: '4px',
                   border: '1px solid #ccc',
                   height: '10px',
                 },
               }}
             />
-            <FormLabel htmlFor="confirmPassword" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="confirmPassword" sx={{ color: 'black' }}>
               Confirm Password
             </FormLabel>
             <TextField
@@ -333,7 +333,7 @@ const AuthForgotPassword = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
               sx={{
                 input: {
-                  color: '#d3d3d3',
+                  color: 'black',
                   borderRadius: '4px',
                   border: '1px solid #ccc',
                   height: '10px',
@@ -345,7 +345,7 @@ const AuthForgotPassword = () => {
       case 2:
         return (
           <Box textAlign="center">
-            <Typography variant="h6" gutterBottom sx={{ color: '#d3d3d3' }}>
+            <Typography variant="h6" gutterBottom sx={{ color: 'black' }}>
               비밀번호 재설정이 완료되었습니다!
             </Typography>
             <Button variant="contained" color="primary" component="a" href="/">

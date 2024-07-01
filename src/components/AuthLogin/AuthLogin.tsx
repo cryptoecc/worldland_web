@@ -42,7 +42,7 @@ const Logo = styled.div`
 
 const Title = styled.h2`
   margin-bottom: 1rem;
-  color: #d3d3d3;
+  color: #000;
   font-weight: bold;
 `;
 
@@ -73,7 +73,7 @@ const Input = styled.input`
   width: 100%;
   padding: 10px;
   margin-bottom: 1rem;
-  border: 1px solid #ccc; // 경계선 스타일 지정
+  border: 1px solid gray; // 경계선 스타일 지정
   border-radius: 4px; // 경계선 둥글게
 `;
 
@@ -227,20 +227,20 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
       {subtext}
 
       {/* <AuthSocialButtons title="Sign in with" /> */}
-      {/* <Box mt={3}>
+      <Box mt={3}>
         <Divider>
-          <Typography component="span" color="textSecondary" variant="h6" fontWeight="400" position="relative" px={2}>
-            sign in with
+          <Typography component="span" color="textSecondary" fontWeight="400" position="relative" px={2}>
+            login in with
           </Typography>
         </Divider>
-      </Box> */}
+      </Box>
 
       <form onSubmit={handleSubmit}>
         {/* <Logo>
           <WorldLandLogo />
         </Logo> */}
         <Stack>
-          <Box mt={7}>
+          <Box mt={3}>
             <Title>Email</Title>
             <Input type="text" name="email" value={formData.email} onChange={handleChange} />
           </Box>
@@ -249,22 +249,10 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             <Input type="password" name="password" value={formData.password} onChange={handleChange} />
           </Box>
           <Stack justifyContent="space-between" direction="row" alignItems="center" my="2">
-            <Typography
-              component="a"
-              href="/api/auth/forgot-email"
-              fontWeight="500"
-              sx={{ color: '#abb0f2' }}
-              fontSize={14}
-            >
+            <Typography component="a" href="/api/auth/forgot-email" fontWeight="500" color="primary" fontSize={14}>
               Forgot Email ?
             </Typography>
-            <Typography
-              component="a"
-              href="/api/auth/forgot-password"
-              fontWeight="500"
-              sx={{ color: '#abb0f2' }}
-              fontSize={14}
-            >
+            <Typography component="a" href="/api/auth/forgot-password" fontWeight="500" color="primary" fontSize={14}>
               Forgot Password ?
             </Typography>
           </Stack>
@@ -276,24 +264,17 @@ const AuthLogin = ({ title, subtitle, subtext }: loginType) => {
             size="large"
             fullWidth
             type="submit"
-            sx={{ backgroundColor: '#abb0f2', color: 'black', fontWeight: 'bold' }}
+            sx={{ backgroundColor: '#3396ff', color: 'white' }}
           >
-            Sign In
+            Log In
           </Button>
         </Box>
         {/* <Button2 type="submit">Sign In</Button2> */}
         <Stack direction="row" spacing={1} justifyContent="center" mt={5}>
-          <Typography color="#d3d3d3" fontWeight="500">
+          <Typography color="black" fontWeight="500">
             New to WorldLand?
           </Typography>
-          <Typography
-            component="a"
-            href="/api/auth/register"
-            fontWeight="500"
-            sx={{
-              color: '#abb0f2',
-            }}
-          >
+          <Typography component="a" href="/api/auth/register" fontWeight="500" color="primary">
             Create an account
           </Typography>
         </Stack>
