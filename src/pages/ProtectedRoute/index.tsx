@@ -1,5 +1,5 @@
 import Admin from 'pages/Admin';
-import AdminBoard from 'pages/Admin/AdminBoard';
+import ContractList from 'pages/Admin/ContractList';
 import { useEffect, useState } from 'react';
 // import { checkJWT } from "utils/jwt";
 
@@ -18,38 +18,18 @@ const ProtectedRoute = () => {
         const token = localStorage.getItem('token');
 
         if (!token || isTokenExpired(token)) {
-            alert('Session expired. Please login again');
             localStorage.removeItem('token');
             return setAuthToken(null);
         }
 
         return setAuthToken(token);
-        // try {
-        //   const response = await provider.get('/api/admin/admin-info', {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`, // Authorization 헤더에 JWT 포함
-        //     },
-        //   });
-
-        //   console.log(response);
-        // } catch (error) {
-        //   console.error('Error fetching', error);
-        //   const err = error as AxiosError;
-
-        //   if (err.response && err.response.status === 403) {
-        //     alert('Session expired. Please login again');
-        //     navigate('/wl-admin');
-        //   } else {
-        //     console.error('Error fetching', err);
-        //   }
-        // }
     };
 
     useEffect(() => {
         checkJWT();
     }, []);
     return authToken || _authToken ? (
-        <AdminBoard token={_authToken ?? authToken} setToken={setAuthToken} />
+        <ContractList />
     ) : (
         <Admin setToken={setAuthToken} />
     );

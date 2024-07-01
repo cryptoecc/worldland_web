@@ -28,6 +28,8 @@ import Register from 'pages/Register';
 import ForgotPassword2 from 'pages/Forgot-password';
 import ForgotEmail2 from 'pages/Forgot-email';
 import CustomizedSteppers from 'components/AuthRegister/test';
+import AdminTokenSale from 'pages/Admin/AdminTokenSale';
+import AdminAward from 'pages/Admin/AdminAward';
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -59,6 +61,8 @@ const Router = () => {
         { path: `${PATH.ADD}`, element: <AddLiquidity /> },
         { path: `${PATH.CONTACT}`, element: <Contact /> },
         { path: `${PATH.ADMIN}`, element: <ProtectedRoute /> },
+        { path: `${PATH.ADMIN_SALE}`, element: <AdminTokenSale /> },
+        { path: `${PATH.ADMIN_AWARD}`, element: <AdminAward /> },
         { path: `${PATH.TIMELOCK_LIST}`, element: <Timelock /> },
         { path: `${PATH.TIMELOCK_USER_AWARD}`, element: <UserAward /> },
         { path: `${PATH.TIMELOCK_USER_SALE}`, element: <UserSale /> },

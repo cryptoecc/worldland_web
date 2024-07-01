@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,41 +13,25 @@ import { WLD_ADDRESSES } from 'configs/contract_addresses';
 
 function createData(
     name: string,
-    address: string | undefined
+    address: string,
+    type: string,
 ) {
-    return { name, address };
-}
-
-const mapTypeToContract = {
-    award: {
-        name: 'Award Distributer',
-        contract: WLD_ADDRESSES.AWARD_LINEAR_TIMELOCK
-    },
-    sale: {
-        name: 'Token Sale',
-        contract: WLD_ADDRESSES.SALE_LINEAR_TIMELOCK
-    }
+    return { name, address, type };
 }
 
 
-export default function Timelock() {
+export default function ContractList() {
     const navigate = useNavigate();
-    const { type } = useParams<{ type: string }>();
-
-    const contractInfo = mapTypeToContract[type as keyof typeof mapTypeToContract] || {
-        name: 'Unknown',
-        contract: 'Unknown'
-    };
 
     const rows = [
-        createData(contractInfo.name, contractInfo.contract),
+        createData('Award Distributer', WLD_ADDRESSES.AWARD_LINEAR_TIMELOCK, 'award'),
+        createData('Token Sale', WLD_ADDRESSES.SALE_LINEAR_TIMELOCK, 'sale'),
     ];
 
     return (
         <Container>
             <Description>
-                <h1>Linear Timelock Contract List ({type === 'award' ? 'Award Distributer' : 'Token Sale'})</h1>
-                <p>Click on a specific contract to see if you hold a position</p>
+                <h1>Linear Timelock Contract List</h1>
             </Description>
             <TableContainer sx={{ maxWidth: '1200px' }} component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -61,7 +46,7 @@ export default function Timelock() {
                             <TableRow
                                 key={i}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 }, 'td, th': { cursor: 'pointer' }, ':hover': { backgroundColor: '#f4f4f4' } }}
-                                onClick={() => navigate(`/timelock-contracts/${type}/${row.address}`)}
+                                onClick={() => navigate(`/admin/${row.type}/${row.address}`)}
                             >
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell component="th" scope="row">

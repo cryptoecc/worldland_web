@@ -13,7 +13,7 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei, putCommaAtPrice } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Contract, initialContractObj } from 'pages/Admin/AdminBoard';
+import { Contract, initialContractObj } from 'pages/Admin/constants';
 import { useEffect, useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { useParams } from "react-router-dom";
@@ -70,7 +70,7 @@ const User = () => {
     dayjs.extend(relativeTime);
     const { address } = useAccount();
     const { addToast } = useToasts();
-    const { type, contract_address } = useParams();
+    const { contract_address } = useParams();
     const [userData, setUserData] = useState<UserInfo>(userInitialData);
     const [disabled, setDisabled] = useState<boolean>(true);
     const [txModal, setTxModal] = useState<Modals>({ modal0: false, modal1: false });
@@ -78,8 +78,6 @@ const User = () => {
     let rows = [
         createData('Contract Owner', userData?.owner),
         createData('Timelock Contract Address', contract_address as string),
-        // createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
-        // createData('NFT Ownership', userData?.userNftBalance),
         createData('Contract Balance', putCommaAtPrice(userData?.balance ?? '0', 4) + ' WL'),
         createData('My assigned balance in the contract', putCommaAtPrice(userData?.userBalance ?? '0', 4) + ' WL'),
         createData('Available amount to withdraw', putCommaAtPrice(userData?.availAmount ?? '0', 4) + ' WL'),
@@ -94,17 +92,6 @@ const User = () => {
         slice1.push(createData('Contract State', 'Frozen ❄️'));
         rows = slice1.concat(slice2);
     }
-    // // main contract ERC20 balance check
-    // useContractRead({
-    //     address: MAPNETTOADDRESS.ERC20_WWLC,
-    //     abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    //     functionName: QUERY.BALANCEOF,
-    //     args: [contract_address],
-    //     watch: true,
-    //     onSuccess(data) {
-    //         setUserData((prev) => ({ ...prev, balance: from_wei(data?.toString()) }))
-    //     }
-    // })
     useBalance({
         address: contract_address as `0x${string}`,
         watch: true,
@@ -119,17 +106,6 @@ const User = () => {
             setUserData((prev) => ({ ...prev, walletBalance: data?.value ? from_wei(data?.value.toString()) : data?.value.toString() }))
         }
     })
-
-    // useContractRead({
-    //     address: MAPNETTOADDRESS.ERC721_WNFTMINTER,
-    //     abi: MAP_STR_ABI[ABI.ERC721_WNFTMINTER],
-    //     functionName: QUERY.BALANCEOF,
-    //     args: [address],
-    //     watch: true,
-    //     onSuccess(data: string) {
-    //         setUserData((prev) => ({ ...prev, userNftBalance: data.toString() }));
-    //     },
-    // });
     useContractRead({
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],

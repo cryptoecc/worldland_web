@@ -42,6 +42,7 @@ export enum CONTRACT_ADDRESSES {
   ERC20_ABI = 'ERC20_ABI',
   BRIDGE = 'BRIDGE',
   AWARD_LINEAR_TIMELOCK = 'AWARD_LINEAR_TIMELOCK',
+  SALE_LINEAR_TIMELOCK = 'SALE_LINEAR_TIMELOCK',
   ERC721_WNFTMINTER = 'ERC721_WNFTMINTER',
 }
 
@@ -71,6 +72,7 @@ export enum FUNCTION {
   FINALIZE = 'finalizeAllIncomingDeposits',
   DEPOSITWL = 'depositWL',
   WITHDRAWWL = 'withdrawEth',
+  WITHDRAWTOKEN = 'transferAccidentallyLockedTokens',
   WITHDRAW = 'transferTimeLockedTokensAfterTimePeriod',
 }
 

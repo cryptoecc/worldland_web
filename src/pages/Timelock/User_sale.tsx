@@ -13,11 +13,11 @@ import { MAP_STR_ABI } from 'configs/abis';
 import { from_wei, putCommaAtPrice } from 'utils/util';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Contract, initialContractObj } from 'pages/Admin/AdminBoard';
-import { useEffect, useState } from 'react';
+import { Contract, initialContractObj } from 'pages/Admin/constants';
+import React, { useEffect, useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { useParams } from "react-router-dom";
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { MESSAGES } from 'utils/messages';
 import { useToasts } from 'react-toast-notifications';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
@@ -48,7 +48,7 @@ interface UserInfo extends Contract {
 
 function createData(
     name: string,
-    value: string | number,
+    value: string | number | React.ReactNode,
 ) {
     return { name, value };
 }
@@ -70,16 +70,25 @@ const User = () => {
     dayjs.extend(relativeTime);
     const { address } = useAccount();
     const { addToast } = useToasts();
-    const { type, contract_address } = useParams();
+    const { contract_address } = useParams();
     const [userData, setUserData] = useState<UserInfo>(userInitialData);
     const [disabled, setDisabled] = useState<boolean>(true);
     const [txModal, setTxModal] = useState<Modals>({ modal0: false, modal1: false });
     const [currentTxData, setCurrentTxData] = useState<TxDetails>({ header: '', content: '', subContent: '', function: () => { } })
+    const nftInput = (<TextField
+        id="outlined-number"
+        label="Number"
+        type="number"
+        InputLabelProps={{
+            shrink: true,
+        }}
+    />)
     let rows = [
         createData('Contract Owner', userData?.owner),
         createData('Timelock Contract Address', contract_address as string),
         createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
-        createData('NFT Ownership', userData?.userNftBalance),
+        createData('NFT ownership balance (Number of nfts owned)', userData?.userNftBalance),
+        createData('Token Id input', nftInput),
         createData('Contract Balance', putCommaAtPrice(userData?.balance ?? '0', 4) + ' WL'),
         createData('My assigned balance in the contract', putCommaAtPrice(userData?.userBalance ?? '0', 4) + ' WL'),
         createData('Available amount to withdraw', putCommaAtPrice(userData?.availAmount ?? '0', 4) + ' WL'),
@@ -103,7 +112,7 @@ const User = () => {
         watch: true,
         onSuccess(data) {
             console.log({ DATA: data })
-            setUserData((prev) => ({ ...prev, balance: data ? from_wei(data?.toString()) : '0' }))
+            setUserData((prev) => ({ ...prev, balance: data ? from_wei(data?.toString()) : '0' }));
         }
     })
 
@@ -114,7 +123,7 @@ const User = () => {
         args: [address],
         watch: true,
         onSuccess(data) {
-            setUserData((prev) => ({ ...prev, walletBalance: from_wei(data?.toString()) }))
+            setUserData((prev) => ({ ...prev, walletBalance: data ? from_wei(data?.toString()) : '0' }));
         }
     })
 

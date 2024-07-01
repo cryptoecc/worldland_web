@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { provider } from 'configs/axios';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import AddReceiver from './AddReceiver';
 import SetTimestamp from './SetTimestamp';
@@ -36,11 +36,7 @@ import { EPS } from 'constants/api-routes';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import TxConfirmModal from 'components/main/TxConfirmModal';
 import TxProcessModal from 'components/main/TxProcessModal';
-export interface Contract {
-  balance: string;
-  owner: string;
-  isAllIncomingDepositsFinalised: boolean;
-}
+import { Contract, initialContractObj } from './constants';
 
 export interface UserData {
   id: number;
@@ -49,11 +45,7 @@ export interface UserData {
   total_amount: string;
 }
 
-export const initialContractObj = {
-  balance: '0',
-  owner: '',
-  isAllIncomingDepositsFinalised: false,
-};
+
 
 const Container = styled.section`
   display: flex;
@@ -110,10 +102,7 @@ function createData(name: string, value: string | number) {
   return { name, value };
 }
 
-interface IProps {
-  token: string | null;
-  setToken: React.Dispatch<React.SetStateAction<string | null>>;
-}
+
 
 type Modals = {
   modal0: boolean;
@@ -128,8 +117,12 @@ type TxDetails = {
 }
 
 
-const AdminBoard = ({ token, setToken }: IProps) => {
+const AdminTokenSale = () => {
   dayjs.extend(relativeTime);
+  const navigate = useNavigate();
+  const { contract_address } = useParams();
+
+  const token = localStorage.getItem('token');
   const [adminId, setAdminId] = useState<string | undefined>('');
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);
   const { address } = useAccount();
@@ -141,15 +134,15 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   const [currentTxData, setCurrentTxData] = useState<TxDetails>({ header: '', content: '', subContent: '', function: () => { } })
   const rows = [
     createData('Contract Owner', contract?.owner),
-    createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK]),
+    createData('Timelock Contract Address', WLD_ADDRESSES[CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK]),
     createData('Contract Balance', contract?.balance + ' WL'),
     createData('Contract-Admin interaction', contract.isAllIncomingDepositsFinalised ? 'Locked 🔒' : 'Open 🔓'),
   ];
 
   function handleRemoveAuthToken() {
     localStorage.removeItem('token');
-    setToken('');
     setModals((prev) => ({ ...prev, modal1: false }));
+    navigate('/admin');
   }
 
   const fetchUserInfo = async () => {
@@ -176,8 +169,8 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   };
 
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
     functionName: QUERY.OWNER,
     onSuccess(data: string) {
       setContract((prev) => ({ ...prev, owner: data }));
@@ -185,28 +178,21 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   });
 
   // // main contract ERC20 balance check
-  // useContractRead({
-  //   address: MAPNETTOADDRESS.ERC20_WWLC,
-  //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
-  //   functionName: QUERY.BALANCEOF,
-  //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK],
-  //   watch: true,
-  //   onSuccess(data) {
-  //     setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
-  //   }
-  // })
-
-  useBalance({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
+  useContractRead({
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: QUERY.BALANCEOF,
+    args: [MAPNETTOADDRESS.SALE_LINEAR_TIMELOCK],
     watch: true,
     onSuccess(data) {
-      setContract((prev) => ({ ...prev, balance: data?.value ? putCommaAtPrice(from_wei(data?.value.toString()), 4) : data?.value.toString() }))
+      console.log({ CONTRACT_BALANCE_WL7823: data });
+      setContract((prev) => ({ ...prev, balance: data ? from_wei(data?.toString()) : '0' }));
     }
   })
 
   useContractRead({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
     functionName: QUERY.ISFINALISED,
     watch: true,
     onSuccess(data: boolean) {
@@ -215,8 +201,8 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   });
 
   const { data: txFinalized, write: finalize } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
     functionName: FUNCTION.FINALIZE,
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
@@ -234,37 +220,17 @@ const AdminBoard = ({ token, setToken }: IProps) => {
     },
   });
 
-  // const { data: txWLDeposited, write: depositWL } = useContractWrite({
-  //   address: MAPNETTOADDRESS.ERC20_WWLC,
-  //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
-  //   functionName: FUNCTION.TRANSFER,
-  //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK, parseEther(inputAmount)],
-  //   onSuccess() {
-  //     addToast(MESSAGES.TX_SENT, {
-  //       appearance: 'success',
-  //       autoDismiss: true,
-  //     });
-  //     setInputAmount('');
-  //   },
-  //   onError(err: any) {
-  //     addToast(MESSAGES.TX_FAIL, {
-  //       appearance: 'error',
-  //       content: err?.shortMessage,
-  //       autoDismiss: true,
-  //     });
-  //   },
-  // });
-
   const { data: txWLDeposited, write: depositWL } = useContractWrite({
-    address: MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK,
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
-    functionName: FUNCTION.DEPOSITWL,
-    value: parseEther(inputAmount),
+    address: MAPNETTOADDRESS.ERC20_WWLC,
+    abi: MAP_STR_ABI[ABI.ERC20_ABI],
+    functionName: FUNCTION.TRANSFER,
+    args: [MAPNETTOADDRESS.SALE_LINEAR_TIMELOCK, parseEther(inputAmount)],
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
         autoDismiss: true,
       });
+      setInputAmount('');
     },
     onError(err: any) {
       addToast(MESSAGES.TX_FAIL, {
@@ -272,16 +238,16 @@ const AdminBoard = ({ token, setToken }: IProps) => {
         content: err?.shortMessage,
         autoDismiss: true,
       });
-      setTxModal(prev => ({ ...prev, modal1: false }));
     },
   });
 
+
+
   const { data: txWLWithdrawn, write: withdrawWL } = useContractWrite({
-    address: MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK,
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
-    functionName: FUNCTION.WITHDRAWWL,
-    args: [parseEther(inputAmount)],
-    value: parseEther('0'),
+    address: MAPNETTOADDRESS.SALE_LINEAR_TIMELOCK,
+    abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
+    functionName: FUNCTION.WITHDRAWTOKEN,
+    args: [MAPNETTOADDRESS.ERC20_WWLC, parseEther(inputAmount)],
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {
         appearance: 'success',
@@ -437,4 +403,4 @@ const AdminBoard = ({ token, setToken }: IProps) => {
   );
 };
 
-export default AdminBoard;
+export default AdminTokenSale;

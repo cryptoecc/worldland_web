@@ -9,7 +9,6 @@ export const checkJWT = async () => {
   const token = localStorage.getItem('token');
 
   if (!token || isTokenExpired(token)) {
-    alert('Session expired. Please login again');
     return localStorage.removeItem('token');
   }
 
@@ -27,7 +26,6 @@ export const checkJWT = async () => {
   //   const err = error as AxiosError;
 
   //   if (err.response && err.response.status === 403) {
-  //     alert('Session expired. Please login again');
   //     navigate('/wl-admin');
   //   } else {
   //     console.error('Error fetching', err);

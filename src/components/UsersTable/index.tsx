@@ -6,18 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Contract } from 'pages/Admin/AdminBoard';
+import { UserData } from 'pages/Admin/constants';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { UserData } from 'pages/Admin/AdminBoard';
 import { putCommaAtPrice } from 'utils/util';
-
-type User = {
-  id: number;
-  created_at: string;
-  address: string;
-  total_amount: string | number;
-};
 
 interface TableProps {
   users: UserData[];
