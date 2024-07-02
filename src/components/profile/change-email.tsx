@@ -120,7 +120,7 @@ const EmailProfile = () => {
         <Grid item xs={3}>
           <Typography variant="body1">새 Email :</Typography>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={7} sx={{ height: '10px' }}>
           <TextField fullWidth variant="outlined" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
         </Grid>
         <Grid item xs={2}>
