@@ -109,7 +109,7 @@ const AuthForgotEmail = () => {
   //이전 버튼
   const handleBack = () => {
     if (activeStep === 0) {
-      router('/auth/auth2/login');
+      router('/api/login');
     }
     setIsVerified(false);
   };
@@ -252,17 +252,16 @@ const AuthForgotEmail = () => {
       case 0:
         return (
           <Stack mt={4} spacing={2}>
-            <FormLabel htmlFor="mobile" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="mobile" sx={{ color: 'black' }}>
               Mobile
             </FormLabel>
-            <Box display="flex" justifyContent="space-between" alignItems="stretch">
+            <Box display="flex" justifyContent="space-between" alignItems="stretch" sx={{ width: '360px' }}>
               <Select
                 sx={{
                   height: '45px',
-                  minWidth: '120px',
-                  color: '#d3d3d3',
+                  minWidth: '100px',
+                  color: 'black',
                   borderRadius: '4px',
-                  border: '1px solid #ccc',
                 }}
                 id="country"
                 name="country"
@@ -292,7 +291,14 @@ const AuthForgotEmail = () => {
                 variant="outlined"
                 value={mobile.mobile1}
                 onChange={handleMobileChange}
-                sx={{ input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' } }}
+                sx={{
+                  input: {
+                    color: 'black',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    height: '10px',
+                  },
+                }}
               />
               <TextField
                 id="mobile2"
@@ -300,7 +306,14 @@ const AuthForgotEmail = () => {
                 variant="outlined"
                 value={mobile.mobile2}
                 onChange={handleMobileChange}
-                sx={{ input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' } }}
+                sx={{
+                  input: {
+                    color: '#black',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    height: '10px',
+                  },
+                }}
               />
               <TextField
                 id="mobile3"
@@ -308,13 +321,13 @@ const AuthForgotEmail = () => {
                 variant="outlined"
                 value={mobile.mobile3}
                 onChange={handleMobileChange}
-                sx={{ input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' } }}
+                sx={{ input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' } }}
               />
               <Button variant="contained" color="primary" onClick={handleSendToMobile} disabled={verifyLoading}>
                 {pinText}
               </Button>
             </Box>
-            <FormLabel htmlFor="verify-code" sx={{ color: '#d3d3d3' }}>
+            <FormLabel htmlFor="verify-code" sx={{ color: 'black' }}>
               Code
             </FormLabel>
             <Box display="flex" justifyContent="space-between">
@@ -323,7 +336,7 @@ const AuthForgotEmail = () => {
                 variant="outlined"
                 value={code}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
-                sx={{ input: { height: '10px', color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc' } }}
+                sx={{ input: { height: '10px', color: 'black', borderRadius: '4px', border: '1px solid #ccc' } }}
               />
               <Button
                 color="primary"
@@ -340,11 +353,11 @@ const AuthForgotEmail = () => {
       case 1:
         return (
           <Box textAlign="center">
-            <Typography variant="h6" gutterBottom sx={{ color: '#d3d3d3' }}>
+            <Typography variant="h6" gutterBottom sx={{ color: 'black' }}>
               이메일 조회 결과
             </Typography>
-            <Typography sx={{ color: '#d3d3d3' }}>{data?.lvUserByMobile?.email}</Typography>
-            <Button variant="contained" color="primary" component="a" href="/auth/auth2/login">
+            <Typography sx={{ color: 'black', marginBottom: '10px' }}>{data?.lvUserByMobile?.email}</Typography>
+            <Button variant="contained" color="primary" component="a" href="/api/login">
               해당 이메일로 로그인 하러 가기
             </Button>
           </Box>

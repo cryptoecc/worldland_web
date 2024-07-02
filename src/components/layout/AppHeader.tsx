@@ -6,6 +6,7 @@ import { maxQuery } from 'utils/breakpoints';
 import { theme } from 'style/theme';
 import { WorldLandLogo } from 'assets';
 import Web3ConnectButton from 'components/web3/Web3Button';
+import LoginButton from 'components/LoginBtn/login_btn';
 import AddNetworkButton from 'components/web3/AddNetworkButton';
 import MobileMetamask from 'components/web3/MobileAddNetwork';
 
@@ -79,6 +80,7 @@ function AppHeader() {
           </LogoWrapper>
         </Link>
         <MainMenu />
+        {/* <LoginButton /> */}
         <Web3ConnectButton
           onAccountConnected={function (account: string): void {
             throw new Error('Function not implemented.');

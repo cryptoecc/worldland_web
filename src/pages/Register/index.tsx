@@ -24,16 +24,16 @@ export default function Register() {
         <Grid item xs={12} sm={12} lg={5} xl={4} display="flex" justifyContent="center" alignItems="center">
           <Card
             elevation={9}
-            sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '450px', color: '#d3d3d3', backgroundColor: '#333' }}
+            sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '450px', color: 'black', backgroundColor: 'white' }}
           >
-            {/* <Box display="flex" alignItems="center" justifyContent="center"> */}
-            <div style={{ marginLeft: '150px', width: '90px' }}>
-              {/* <WorldLandLogo /> */}
-              <img src={LogoImage} />
-            </div>
+            <Box display="flex" alignItems="center" justifyContent="center">
+              <div style={{ width: '90px' }}>
+                {/* <WorldLandLogo /> */}
+                <img src={LogoImage} />
+              </div>
 
-            {/* <img src={LogoImage} alt="World Land Logo" style={{ width: '200px' }} /> */}
-            {/* </Box> */}
+              {/* <img src={LogoImage} alt="World Land Logo" style={{ width: '200px' }} /> */}
+            </Box>
             <AuthRegister
               subtext={
                 <Typography variant="subtitle1" textAlign="center" color="yellow" mb={1}>
@@ -42,7 +42,7 @@ export default function Register() {
               }
               subtitle={
                 <Stack direction="row" spacing={1} mt={3}>
-                  <Typography color="#d3d3d3" fontWeight="400">
+                  <Typography color="black" fontWeight="400">
                     Already have an Account?
                   </Typography>
                   <Typography

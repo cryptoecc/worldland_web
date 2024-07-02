@@ -351,7 +351,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         return (
           <form onSubmit={formik.handleSubmit}>
             <Stack mb={3}>
-              <InputLabel htmlFor="email" sx={{ color: '#d3d3d3' }}>
+              <InputLabel htmlFor="email" sx={{ color: 'black' }}>
                 Email
               </InputLabel>
               <Box display="flex" justifyContent="space-between">
@@ -369,7 +369,8 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   }
                   sx={{
                     input: {
-                      color: '#d3d3d3',
+                      color: 'black',
+                      // width: '250px',
                       borderRadius: '4px',
                       border: '1px solid #ccc',
                       height: '10px',
@@ -377,9 +378,11 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                     marginTop: '10px',
                   }}
                 />
-                <Button onClick={handleEmailCheck}>중복확인</Button>
+                <Button onClick={handleEmailCheck} sx={{ width: '100px', height: '45px', marginTop: '10px' }}>
+                  중복확인
+                </Button>
               </Box>
-              <InputLabel htmlFor="nickname" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="nickname" sx={{ color: 'black', marginTop: '30px' }}>
                 Nick Name
               </InputLabel>
               <Box display="flex" justifyContent="space-between">
@@ -396,7 +399,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   }
                   sx={{
                     input: {
-                      color: '#d3d3d3',
+                      color: 'black',
                       borderRadius: '4px',
                       border: '1px solid #ccc',
                       height: '10px',
@@ -404,9 +407,11 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                     marginTop: '10px',
                   }}
                 />
-                <Button onClick={handleNicknameCheck}>중복확인</Button>
+                <Button onClick={handleNicknameCheck} sx={{ width: '100px', height: '45px', marginTop: '10px' }}>
+                  중복확인
+                </Button>
               </Box>
-              <InputLabel htmlFor="password" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="password" sx={{ color: 'black', marginTop: '30px' }}>
                 Password
               </InputLabel>
               <TextField
@@ -423,11 +428,11 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   formik.touched.password && formik.errors.password === 'string' ? formik.errors.password : ''
                 }
                 sx={{
-                  input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                  input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                   marginTop: '10px',
                 }}
               />
-              <InputLabel htmlFor="password-confirm" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="password-confirm" sx={{ color: 'black', marginTop: '30px' }}>
                 Password confirm
               </InputLabel>
               <TextField
@@ -446,11 +451,11 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                     : ''
                 }
                 sx={{
-                  input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                  input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                   marginTop: '10px',
                 }}
               />
-              <InputLabel htmlFor="mobile" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="mobile" sx={{ color: 'black', marginTop: '30px' }}>
                 Mobile
               </InputLabel>
               <Box display="flex" justifyContent="space-between" alignItems="stretch">
@@ -458,9 +463,9 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   sx={{
                     // height: '60%',
                     minWidth: '120px',
-                    color: '#d3d3d3',
+                    color: 'black',
                     borderRadius: '4px',
-                    border: '1px solid #ccc',
+                    // border: '1px solid #ccc',
                     marginTop: '10px',
                     height: '45px',
                   }}
@@ -499,7 +504,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile1 && Boolean(formik.errors.mobile1)}
                   helperText={formik.touched.mobile1 && formik.errors.mobile1 === 'string' ? formik.errors.mobile1 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
@@ -514,7 +519,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile2 && Boolean(formik.errors.mobile2)}
                   helperText={formik.touched.mobile2 && formik.errors.mobile2 === 'string' ? formik.errors.mobile2 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
@@ -529,15 +534,19 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile3 && Boolean(formik.errors.mobile3)}
                   helperText={formik.touched.mobile3 && formik.errors.mobile3 === 'string' ? formik.errors.mobile3 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
-                <Button onClick={handleSendToMobile} disabled={verifyLoading}>
+                <Button
+                  onClick={handleSendToMobile}
+                  disabled={verifyLoading}
+                  sx={{ width: '100px', height: '45px', marginTop: '10px' }}
+                >
                   {pinText}
                 </Button>
               </Box>
-              <InputLabel htmlFor="verify-code" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="verify-code" sx={{ color: 'black', marginTop: '30px' }}>
                 Code
               </InputLabel>
               <Box display="flex" justifyContent="space-between">
@@ -553,11 +562,15 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                     formik.touched.verifyCode && formik.errors.verifyCode === 'string' ? formik.errors.verifyCode : ''
                   }
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
-                <Button onClick={handleVerifyClick} disabled={verifyDisable}>
+                <Button
+                  onClick={handleVerifyClick}
+                  disabled={verifyDisable}
+                  sx={{ width: '100px', height: '45px', marginTop: '10px' }}
+                >
                   인증
                 </Button>
               </Box>
@@ -570,7 +583,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
             <Typography variant="h6" gutterBottom>
               가입이 완료되었습니다!
             </Typography>
-            <Button variant="contained" color="primary" component="a" href="/auth/auth2/login">
+            <Button variant="contained" color="primary" component="a" href="/api/login">
               로그인 하러 가기
             </Button>
           </Box>
