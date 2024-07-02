@@ -51,7 +51,7 @@ const LoginButton = () => {
 
   return (
     <div>
-      {/* {showButton ? (
+      {showButton ? (
         <Link to="/api/apps/profile/personal-information" style={{ textDecoration: 'none' }}>
           <ManageAccountsIcon sx={{ color: 'white', fontSize: '30px', marginRight: '30px' }} />
         </Link>
@@ -59,7 +59,7 @@ const LoginButton = () => {
         <Link to="/api/login">
           <StyledButton>Log In</StyledButton>
         </Link>
-      )} */}
+      )}
     </div>
   );
 };

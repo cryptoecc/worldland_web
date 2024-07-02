@@ -53,6 +53,7 @@ const Chatbot = () => {
   const handleRedirect = async () => {
     if (!loggedInUserId) {
       console.error('User ID is undefined.');
+      window.location.href = 'https://law-chats.com/auth/redirect';
       return;
     }
 
