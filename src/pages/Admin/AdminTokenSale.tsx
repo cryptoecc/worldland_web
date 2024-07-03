@@ -368,7 +368,7 @@ const AdminTokenSale = () => {
             Withdraw
           </Button>
         </BtnWrap>
-        <AddReceiver setModal={setTxModal} setCurrentTxData={setCurrentTxData} isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
+        <AddReceiver contract_type={CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK} abi_type={ABI.SALE_LINEAR_TIMELOCK} setModal={setTxModal} setCurrentTxData={setCurrentTxData} isFinalised={contract?.isAllIncomingDepositsFinalised} fetchDaoInfo={fetchDaoInfo} />
         <BtnWrap>
           <Button
             disabled={contract?.isAllIncomingDepositsFinalised}

@@ -81,7 +81,7 @@ type Modals = {
   modal1: boolean;
 };
 
-const AddReceiver = ({ setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: { setModal: React.Dispatch<React.SetStateAction<Modals>>; setCurrentTxData: React.Dispatch<React.SetStateAction<TxDetails>>; isFinalised: boolean; fetchDaoInfo: () => void }) => {
+const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: { contract_type: string; abi_type: string; setModal: React.Dispatch<React.SetStateAction<Modals>>; setCurrentTxData: React.Dispatch<React.SetStateAction<TxDetails>>; isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
   const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[], lockTime: string[], vestTime: string[] }>({ receivers: [], amounts: [], lockTime: [], vestTime: [] });
   const { addToast } = useToasts();
