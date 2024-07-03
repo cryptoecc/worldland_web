@@ -129,8 +129,6 @@ type TxDetails = {
 const AdminTokenSale = () => {
   dayjs.extend(relativeTime);
   const navigate = useNavigate();
-  const { contract_address } = useParams();
-
   const token = localStorage.getItem('token');
   const [adminId, setAdminId] = useState<string | undefined>('');
   const [daoInfo, setDaoInfo] = useState<UserData[]>([]);

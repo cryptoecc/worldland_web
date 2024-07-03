@@ -122,7 +122,7 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 
   ${maxQuery.tablet} {
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-top: 10px;

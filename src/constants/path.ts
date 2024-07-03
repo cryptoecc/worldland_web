@@ -25,4 +25,10 @@ export const PATH = {
   TIMELOCK_LIST: '/timelock-contracts/:type',
   TIMELOCK_USER_AWARD: '/timelock-contracts/award/:contract_address',
   TIMELOCK_USER_SALE: '/timelock-contracts/sale/:contract_address',
+  LOGIN: '/api/login',
+  REGISTER: '/api/auth/register',
+  CUSTOM: '/test',
+  FORGOT_PASSWORD: '/api/auth/forgot-password',
+  FORGOT_EMAIL: '/api/auth/forgot-email',
+  PROFILE_INFORMATION: '/api/apps/profile/:pageid',
 };

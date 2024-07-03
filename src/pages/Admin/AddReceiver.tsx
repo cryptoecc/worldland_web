@@ -86,9 +86,11 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
   const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[], lockTime: string[], vestTime: string[] }>({ receivers: [], amounts: [], lockTime: [], vestTime: [] });
   const { addToast } = useToasts();
 
+  const abi = MAP_STR_ABI[abi_type as keyof typeof MAP_STR_ABI] || {}
+
   const { data: tx, write: bulkDepositFeaturingTimestamp } = useContractWrite({
     address: WLD_ADDRESSES[contract_type],
-    abi: contract_type === CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK ? MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK] : MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
+    abi,
     functionName: FUNCTION.BULKDEPOSITTOKENSFEATURINGTIMESTAMP,
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {

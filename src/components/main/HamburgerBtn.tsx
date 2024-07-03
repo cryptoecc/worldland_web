@@ -16,6 +16,7 @@ import { theme } from 'style/theme';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useWeb3Modal, Web3NetworkSwitch } from '@web3modal/react';
+import Chatbot from 'components/Chatbot';
 
 const HamburgerBtn = () => {
   const [isHamburgerOpen, setHamburgerOpen] = useState(false);
@@ -125,21 +126,21 @@ const HamburgerBtn = () => {
                   Connect Worldland
                 </a>
                 <a
-                  href="https://docs.worldland.foundation/miner/start-mining"
+                  href="https://docs.worldland.foundation/miner/install-and-run-geth"
                   className="user"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Start Mining
+                  Run node
                 </a>
-                <a
+                {/* <a
                   href="https://docs.worldland.foundation/miner/install-and-run-geth"
                   className="user"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   Node Operator
-                </a>
+                </a> */}
                 {/* <AddNetworkButton /> */}
                 <div className="user" onClick={() => open()}>
                   Add to Wallet
@@ -158,6 +159,11 @@ const HamburgerBtn = () => {
                 <a href="https://ai.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
                   My AI
                 </a>
+              </div>
+              <div className="user-menu">
+                <span className="user">
+                  <Chatbot />
+                </span>
               </div>
             </Dropdown>
           )}
@@ -178,7 +184,12 @@ const HamburgerBtn = () => {
                 >
                   Docs
                 </a>
-                <a href="https://github.com/cryptoecc" className="user" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://github.com/cryptoecc/WorldLand"
+                  className="user"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   GitHub
                 </a>
               </div>

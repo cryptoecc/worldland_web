@@ -24,7 +24,7 @@ export default function ForgotPassword2() {
     >
       <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
         <Grid item xs={12} sm={12} lg={4} xl={3} display="flex" justifyContent="center" alignItems="center">
-          <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px', backgroundColor: '#333' }}>
+          <Card elevation={9} sx={{ p: 4, zIndex: 1, width: '100%', maxWidth: '500px', backgroundColor: 'white' }}>
             <Box display="flex" alignItems="center" justifyContent="center">
               {/* <Logo /> */}
               <div style={{ width: '90px', marginBottom: '20px' }}>
@@ -32,7 +32,7 @@ export default function ForgotPassword2() {
                 <img src={LogoImage} />
               </div>
             </Box>
-            <Typography color="#d3d3d3" textAlign="center" variant="subtitle2" fontWeight="400">
+            <Typography color="black" textAlign="center" variant="subtitle2" fontWeight="400">
               Please enter the email address associated with your account and We will email you a link to reset your
               password.
             </Typography>
