@@ -11,11 +11,12 @@ import { mainnet, sepolia } from 'wagmi/chains';
 import { HelmetProvider } from 'react-helmet-async';
 import { worldland, worldland_testnet } from 'utils/wagmi';
 import { Provider } from 'react-redux';
-import { store } from 'store';
+import { store } from 'store/store';
 import { ToastProvider } from 'react-toast-notifications';
 import { projectId } from 'configs/services/wagmi-credentials';
 import client from 'apollo/apolloClient';
 import { ApolloProvider } from '@apollo/client';
+import InitUser from 'pages/authentication/initUser';
 
 const chains = [worldland, worldland_testnet, sepolia]; // will add mainnet in production
 
@@ -38,6 +39,7 @@ root.render(
             <GlobalStyle />
             <ToastProvider>
               <ApolloProvider client={client}>
+                {/* <InitUser /> */}
                 <App />
               </ApolloProvider>
             </ToastProvider>

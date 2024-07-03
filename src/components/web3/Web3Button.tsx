@@ -8,6 +8,7 @@ import { useConnect, useAccount } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { connect } from '@wagmi/core';
 import { worldland } from 'utils/wagmi';
+import LoginButton from 'components/LoginBtn/login_btn';
 
 interface Web3ConnectButtonProps {
   onAccountConnected: (account: string) => void;
@@ -144,7 +145,8 @@ const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({ onAccountConnecte
   }, [localStorage.getItem('wagmi.connected')]);
 
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <LoginButton />
       {isMobile && !address ? (
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <MobileButton onClick={handleOpenMetamaskLink}>Metamask</MobileButton>

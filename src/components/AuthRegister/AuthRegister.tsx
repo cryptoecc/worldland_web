@@ -3,7 +3,6 @@ import {
   Box,
   Typography,
   Button,
-  Divider,
   Stepper,
   Step,
   StepLabel,
@@ -13,30 +12,16 @@ import {
   Snackbar,
   Alert,
   TextField,
-  FormControlLabel,
   InputLabel,
 } from '@mui/material';
-// import CustomTextField from "@/app/components/forms/theme-elements/CustomTextField";
-// import CustomFormLabel from "@/app/components/forms/theme-elements/CustomFormLabel";
 import { Stack } from '@mui/system';
-// import { registerType } from "@/app/(DashboardLayout)/types/auth/auth";
-// import AuthSocialButtons from "./AuthSocialButtons";
-import { styled } from '@mui/material/styles';
-import { validatePIN } from '../../utils/util';
-import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
-import { StepIconProps } from '@mui/material/StepIcon';
-
-//utils for form
-// import { useFormik } from "formik";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-//graphql
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
-import './styles.css';
+import { validatePIN } from 'utils/util';
 
-const steps = ['약관 동의', '정보 입력', '가입 완료'];
+const steps = ['Agree to Terms', 'Enter Information', 'Registration Complete'];
 
 const CHECK_NICKNAME_MUTATION = gql`
   mutation CheckNickname($nickname: String!) {
@@ -134,28 +119,28 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
       verifyCode: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('유효하지 않은 이메일 주소입니다.').required('이메일을 입력해주세요.'),
-      nickname: Yup.string().required('닉네임을 입력해주세요.'),
+      email: Yup.string().email('Invalid email address.').required('Please enter your email.'),
+      nickname: Yup.string().required('Please enter your nickname.'),
       password: Yup.string()
         .matches(
           /(?=.*[0-9]{1,})(?=.*[~`!@#$%^&*()-+=]{1,})(?=.*[a-zA-Z]{1,}).{8,}$/,
-          '비밀번호는 8자리 이상, 영문자와 숫자, 특수문자를 포함해주세요.)',
+          'The password must be at least 8 characters long and include letters, numbers, and special characters.',
         )
-        .required('비밀번호를 입력해주세요.'),
+        .required('Please enter your password.'),
       passwordConfirm: Yup.string()
-        .oneOf([Yup.ref('password')], '비밀번호가 일치해야 합니다.')
+        .oneOf([Yup.ref('password')], 'Passwords must match.')
         .required('Required'),
-      country: Yup.string().required('국가를 선택해주세요.'),
+      country: Yup.string().required('Please select your country.'),
       mobile1: Yup.string()
-        .required('3자리 숫자를 입력해주세요.')
-        .matches(/^\d{3}$/, '3자리 숫자를 입력해주세요.'),
+        .required('Please enter a 3-digit number.')
+        .matches(/^\d{3}$/, 'Please enter a 3-digit number.'),
       mobile2: Yup.string()
-        .required('4자리 숫자를 입력해주세요.')
-        .matches(/^\d{4}$/, '4자리 숫자를 입력해주세요.'),
+        .required('Please enter a 4-digit number.')
+        .matches(/^\d{4}$/, 'Please enter a 4-digit number.'),
       mobile3: Yup.string()
-        .required('4자리 숫자를 입력해주세요.')
-        .matches(/^\d{4}$/, '4자리 숫자를 입력해주세요.'),
-      verifyCode: Yup.string().required('인증코드를 입력해주세요.'),
+        .required('Please enter a 4-digit number.')
+        .matches(/^\d{4}$/, 'Please enter a 4-digit number.'),
+      verifyCode: Yup.string().required('Please enter the verification code.'),
     }),
     onSubmit: async (values: any) => {
       const mobile = `${values.mobile1}${values.mobile2}${values.mobile3}`;
@@ -175,19 +160,19 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
           alert(data.registerLvUser.retMsg);
         }
       } catch (error) {
-        alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+        alert('Registration failed. Please try again.');
       }
     },
   });
 
   const handleNext = () => {
     if (activeStep === 0 && (!termsAccepted || !privacyAccepted)) {
-      setAlertMessage('모든 약관에 동의해야 합니다.');
+      setAlertMessage('You must agree to all terms and conditions.');
       setAlertOpen(true);
       return;
     }
     if (activeStep === 1 && !isVerified) {
-      setAlertMessage('휴대전화번호 인증을 완료해야 합니다.');
+      setAlertMessage('You must complete phone number verification.');
       setAlertOpen(true);
       return;
     }
@@ -207,7 +192,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         setEmail('');
       }
     } catch (error) {
-      setAlertMessage('이메일 확인에 실패했습니다.');
+      setAlertMessage('Email verification failed.');
     }
     setAlertOpen(true);
   };
@@ -220,7 +205,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         setNickname('');
       }
     } catch (error) {
-      setAlertMessage('닉네임 확인에 실패했습니다.');
+      setAlertMessage('Nickname verification failed.');
     }
     setAlertOpen(true);
   };
@@ -274,7 +259,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
       });
 
       if (data && data.addLvVerifyCodeByMobileForRegister.retCode === '200') {
-        setAlertMessage('모바일로 인증코드가 전송되었습니다.');
+        setAlertMessage('The verification code has been sent to your mobile.');
         setAlertOpen(true);
         setVerifyDisable(false);
       } else {
@@ -283,7 +268,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         setAlertOpen(true);
       }
     } catch (error: any) {
-      setAlertMessage('인증코드 전송에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage('Failed to send the verification code. Please try again.');
       setAlertOpen(true);
       setIsVerified(false);
       setCode('');
@@ -295,7 +280,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
     e.preventDefault();
 
     if (!validatePIN(formik.values.verifyCode)) {
-      setAlertMessage('유효하지 않은 인증코드 형식입니다.');
+      setAlertMessage('Invalid verification code format.');
       setAlertOpen(true);
       return;
     }
@@ -312,7 +297,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
       });
 
       if (data && data.checkLvVerifyCodeWithMobile.retCode === '200') {
-        setAlertMessage('인증코드가 확인되었습니다.');
+        setAlertMessage('The verification code has been verified.');
         setAlertOpen(true);
         setIsVerified(true); // 인증 완료 상태
         setCode(formik.values.verifyCode); // 인증 코드
@@ -322,7 +307,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         setAlertOpen(true);
       }
     } catch (error) {
-      setAlertMessage('인증코드 확인에 실패했습니다. 다시 시도해주세요.');
+      setAlertMessage('Verification of the code failed. Please try again.');
       setAlertOpen(true);
     }
   };
@@ -333,16 +318,28 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         return (
           <Box>
             <Typography variant="h6" gutterBottom>
-              약관 동의
+              Terms and Conditions
             </Typography>
             <Stack spacing={2}>
               <Box>
+                <Box sx={{ maxHeight: 100, overflow: 'auto', mt: 1, p: 1, border: '1px solid #ccc', borderRadius: 2 }}>
+                  <Typography variant="body2">
+                    1. <strong>Purpose</strong>: The purpose of these terms and conditions is to stipulate the basic
+                    matters concerning the terms and procedures for the use of all services provided by the company. ...
+                  </Typography>
+                </Box>
                 <Checkbox checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
-                <Typography display="inline">이용 약관에 동의합니다</Typography>
+                <Typography display="inline">I agree to the Terms of Service</Typography>
               </Box>
               <Box>
+                <Box sx={{ maxHeight: 100, overflow: 'auto', mt: 1, p: 1, border: '1px solid #ccc', borderRadius: 2 }}>
+                  <Typography variant="body2">
+                    1. <strong>Items of personal information collected and methods of collection</strong>: ... Modifying
+                    terms and conditions.
+                  </Typography>
+                </Box>
                 <Checkbox checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} />
-                <Typography display="inline">개인정보 처리방침에 동의합니다</Typography>
+                <Typography display="inline">I agree to the Privacy Policy</Typography>
               </Box>
             </Stack>
           </Box>
@@ -351,17 +348,29 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         return (
           <form onSubmit={formik.handleSubmit}>
             <Stack mb={3}>
-              <InputLabel htmlFor="email" sx={{ color: '#d3d3d3' }}>
+              <InputLabel htmlFor="email" sx={{ color: 'black' }}>
                 Email
               </InputLabel>
-              <Box display="flex" justifyContent="space-between">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                sx={{
+                  flexDirection: 'row',
+                  '@media (max-width:600px)': {
+                    flexDirection: 'column',
+                  },
+                }}
+              >
                 <TextField
                   id="email"
                   name="email"
                   variant="outlined"
                   fullWidth
                   value={email}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    formik.setFieldValue('email', e.target.value);
+                  }}
                   onBlur={formik.handleBlur}
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={
@@ -369,44 +378,97 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   }
                   sx={{
                     input: {
-                      color: '#d3d3d3',
+                      color: 'black',
                       borderRadius: '4px',
                       border: '1px solid #ccc',
                       height: '10px',
                     },
                     marginTop: '10px',
+                    marginBottom: '10px',
+                    flex: 1,
+                    marginRight: '10px',
+                    '@media (max-width:600px)': {
+                      marginRight: 0,
+                      marginBottom: '10px',
+                    },
                   }}
                 />
-                <Button onClick={handleEmailCheck}>중복확인</Button>
+                <Button
+                  onClick={handleEmailCheck}
+                  disabled={!!formik.errors.email || !formik.touched.email}
+                  sx={{
+                    width: '100px',
+                    height: '45px',
+                    marginTop: '10px',
+                    '@media (max-width:600px)': {
+                      width: '100%',
+                    },
+                  }}
+                >
+                  Check
+                </Button>
               </Box>
-              <InputLabel htmlFor="nickname" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="nickname" sx={{ color: 'black', marginTop: '30px' }}>
                 Nick Name
               </InputLabel>
-              <Box display="flex" justifyContent="space-between">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                sx={{
+                  flexDirection: 'row',
+                  '@media (max-width:600px)': {
+                    flexDirection: 'column',
+                  },
+                }}
+              >
                 <TextField
                   id="nickname"
                   name="nickname"
                   variant="outlined"
+                  fullWidth
                   value={nickname}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNickname(e.target.value)}
+                  onChange={(e) => {
+                    setNickname(e.target.value);
+                    formik.setFieldValue('nickname', e.target.value);
+                  }}
                   onBlur={formik.handleBlur}
                   error={formik.touched.nickname && Boolean(formik.errors.nickname)}
                   helperText={
-                    formik.touched.nickname && formik.errors.nickname === 'string' ? formik.errors.nickname : ''
+                    formik.touched.nickname && typeof formik.errors.nickname === 'string' ? formik.errors.nickname : ''
                   }
                   sx={{
                     input: {
-                      color: '#d3d3d3',
+                      color: 'black',
                       borderRadius: '4px',
                       border: '1px solid #ccc',
                       height: '10px',
                     },
                     marginTop: '10px',
+                    marginBottom: '10px',
+                    flex: 1,
+                    marginRight: '10px',
+                    '@media (max-width:600px)': {
+                      marginRight: 0,
+                      marginBottom: '10px',
+                    },
                   }}
                 />
-                <Button onClick={handleNicknameCheck}>중복확인</Button>
+                <Button
+                  onClick={handleNicknameCheck}
+                  disabled={!!formik.errors.nickname || !formik.touched.nickname}
+                  sx={{
+                    width: '100px',
+                    height: '45px',
+                    marginTop: '10px',
+                    '@media (max-width:600px)': {
+                      width: '100%',
+                    },
+                  }}
+                >
+                  Check
+                </Button>
               </Box>
-              <InputLabel htmlFor="password" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="password" sx={{ color: 'black', marginTop: '30px' }}>
                 Password
               </InputLabel>
               <TextField
@@ -420,14 +482,14 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                 onBlur={formik.handleBlur}
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={
-                  formik.touched.password && formik.errors.password === 'string' ? formik.errors.password : ''
+                  formik.touched.password && typeof formik.errors.password === 'string' ? formik.errors.password : ''
                 }
                 sx={{
-                  input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                  input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                   marginTop: '10px',
                 }}
               />
-              <InputLabel htmlFor="password-confirm" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="password-confirm" sx={{ color: 'black', marginTop: '30px' }}>
                 Password confirm
               </InputLabel>
               <TextField
@@ -441,53 +503,51 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                 onBlur={formik.handleBlur}
                 error={formik.touched.passwordConfirm && Boolean(formik.errors.passwordConfirm)}
                 helperText={
-                  formik.touched.passwordConfirm && formik.errors.passwordConfirm === 'string'
+                  formik.touched.passwordConfirm && typeof formik.errors.passwordConfirm === 'string'
                     ? formik.errors.passwordConfirm
                     : ''
                 }
                 sx={{
-                  input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                  input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                   marginTop: '10px',
                 }}
               />
-              <InputLabel htmlFor="mobile" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="mobile" sx={{ color: 'black', marginTop: '30px' }}>
                 Mobile
               </InputLabel>
+              <Select
+                sx={{
+                  minWidth: '120px',
+                  color: 'black',
+                  borderRadius: '4px',
+                  marginTop: '10px',
+                  height: '45px',
+                }}
+                id="country"
+                name="country"
+                variant="outlined"
+                value={formik.values.country}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.country && Boolean(formik.errors.country)}
+              >
+                <MenuItem value="AU">Australia</MenuItem>
+                <MenuItem value="CA">Canada</MenuItem>
+                <MenuItem value="CN">China</MenuItem>
+                <MenuItem value="HK">Hong Kong</MenuItem>
+                <MenuItem value="ID">Indonesia</MenuItem>
+                <MenuItem value="JP">Japan</MenuItem>
+                <MenuItem value="KR">Korea (Republic of)</MenuItem>
+                <MenuItem value="MN">Mongolia</MenuItem>
+                <MenuItem value="MO">Macau</MenuItem>
+                <MenuItem value="MY">Malaysia</MenuItem>
+                <MenuItem value="PH">Philippines</MenuItem>
+                <MenuItem value="SG">Singapore</MenuItem>
+                <MenuItem value="TH">Thailand</MenuItem>
+                <MenuItem value="UK">United Kingdom</MenuItem>
+                <MenuItem value="US">United States</MenuItem>
+              </Select>
               <Box display="flex" justifyContent="space-between" alignItems="stretch">
-                <Select
-                  sx={{
-                    // height: '60%',
-                    minWidth: '120px',
-                    color: '#d3d3d3',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                    marginTop: '10px',
-                    height: '45px',
-                  }}
-                  id="country"
-                  name="country"
-                  variant="outlined"
-                  value={formik.values.country}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.country && Boolean(formik.errors.country)}
-                >
-                  <MenuItem value="AU">Australia</MenuItem>
-                  <MenuItem value="CA">Canada</MenuItem>
-                  <MenuItem value="CN">China</MenuItem>
-                  <MenuItem value="HK">Hong Kong</MenuItem>
-                  <MenuItem value="ID">Indonesia</MenuItem>
-                  <MenuItem value="JP">Japan</MenuItem>
-                  <MenuItem value="KR">Korea (Republic of)</MenuItem>
-                  <MenuItem value="MN">Mongolia</MenuItem>
-                  <MenuItem value="MO">Macau</MenuItem>
-                  <MenuItem value="MY">Malaysia</MenuItem>
-                  <MenuItem value="PH">Philippines</MenuItem>
-                  <MenuItem value="SG">Singapore</MenuItem>
-                  <MenuItem value="TH">Thailand</MenuItem>
-                  <MenuItem value="UK">United Kingdom</MenuItem>
-                  <MenuItem value="US">United States</MenuItem>
-                </Select>
                 <TextField
                   id="mobile1"
                   name="mobile1"
@@ -499,7 +559,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile1 && Boolean(formik.errors.mobile1)}
                   helperText={formik.touched.mobile1 && formik.errors.mobile1 === 'string' ? formik.errors.mobile1 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
@@ -514,7 +574,7 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile2 && Boolean(formik.errors.mobile2)}
                   helperText={formik.touched.mobile2 && formik.errors.mobile2 === 'string' ? formik.errors.mobile2 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
@@ -529,18 +589,31 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   error={formik.touched.mobile3 && Boolean(formik.errors.mobile3)}
                   helperText={formik.touched.mobile3 && formik.errors.mobile3 === 'string' ? formik.errors.mobile3 : ''}
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
                   }}
                 />
-                <Button onClick={handleSendToMobile} disabled={verifyLoading}>
+                <Button
+                  onClick={handleSendToMobile}
+                  disabled={verifyLoading}
+                  sx={{ width: '100px', height: '45px', marginTop: '10px' }}
+                >
                   {pinText}
                 </Button>
               </Box>
-              <InputLabel htmlFor="verify-code" sx={{ color: '#d3d3d3', marginTop: '30px' }}>
+              <InputLabel htmlFor="verify-code" sx={{ color: 'black', marginTop: '30px' }}>
                 Code
               </InputLabel>
-              <Box display="flex" justifyContent="space-between">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                sx={{
+                  flexDirection: 'row',
+                  '@media (max-width:600px)': {
+                    flexDirection: 'column',
+                  },
+                }}
+              >
                 <TextField
                   id="verifyCode"
                   name="verifyCode"
@@ -550,15 +623,35 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.verifyCode && Boolean(formik.errors.verifyCode)}
                   helperText={
-                    formik.touched.verifyCode && formik.errors.verifyCode === 'string' ? formik.errors.verifyCode : ''
+                    formik.touched.verifyCode && typeof formik.errors.verifyCode === 'string'
+                      ? formik.errors.verifyCode
+                      : ''
                   }
                   sx={{
-                    input: { color: '#d3d3d3', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
+                    input: { color: 'black', borderRadius: '4px', border: '1px solid #ccc', height: '10px' },
                     marginTop: '10px',
+                    marginBottom: '10px',
+                    flex: 1,
+                    marginRight: '10px',
+                    '@media (max-width:600px)': {
+                      marginRight: 0,
+                      marginBottom: '10px',
+                    },
                   }}
                 />
-                <Button onClick={handleVerifyClick} disabled={verifyDisable}>
-                  인증
+                <Button
+                  onClick={handleVerifyClick}
+                  disabled={verifyDisable}
+                  sx={{
+                    width: '100px',
+                    height: '45px',
+                    marginTop: '10px',
+                    '@media (max-width:600px)': {
+                      width: '100%',
+                    },
+                  }}
+                >
+                  Verification
                 </Button>
               </Box>
             </Stack>
@@ -568,10 +661,10 @@ const AuthRegister = ({ title, subtitle, subtext }: any) => {
         return (
           <Box textAlign="center">
             <Typography variant="h6" gutterBottom>
-              가입이 완료되었습니다!
+              Registration Complete!
             </Typography>
-            <Button variant="contained" color="primary" component="a" href="/auth/auth2/login">
-              로그인 하러 가기
+            <Button variant="contained" color="primary" component="a" href="/api/login">
+              Go to Login
             </Button>
           </Box>
         );

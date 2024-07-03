@@ -7,6 +7,7 @@ import {
   OutlineDown,
   OutlineUp,
   SpaceLink,
+  SpaceDiv,
   Strong,
   Network,
   User,
@@ -25,6 +26,7 @@ import { Link } from 'react-router-dom';
 import { Twitter, Discord } from 'assets/header/Header';
 import AddNetworkButton from 'components/web3/AddNetworkButton';
 import axios from 'axios';
+import Chatbot from 'components/Chatbot';
 // import { EVM } from 'assets/main/Main_core';
 
 const MainMenu = () => {
@@ -97,6 +99,11 @@ const MainMenu = () => {
                   <SpaceLink href="https://ai.worldland.foundation/" target="_blank">
                     <Strong>My AI</Strong>
                   </SpaceLink>
+                  <SpaceDiv>
+                    <Strong>
+                      <Chatbot />
+                    </Strong>
+                  </SpaceDiv>
                 </div>
               </div>
             </User>
@@ -115,7 +122,7 @@ const MainMenu = () => {
                   <SpaceLink href="https://docs.worldland.foundation/" target="_blank" rel="noopener noreferrer">
                     <Strong>Docs</Strong>
                   </SpaceLink>
-                  <SpaceLink href="https://github.com/cryptoecc/ETH-ECC" target="_blank" rel="noopener noreferrer">
+                  <SpaceLink href="https://github.com/cryptoecc/WorldLand" target="_blank" rel="noopener noreferrer">
                     <Strong>GitHub</Strong>
                   </SpaceLink>
                 </div>

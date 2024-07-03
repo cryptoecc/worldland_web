@@ -23,13 +23,14 @@ import Timelock from 'pages/Timelock';
 import UserAward from 'pages/Timelock/User_award';
 import UserSale from 'pages/Timelock/User_sale';
 import ProtectedRoute from 'pages/ProtectedRoute';
-import Login from 'pages/Login';
+import Login2 from 'pages/Login/page';
 import Register from 'pages/Register';
 import ForgotPassword2 from 'pages/Forgot-password';
 import ForgotEmail2 from 'pages/Forgot-email';
 import CustomizedSteppers from 'components/AuthRegister/test';
 import AdminTokenSale from 'pages/Admin/AdminTokenSale';
 import AdminAward from 'pages/Admin/AdminAward';
+import ProfileSub from 'apps/profile/pageid/page';
 
 const Router = () => {
   const router = createBrowserRouter([

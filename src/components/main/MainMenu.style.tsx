@@ -167,6 +167,22 @@ const SpaceSpanLink = styled.span`
   }
 `;
 
+const SpaceDiv = styled.div`
+  text-decoration: none;
+  padding: 5px 30px 5px 5px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition:
+    border-color 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
+  line-height: 25px;
+
+  &:hover {
+    background-color: #1e1e1e;
+    font-weight: bold;
+  }
+`;
+
 const Strong = styled.div`
   color: #ffffff;
   font-weight: bold;
@@ -229,6 +245,7 @@ export {
   Learn,
   SpaceLink,
   SpaceSpanLink,
+  SpaceDiv,
   Strong,
   Network,
   User,
