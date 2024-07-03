@@ -182,7 +182,7 @@ const User = () => {
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
         functionName: FUNCTION.WITHDRAW,
-        args: [address],
+        args: [address, userData?.tokenId],
         onSuccess() {
             addToast(MESSAGES.TX_SENT, {
                 appearance: 'success',
