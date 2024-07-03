@@ -192,18 +192,6 @@ const AdminAward = () => {
         },
     });
 
-    // // main contract ERC20 balance check
-    // useContractRead({
-    //   address: MAPNETTOADDRESS.ERC20_WWLC,
-    //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    //   functionName: QUERY.BALANCEOF,
-    //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK],
-    //   watch: true,
-    //   onSuccess(data) {
-    //     setContract((prev) => ({ ...prev, balance: from_wei(data?.toString()) }));
-    //   }
-    // })
-
     useBalance({
         address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
         watch: true,

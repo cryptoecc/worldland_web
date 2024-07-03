@@ -67,6 +67,12 @@ const Router = () => {
         { path: `${PATH.TIMELOCK_LIST}`, element: <Timelock /> },
         { path: `${PATH.TIMELOCK_USER_AWARD}`, element: <UserAward /> },
         { path: `${PATH.TIMELOCK_USER_SALE}`, element: <UserSale /> },
+        { path: `${PATH.LOGIN}`, element: <Login2 /> },
+        { path: `${PATH.REGISTER}`, element: <Register /> },
+        { path: `${PATH.CUSTOM}`, element: <CustomizedSteppers /> },
+        { path: `${PATH.FORGOT_PASSWORD}`, element: <ForgotPassword2 /> },
+        { path: `${PATH.FORGOT_EMAIL}`, element: <ForgotEmail2 /> },
+        { path: `${PATH.PROFILE_INFORMATION}`, element: <ProfileSub /> },
       ],
     },
   ]);
