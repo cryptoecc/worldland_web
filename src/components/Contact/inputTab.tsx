@@ -22,7 +22,7 @@ const InputTab = () => {
     try {
       console.log(formData);
       //   await axios.post('/api/contact/send-email', formData);
-      await fetch('https://be.worldland.foundation/api/contact/send-email', {
+      await fetch('https://be.worldland.foundation/contact/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // 요청 헤더 설정 (필요에 따라 변경)
