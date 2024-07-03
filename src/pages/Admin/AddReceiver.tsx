@@ -121,7 +121,7 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
         parsedAmounts[i] = from_wei(txObj.amounts[i]);
       }
       setReceivers((prev) => [{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
-      await provider.post('/api/admin/dao-list', { _receivers: txObj.receivers, _amounts: parsedAmounts });
+      await provider.post('/admin/dao-list', { _receivers: txObj.receivers, _amounts: parsedAmounts });
       fetchDaoInfo();
     },
     onError(err: any) {
