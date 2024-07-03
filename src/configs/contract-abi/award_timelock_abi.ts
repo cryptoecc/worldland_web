@@ -1,6 +1,12 @@
 export const abi = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: 'address',
+        name: '_nftContract',
+        type: 'address',
+      },
+    ],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
@@ -128,6 +134,25 @@ export const abi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'checkERC721TokenId',
+    outputs: [
+      {
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'contractBalance',
     outputs: [
@@ -175,12 +200,44 @@ export const abi = [
   },
   {
     inputs: [],
+    name: 'nftContract',
+    outputs: [
+      {
+        internalType: 'contract IERC721',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'owner',
     outputs: [
       {
         internalType: 'address payable',
         name: '',
         type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    name: 'registeredTokenIds',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -239,6 +296,11 @@ export const abi = [
         internalType: 'address',
         name: 'to',
         type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'ERC721TokenId',
+        type: 'uint256',
       },
     ],
     name: 'transferTimeLockedTokensAfterTimePeriod',
