@@ -289,7 +289,7 @@ const Container = styled.section`
     justify-content: center;
     height: 100vh;
     font-family: 'Nunito Sans', sans-serif;
-    padding-top: 50px;
+    padding-top: 170px;
 `
 
 const Content = styled.div`
