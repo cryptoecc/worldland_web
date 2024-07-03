@@ -57,7 +57,7 @@ const ResetLvPasswordByTokenMutation = gql`
   }
 `;
 
-const steps = ['이메일 인증', '비밀번호 재설정', '완료'];
+const steps = ['Email Verification', 'Reset Password', 'Complete'];
 
 const AuthForgotPassword = () => {
   const [activeStep, setActiveStep] = useState(0);

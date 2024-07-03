@@ -78,7 +78,7 @@ interface Lv_BasicResponse {
   retMsg: string;
 }
 
-const steps = ['이메일 인증', '비밀번호 재설정', '완료'];
+const steps = ['Email Verification', 'Reset Password', 'Complete'];
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -139,12 +139,12 @@ const PasswordProfile = () => {
       newPassword: Yup.string()
         .matches(
           /(?=.*[0-9]{1,})(?=.*[~`!@#$%^&*()-+=]{1,})(?=.*[a-zA-Z]{1,}).{8,}$/,
-          '비밀번호는 8자리 이상, 영문자와 숫자, 특수문자를 포함해주세요.',
+          'The password must be at least 8 characters long and include letters, numbers, and special characters.',
         )
-        .required('비밀번호를 입력해주세요.'),
+        .required('Please enter your password.'),
       confirmPassword: Yup.string()
-        .oneOf([Yup.ref('newPassword')], '비밀번호가 일치해야 합니다.')
-        .required('비밀번호 확인을 입력해주세요.'),
+        .oneOf([Yup.ref('newPassword')], 'Passwords must match.')
+        .required('Please enter your password confirmation.'),
     }),
     onSubmit: async (values) => {
       try {
@@ -156,7 +156,7 @@ const PasswordProfile = () => {
           },
         });
         if (data.resetLvPasswordByToken.retCode === '200') {
-          setAlertMessage('비밀번호가 성공적으로 재설정되었습니다.');
+          setAlertMessage('Your password has been successfully reset.');
           setOpen(true);
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         } else {
@@ -164,7 +164,7 @@ const PasswordProfile = () => {
           setOpen(true);
         }
       } catch (error) {
-        setAlertMessage('비밀번호 재설정 중 오류가 발생했습니다.');
+        setAlertMessage('An error occurred during password reset.');
         setAlertSeverity('error');
         setOpen(true);
       }
@@ -174,12 +174,12 @@ const PasswordProfile = () => {
   //다음 버튼
   const handleNext = () => {
     if (activeStep === 0 && !isVerified) {
-      setAlertMessage('이메일 인증을 완료해야 합니다.');
+      setAlertMessage('You need to complete email verification.');
       setOpen(true);
       return;
     }
     if (activeStep === 1 && newPassword !== confirmPassword) {
-      setAlertMessage('비밀번호가 일치하지 않습니다.');
+      setAlertMessage('The passwords do not match.');
       setOpen(true);
       return;
     }
@@ -200,7 +200,7 @@ const PasswordProfile = () => {
       return;
     }
     if (!validateEmail) {
-      setAlertMessage('유효하지 않은 이메일 형식입니다.');
+      setAlertMessage('Invalid email format.');
       setOpen(true);
       return;
     }
@@ -247,7 +247,7 @@ const PasswordProfile = () => {
         const retData: Lv_BasicResponse = res.data.addLvVerifyCodeByEmail;
         console.log('addLvVerifyCodeByEmail 리턴데이터 :', retData);
         if (retData.retCode == '200') {
-          setAlertMessage('이메일로 인증코드가 전송되었습니다.');
+          setAlertMessage('An authentication code has been sent to your email.');
           setOpen(true);
           setVerifyDisable(false); //인증 버튼 활성화
         } else {
@@ -271,7 +271,7 @@ const PasswordProfile = () => {
     e.preventDefault();
 
     if (!validatePIN(code)) {
-      setAlertMessage('유효하지 않은 인증코드 형식입니다.');
+      setAlertMessage('Invalid authentication code format.');
       setOpen(true);
       return;
     }
@@ -286,7 +286,7 @@ const PasswordProfile = () => {
         const retData: Lv_BasicResponse = res.data.checkLvVerifyCodeWithEmail;
         console.log('checkLvVerifyCodeWithEmail 리턴데이터 :', retData);
         if (retData.retCode == '200') {
-          setAlertMessage('인증코드가 확인되었습니다.');
+          setAlertMessage('The authentication code has been verified.');
           setOpen(true);
           setIsVerified(true); //인증 완료 상태
           setCode(code); //인증 코드
@@ -341,7 +341,7 @@ const PasswordProfile = () => {
               disabled={verifyDisable}
               onClick={handleVerifyClick}
             >
-              인증
+              Verification
             </Button>
           </Stack>
         );
@@ -380,7 +380,7 @@ const PasswordProfile = () => {
         return (
           <Box textAlign="center">
             <Typography variant="h6" gutterBottom>
-              비밀번호 재설정이 완료되었습니다!
+              Password reset is complete!
             </Typography>
           </Box>
         );

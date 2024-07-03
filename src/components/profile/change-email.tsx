@@ -70,7 +70,7 @@ const EmailProfile = () => {
       });
       const result: Lv_BasicResponse = response.data.updateNewEmailByUserId;
       if (result.retCode === '200') {
-        setAlertMessage('이메일이 성공적으로 변경되었습니다!');
+        setAlertMessage('Your email has been successfully changed!');
         setAlertSeverity('success');
         setOpen(true);
         setTimeout(() => {
@@ -83,7 +83,7 @@ const EmailProfile = () => {
         setOpen(true);
       }
     } catch (error) {
-      setAlertMessage('이메일 변경 중 오류가 발생했습니다.');
+      setAlertMessage('An error occurred during email change.');
       setAlertSeverity('error');
       setOpen(true);
       console.error(error);
@@ -103,28 +103,30 @@ const EmailProfile = () => {
   }
 
   return (
-    <Card sx={{ p: 4 }}>
+    <Card sx={{ p: 4, width: '100%', maxWidth: 600, mx: 'auto' }}>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h5">Change Email</Typography>
           <Divider sx={{ mb: 2 }} />
         </Grid>
 
-        <Grid item xs={3}>
-          <Typography variant="body1">현재 Email:</Typography>
+        <Grid item xs={12} sm={4}>
+          <Typography variant="body1">Current Email:</Typography>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={12} sm={8}>
           <Typography variant="body1">{data.lvUserByUserId.email}</Typography>
         </Grid>
 
-        <Grid item xs={3}>
-          <Typography variant="body1">새 Email :</Typography>
+        <Grid item xs={12} sm={4}>
+          <Typography variant="body1">New Email:</Typography>
         </Grid>
-        <Grid item xs={7} sx={{ height: '10px' }}>
+        <Grid item xs={12} sm={8}>
           <TextField fullWidth variant="outlined" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} />
         </Grid>
-        <Grid item xs={2}>
-          <Button onClick={handleEmailChange}>변경</Button>
+        <Grid item xs={12} sm={12} display="flex" justifyContent={{ xs: 'center', sm: 'flex-end' }}>
+          <Button onClick={handleEmailChange} variant="contained" color="primary">
+            Change
+          </Button>
         </Grid>
       </Grid>
       <Snackbar
