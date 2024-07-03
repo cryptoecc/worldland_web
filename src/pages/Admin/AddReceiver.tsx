@@ -87,8 +87,8 @@ const AddReceiver = ({ setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: 
   const { addToast } = useToasts();
 
   const { data: tx, write: bulkDepositFeaturingTimestamp } = useContractWrite({
-    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK],
-    abi: MAP_STR_ABI[ABI.AWARD_LINEAR_TIMELOCK],
+    address: WLD_ADDRESSES[CONTRACT_ADDRESSES.SALE_LINEAR_TIMELOCK],
+    abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
     functionName: FUNCTION.BULKDEPOSITTOKENSFEATURINGTIMESTAMP,
     onSuccess() {
       addToast(MESSAGES.TX_SENT, {

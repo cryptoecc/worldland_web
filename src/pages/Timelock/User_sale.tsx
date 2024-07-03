@@ -16,7 +16,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { Contract, initialContractObj } from 'pages/Admin/constants';
 import React, { useEffect, useState } from 'react';
 import CustomTable from 'components/CustomTable';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button, TextField } from '@mui/material';
 import { MESSAGES } from 'utils/messages';
 import { useToasts } from 'react-toast-notifications';
@@ -30,6 +30,7 @@ const userInitialData = {
     userBalance: '0',
     userNftBalance: '0',
     walletBalance: '0',
+    tokenId: '',
     initialTimestamp: '',
     cliffEdge: '',
     releaseEdge: ''
@@ -40,6 +41,7 @@ interface UserInfo extends Contract {
     userBalance?: string;
     walletBalance: string;
     userNftBalance: string;
+    tokenId: string;
     initialTimestamp: string;
     cliffEdge: string;
     releaseEdge: string;
@@ -68,6 +70,7 @@ type TxDetails = {
 const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
 const User = () => {
     dayjs.extend(relativeTime);
+    const navigate = useNavigate();
     const { address } = useAccount();
     const { addToast } = useToasts();
     const { contract_address } = useParams();
@@ -75,10 +78,14 @@ const User = () => {
     const [disabled, setDisabled] = useState<boolean>(true);
     const [txModal, setTxModal] = useState<Modals>({ modal0: false, modal1: false });
     const [currentTxData, setCurrentTxData] = useState<TxDetails>({ header: '', content: '', subContent: '', function: () => { } })
+    const [inputErrorState, setInputErrorState] = useState<boolean>(false);
     const nftInput = (<TextField
         id="outlined-number"
-        label="Number"
+        label="Token Id"
         type="number"
+        value={userData?.tokenId}
+        error={inputErrorState}
+        onChange={(e) => setUserData((prev) => ({ ...prev, tokenId: e.target.value }))}
         InputLabelProps={{
             shrink: true,
         }}
@@ -87,7 +94,7 @@ const User = () => {
         createData('Contract Owner', userData?.owner),
         createData('Timelock Contract Address', contract_address as string),
         createData('NFT Contract Address', MAPNETTOADDRESS.ERC721_WNFTMINTER as string),
-        createData('NFT ownership balance (Number of nfts owned)', userData?.userNftBalance),
+        createData('NFT ownership balance (Number of NFTs owned)', userData?.userNftBalance),
         createData('Token Id input', nftInput),
         createData('Contract Balance', putCommaAtPrice(userData?.balance ?? '0', 4) + ' WL'),
         createData('My assigned balance in the contract', putCommaAtPrice(userData?.userBalance ?? '0', 4) + ' WL'),
@@ -185,7 +192,7 @@ const User = () => {
         address: contract_address as `0x${string}`,
         abi: MAP_STR_ABI[ABI.SALE_LINEAR_TIMELOCK],
         functionName: FUNCTION.WITHDRAW,
-        args: [address],
+        args: [address, userData?.tokenId],
         onSuccess() {
             addToast(MESSAGES.TX_SENT, {
                 appearance: 'success',
@@ -223,8 +230,10 @@ const User = () => {
 
     async function handleWithdraw() {
         try {
+
             if (Number(userData.availAmount) > 0) {
                 withdraw();
+                setUserData((prev) => ({ ...prev, tokenId: '' }));
             } else {
                 setTxModal(prev => ({ ...prev, modal1: false }));
                 addToast(MESSAGES.NO_AVAIL_AMOUNT, {
@@ -233,10 +242,17 @@ const User = () => {
                 });
             }
         } catch (err) {
+            setUserData((prev) => ({ ...prev, tokenId: '' }));
             setTxModal(prev => ({ ...prev, modal1: false }));
             console.log(err);
         }
     }
+
+    useEffect(() => {
+        if (userData?.tokenId !== '') {
+            setInputErrorState(false);
+        }
+    }, [userData?.tokenId])
 
     return (
         <Container>
@@ -247,7 +263,18 @@ const User = () => {
                 </Description>
                 <CustomTable rows={rows} />
                 <BtnWrap>
-                    <Button onClick={() => { setTxModal(prev => ({ ...prev, modal0: true })); setCurrentTxData({ header: `Confirm the withdrawal of ${putCommaAtPrice(userData?.userBalance ?? '0', 4)} WLC from the contract`, content: 'Action can not be undone', subContent: `Withdrawing funds from the contract...`, function: handleWithdraw }) }} disabled={disabled} sx={{ width: '100%', }} variant="contained">Withdraw available amount</Button>
+                    <Button onClick={() => {
+                        if (userData?.tokenId) {
+                            setTxModal(prev => ({ ...prev, modal0: true }));
+                            setCurrentTxData({ header: `Confirm the withdrawal of ${putCommaAtPrice(userData?.userBalance ?? '0', 4)} WLC from the contract`, content: 'Action can not be undone', subContent: `Withdrawing funds from the contract...`, function: handleWithdraw })
+                        }
+                        else {
+                            setInputErrorState(true);
+                        }
+                    }} disabled={disabled} sx={{ width: '100%', }} variant="contained">Withdraw available amount</Button>
+                </BtnWrap>
+                <BtnWrap>
+                    <Button onClick={() => navigate(-1)} sx={{ width: '100%', }} variant="contained">Go Back</Button>
                 </BtnWrap>
             </Content>
             <TxConfirmModal

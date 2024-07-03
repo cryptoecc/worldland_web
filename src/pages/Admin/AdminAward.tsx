@@ -36,6 +36,7 @@ import { EPS } from 'constants/api-routes';
 import { MAPNETTOADDRESS } from 'configs/contract_address_config';
 import TxConfirmModal from 'components/main/TxConfirmModal';
 import TxProcessModal from 'components/main/TxProcessModal';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 export interface Contract {
     balance: string;
     owner: string;
@@ -80,6 +81,14 @@ const Content = styled.div`
   border: 1px;
   border-radius: 5px;
 `;
+
+const HeaderWrap = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 80px;
+`
 
 const H1 = styled.h1`
   text-align: center;
@@ -233,26 +242,6 @@ const AdminAward = () => {
         },
     });
 
-    // const { data: txWLDeposited, write: depositWL } = useContractWrite({
-    //   address: MAPNETTOADDRESS.ERC20_WWLC,
-    //   abi: MAP_STR_ABI[ABI.ERC20_ABI],
-    //   functionName: FUNCTION.TRANSFER,
-    //   args: [MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK, parseEther(inputAmount)],
-    //   onSuccess() {
-    //     addToast(MESSAGES.TX_SENT, {
-    //       appearance: 'success',
-    //       autoDismiss: true,
-    //     });
-    //     setInputAmount('');
-    //   },
-    //   onError(err: any) {
-    //     addToast(MESSAGES.TX_FAIL, {
-    //       appearance: 'error',
-    //       content: err?.shortMessage,
-    //       autoDismiss: true,
-    //     });
-    //   },
-    // });
 
     const { data: txWLDeposited, write: depositWL } = useContractWrite({
         address: MAPNETTOADDRESS.AWARD_LINEAR_TIMELOCK,
@@ -360,7 +349,10 @@ const AdminAward = () => {
     return (
         <Container>
             <Content>
-                <H1>Linear Timelock Smart Contract Settings</H1>
+                <HeaderWrap>
+                    <ArrowBackIcon onClick={() => navigate(-1)} sx={{ cursor: 'pointer' }} />
+                    <H1>Linear Timelock Smart Contract Settings (Award Distributer)</H1>
+                </HeaderWrap>
                 <CustomTable rows={rows} />
                 <FormControl fullWidth sx={{ m: 1 }} variant="filled">
                     <InputLabel htmlFor="filled-adornment-amount">Amount</InputLabel>
