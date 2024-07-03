@@ -1,4 +1,4 @@
 export const EPS = {
-  ADMIN_INFO: '/api/admin/admin-info',
-  DAO_INFO: '/api/admin/dao-info',
+  ADMIN_INFO: '/admin/admin-info',
+  DAO_INFO: '/admin/dao-info',
 };
