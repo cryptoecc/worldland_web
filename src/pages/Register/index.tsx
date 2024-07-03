@@ -20,7 +20,7 @@ export default function Register() {
         },
       }}
     >
-      <Grid container spacing={0} justifyContent="center" sx={{ height: '180vh' }}>
+      <Grid container spacing={0} justifyContent="center" sx={{ height: '100vh' }}>
         <Grid item xs={12} sm={12} lg={5} xl={4} display="flex" justifyContent="center" alignItems="center">
           <Card
             elevation={9}
