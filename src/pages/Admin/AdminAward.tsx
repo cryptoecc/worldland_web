@@ -109,8 +109,6 @@ const TableWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 800px;
-  width: 100%;
   margin: 40px 0 0;
 `;
 
