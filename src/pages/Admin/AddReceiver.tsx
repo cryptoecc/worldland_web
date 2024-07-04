@@ -83,7 +83,7 @@ type Modals = {
 
 const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFinalised, fetchDaoInfo }: { contract_type: string; abi_type: string; setModal: React.Dispatch<React.SetStateAction<Modals>>; setCurrentTxData: React.Dispatch<React.SetStateAction<TxDetails>>; isFinalised: boolean; fetchDaoInfo: () => void }) => {
   const [receivers, setReceivers] = useState<Receiver[]>([{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
-  const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[], lockTime: string[], vestTime: string[] }>({ receivers: [], amounts: [], lockTime: [], vestTime: [] });
+  const [txObj, setTxObj] = useState<{ receivers: string[]; amounts: string[], initial_timestamp: string[], lockTime: string[], vestTime: string[], types: string[] }>({ receivers: [], amounts: [], initial_timestamp: [], lockTime: [], vestTime: [], types: [] });
   const { addToast } = useToasts();
 
   const abi = MAP_STR_ABI[abi_type as keyof typeof MAP_STR_ABI] || {}
@@ -116,12 +116,15 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
         autoDismiss: true,
       });
       setModal(prev => ({ ...prev, modal1: false }));
-      let parsedAmounts = [];
-      for (let i = 0; i < txObj.amounts.length; i++) {
-        parsedAmounts[i] = from_wei(txObj.amounts[i]);
-      }
-      setReceivers((prev) => [{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
-      await provider.post('/admin/dao-list', { _receivers: txObj.receivers, _amounts: parsedAmounts });
+      setReceivers([{ receiveAddress: '', totalAmount: '', lockTime: '', vestTime: '' }]);
+      await provider.post('/admin/dao-list', {
+        types: txObj.types,
+        _receivers: txObj.receivers,
+        _amounts: txObj.amounts,
+        initial_timestamps: txObj.initial_timestamp,
+        lock_timestamps: txObj.lockTime,
+        vest_timestamps: txObj.vestTime
+      });
       fetchDaoInfo();
     },
     onError(err: any) {
@@ -161,6 +164,8 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
     let _amounts: string[] = [];
     let _cliffEdge: string[] = [];
     let _releaseEdge: string[] = [];
+    let initial_timestamp: string[] = [];
+    let types: string[] = [];
     let empty_fields = [];
     const now = dayjs().unix();
     for (let i = 0; i < receivers.length; i++) {
@@ -168,6 +173,8 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
       _amounts[i] = to_wei(receivers[i].totalAmount);
       _cliffEdge[i] = (dayjs(receivers[i].lockTime).unix() - now).toString();
       _releaseEdge[i] = (dayjs(receivers[i].vestTime).unix() - now).toString();
+      initial_timestamp[i] = now.toString();
+      types[i] = contract_type === CONTRACT_ADDRESSES.AWARD_LINEAR_TIMELOCK ? 'award' : 'sale';
       if (_receivers[i] === '' || _amounts[i] === '' || _cliffEdge[i] === '' || _releaseEdge[i] === '') empty_fields[i] = _receivers[i];
     }
     if (_receivers.length > 0 && _amounts.length > 0) {
@@ -179,7 +186,7 @@ const AddReceiver = ({ contract_type, abi_type, setModal, setCurrentTxData, isFi
         });
       } else {
         bulkDepositFeaturingTimestamp?.({ args: [_receivers, _amounts, _cliffEdge, _releaseEdge] });
-        setTxObj({ receivers: _receivers, amounts: _amounts, lockTime: _cliffEdge, vestTime: _releaseEdge });
+        setTxObj({ receivers: _receivers, amounts: _amounts, initial_timestamp, lockTime: _cliffEdge, vestTime: _releaseEdge, types });
       }
     } else {
       addToast(MESSAGES.SUBMISSION_ERROR, {

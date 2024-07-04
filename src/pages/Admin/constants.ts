@@ -13,6 +13,10 @@ export interface Contract {
 export interface UserData {
   id: number;
   created_at: string;
-  wallet_address: string;
-  total_amount: string;
+  receiver_address: string;
+  amount: string;
+  contract_type: string;
+  initial_timestamp: string;
+  lock_period: string;
+  vest_period: string;
 }

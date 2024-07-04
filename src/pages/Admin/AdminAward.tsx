@@ -46,8 +46,12 @@ export interface Contract {
 export interface UserData {
     id: number;
     created_at: string;
-    wallet_address: string;
-    total_amount: string;
+    receiver_address: string;
+    amount: string;
+    contract_type: string;
+    initial_timestamp: string;
+    lock_period: string;
+    vest_period: string;
 }
 
 export const initialContractObj = {
@@ -382,7 +386,7 @@ const AdminAward = () => {
                     </Button>
                 </BtnWrap>
             </Content>
-            <TableWrap>{daoInfo.length > 0 && <UsersTable users={daoInfo} />}</TableWrap>
+            <TableWrap>{daoInfo.length > 0 && <UsersTable users={daoInfo.filter(el => el.contract_type === 'award')} />}</TableWrap>
             <WarningModal
                 header={popups.WARNING}
                 content={popups.FINALIZE_W}

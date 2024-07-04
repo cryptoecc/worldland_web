@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import { UserData } from 'pages/Admin/constants';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { putCommaAtPrice } from 'utils/util';
+import { from_wei, putCommaAtPrice } from 'utils/util';
 
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -118,14 +118,13 @@ export default function UsersTable({ users }: TableProps) {
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: 'bold' }}>Id</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Initial Timestamp</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Lock Period</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Vest Period</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+            <TableCell sx={{ fontWeight: 'bold' }} align="left">
               Receiver Address
             </TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }} align="right">
+            <TableCell sx={{ fontWeight: 'bold' }} align="left">
               Amount
             </TableCell>
           </TableRow>
@@ -136,16 +135,13 @@ export default function UsersTable({ users }: TableProps) {
             : users
           ).map((row, i) => (
             <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell align="left">{dayjs(row.initial_timestamp).fromNow()}</TableCell>
+              <TableCell align="left">{dayjs(row.created_at).format(timeFormat)}</TableCell>
+              <TableCell align="left">{dayjs(row.created_at).format(timeFormat)}</TableCell>
               <TableCell component="th" scope="row">
-                {row.id}
+                {row.receiver_address}
               </TableCell>
-              <TableCell align="right">{dayjs(row.created_at).format(timeFormat)}</TableCell>
-              <TableCell align="right">{dayjs(row.created_at).format(timeFormat)}</TableCell>
-              <TableCell align="right">{dayjs(row.created_at).format(timeFormat)}</TableCell>
-              <TableCell component="th" scope="row">
-                {row.wallet_address}
-              </TableCell>
-              <TableCell align="right">{putCommaAtPrice(row.total_amount, 2)} WL</TableCell>
+              <TableCell align="left">{putCommaAtPrice(from_wei(row.amount), 2)} WL</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
