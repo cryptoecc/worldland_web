@@ -143,7 +143,7 @@ const MobileProfile = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">현재 Mobile:</Typography>
+          <Typography variant="body1">Current Mobile:</Typography>
         </Grid>
         <Grid item xs={7}>
           <Typography variant="body1">{data.lvUserByUserId.country.name}</Typography>
@@ -154,7 +154,7 @@ const MobileProfile = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">새 Mobile :</Typography>
+          <Typography variant="body1">New Mobile :</Typography>
         </Grid>
         <Grid item xs={7}>
           <Box display="flex" justifyContent="space-between" alignItems="stretch">

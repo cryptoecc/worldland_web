@@ -213,7 +213,7 @@ const InfoProfile = () => {
           {data.lvUserByUserId.wallet_addr ? (
             <Typography variant="body1">{formatWalletAddress(data.lvUserByUserId.wallet_addr)}</Typography>
           ) : (
-            <Typography variant="body1">현재 등록된 지갑 주소가 없습니다.</Typography>
+            <Typography variant="body1">There is no wallet address currently registered.</Typography>
           )}
         </Grid>
         <Grid item xs={2}>
@@ -221,7 +221,7 @@ const InfoProfile = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">추천 ID:</Typography>
+          <Typography variant="body1">Referral ID:</Typography>
         </Grid>
         <Grid item xs={7}>
           <Typography variant="body1">{data.lvUserByUserId.ref_id}</Typography>

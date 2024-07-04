@@ -111,14 +111,14 @@ const NicknameProfile = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">현재 Nickname:</Typography>
+          <Typography variant="body1">Current Nickname:</Typography>
         </Grid>
         <Grid item xs={7}>
           <Typography variant="body1">{data.lvUserByUserId.nickname}</Typography>
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">새 Nickname :</Typography>
+          <Typography variant="body1">New Nickname :</Typography>
         </Grid>
         <Grid item xs={7}>
           <TextField
@@ -129,7 +129,7 @@ const NicknameProfile = () => {
           />
         </Grid>
         <Grid item xs={2}>
-          <Button onClick={handleNicknameChange}>변경</Button>
+          <Button onClick={handleNicknameChange}>Change</Button>
         </Grid>
       </Grid>
       <Snackbar

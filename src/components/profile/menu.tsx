@@ -35,37 +35,37 @@ const MenuProfile: FC<MenuProfileProps> = ({ onCloseDrawer }) => {
 
   const menuItems = [
     {
-      label: '개인정보 조회',
+      label: 'Personal Information',
       pageId: 'personal-information',
       icon: <Person />,
     },
     {
-      label: '이메일 변경',
+      label: 'Change Email',
       pageId: 'change-email',
       icon: <Email />,
     },
     {
-      label: '연락처 변경',
+      label: 'Change Mobile',
       pageId: 'change-mobile',
       icon: <PhoneIphone />,
     },
     {
-      label: '닉네임 변경',
+      label: 'Change Nickname',
       pageId: 'change-nickname',
       icon: <Badge />,
     },
     {
-      label: '비밀번호 재설정',
+      label: 'Reset Password',
       pageId: 'change-password',
       icon: <Password />,
     },
     {
-      label: '지갑주소 설정',
+      label: 'Set Wallet Address',
       pageId: 'change-wallet',
       icon: <AccountBalanceWallet />,
     },
     {
-      label: '로그아웃',
+      label: 'Logout',
       pageId: 'logout',
       icon: <Logout />,
     },

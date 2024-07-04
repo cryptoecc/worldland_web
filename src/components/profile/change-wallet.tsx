@@ -70,7 +70,7 @@ const WalletProfile = () => {
       });
       const result: Lv_BasicResponse = response.data.updateNewWalletByUserId;
       if (result.retCode === '200') {
-        setAlertMessage('지갑주소가 성공적으로 등록되었습니다!');
+        setAlertMessage('Wallet address has been successfully registered!');
         setAlertSeverity('success');
         setOpen(true);
         setTimeout(() => {
@@ -83,7 +83,7 @@ const WalletProfile = () => {
         setOpen(true);
       }
     } catch (error) {
-      setAlertMessage('지갑주소 등록 중 오류가 발생했습니다.');
+      setAlertMessage('An error occurred while registering the wallet address.');
       setAlertSeverity('error');
       setOpen(true);
       console.error(error);
@@ -111,24 +111,24 @@ const WalletProfile = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">현재 Wallet Address :</Typography>
+          <Typography variant="body1">Current Wallet Address :</Typography>
         </Grid>
         <Grid item xs={7}>
           {data.lvUserByUserId.wallet_addr ? (
             <Typography variant="body1">{data.lvUserByUserId.wallet_addr}</Typography>
           ) : (
-            <Typography variant="body1">현재 등록된 지갑주소가 없습니다.</Typography>
+            <Typography variant="body1">There is no wallet address currently registered.</Typography>
           )}
         </Grid>
 
         <Grid item xs={3}>
-          <Typography variant="body1">새 Wallet Address :</Typography>
+          <Typography variant="body1">New Wallet Address :</Typography>
         </Grid>
         <Grid item xs={7}>
           <TextField fullWidth variant="outlined" value={newWallet} onChange={(e) => setNewWallet(e.target.value)} />
         </Grid>
         <Grid item xs={2}>
-          <Button onClick={handleWalletChange}>변경</Button>
+          <Button onClick={handleWalletChange}>Change</Button>
         </Grid>
       </Grid>
       <Snackbar
