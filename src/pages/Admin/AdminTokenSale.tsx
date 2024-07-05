@@ -108,7 +108,7 @@ const TableWrap = styled.div`
   margin: 40px 0 0;
 `;
 
-const timeFormat = 'YYYY / MM / DD hh:mm:ss a';
+const timeFormat = 'YYYY.MM.DD hh:mm a'
 function createData(name: string, value: string | number) {
   return { name, value };
 }

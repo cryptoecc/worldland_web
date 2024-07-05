@@ -24,7 +24,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 interface TableProps {
   users: UserData[];
 }
-const timeFormat = 'YYYY / MM / DD'
+const timeFormat = 'YYYY.MM.DD hh:mm a'
 
 interface TablePaginationActionsProps {
   count: number;
@@ -119,8 +119,8 @@ export default function UsersTable({ users }: TableProps) {
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>Initial Timestamp</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Lock Period</TableCell>
-            <TableCell sx={{ fontWeight: 'bold' }}>Vest Period</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Lock End</TableCell>
+            <TableCell sx={{ fontWeight: 'bold' }}>Vest End</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }} align="left">
               Receiver Address
             </TableCell>
@@ -135,9 +135,9 @@ export default function UsersTable({ users }: TableProps) {
             : users
           ).map((row, i) => (
             <TableRow key={i} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell align="left">{dayjs(row.initial_timestamp).fromNow()}</TableCell>
-              <TableCell align="left">{dayjs(row.created_at).format(timeFormat)}</TableCell>
-              <TableCell align="left">{dayjs(row.created_at).format(timeFormat)}</TableCell>
+              <TableCell align="left">{row.initial_timestamp} ({dayjs(row.initial_timestamp).fromNow()})</TableCell>
+              <TableCell align="left">{row.lock_period} ({dayjs(row.lock_period).fromNow()})</TableCell>
+              <TableCell align="left">{row.vest_period} ({dayjs(row.vest_period).fromNow()})</TableCell>
               <TableCell component="th" scope="row">
                 {row.receiver_address}
               </TableCell>

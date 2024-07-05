@@ -116,7 +116,7 @@ const TableWrap = styled.div`
   margin: 40px 0 0;
 `;
 
-const timeFormat = 'YYYY / MM / DD hh:mm:ss a';
+const timeFormat = 'YYYY.MM.DD hh:mm a'
 function createData(name: string, value: string | number) {
     return { name, value };
 }
@@ -178,7 +178,13 @@ const AdminAward = () => {
     const fetchDaoInfo = async () => {
         try {
             const response = await provider.get(EPS.DAO_INFO);
-            console.log(response.data);
+            for (let i = 0; i < response.data.length; i++) {
+                let sum_lock = Number(response.data[i].initial_timestamp) + Number(response.data[i].lock_period);
+                let sum_vest = Number(response.data[i].initial_timestamp) + Number(response.data[i].vest_period);
+                response.data[i].initial_timestamp = dayjs.unix(Number(response.data[i].initial_timestamp)).format(timeFormat);
+                response.data[i].lock_period = dayjs.unix(sum_lock).format(timeFormat);
+                response.data[i].vest_period = dayjs.unix(sum_vest).format(timeFormat);
+            }
             setDaoInfo(response.data);
         } catch (error) {
             console.error('Error fetching', error);

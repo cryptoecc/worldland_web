@@ -67,7 +67,7 @@ type TxDetails = {
     function: () => void;
 }
 
-const timeFormat = 'YYYY / MM / DD hh:mm:ss a'
+const timeFormat = 'YYYY.MM.DD hh:mm a'
 const User = () => {
     dayjs.extend(relativeTime);
     const navigate = useNavigate();
