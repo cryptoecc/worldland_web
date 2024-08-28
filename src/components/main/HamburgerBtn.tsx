@@ -155,16 +155,16 @@ const HamburgerBtn = () => {
                   Scan
                 </a>
               </div>
-              <div className="user-menu">
+              {/* <div className="user-menu">
                 <a href="https://ai.worldland.foundation/" className="user" target="_blank" rel="noopener noreferrer">
                   My AI
                 </a>
-              </div>
-              <div className="user-menu">
+              </div> */}
+              {/* <div className="user-menu">
                 <span className="user">
                   <Chatbot />
                 </span>
-              </div>
+              </div> */}
             </Dropdown>
           )}
         </Li>

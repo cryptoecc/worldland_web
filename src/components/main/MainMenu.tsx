@@ -72,7 +72,12 @@ const MainMenu = () => {
                   </SpaceLink>
                   <AddNetworkButton />
                   <TimelockSectionWrap>
-                    <SpaceSpanLink onClick={(e) => { e.stopPropagation(); setActiveDropdown(prev => !prev) }}>
+                    <SpaceSpanLink
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveDropdown((prev) => !prev);
+                      }}
+                    >
                       <Strong>Timelock Contracts</Strong>
                     </SpaceSpanLink>
                     <UnorderedList active={activeDropdown}>
@@ -96,14 +101,14 @@ const MainMenu = () => {
                   <SpaceLink href="https://scan.worldland.foundation/" target="_blank">
                     <Strong>Scan</Strong>
                   </SpaceLink>
-                  <SpaceLink href="https://ai.worldland.foundation/" target="_blank">
+                  {/* <SpaceLink href="https://ai.worldland.foundation/" target="_blank">
                     <Strong>My AI</Strong>
                   </SpaceLink>
                   <SpaceDiv>
                     <Strong>
                       <Chatbot />
                     </Strong>
-                  </SpaceDiv>
+                  </SpaceDiv> */}
                 </div>
               </div>
             </User>
@@ -162,11 +167,7 @@ const MainMenu = () => {
           Community
           <CommunityDropdown className="community" data-isvisible={activeMenu === 'Community'}>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <SpaceLink
-                href="https://dao.worldland.foundation"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <SpaceLink href="https://dao.worldland.foundation" target="_blank" rel="noopener noreferrer">
                 <Strong>DAO Vote</Strong>
               </SpaceLink>
 

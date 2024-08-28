@@ -62,7 +62,7 @@ const MainAreaChart = () => {
       <br />
 
       <DetailDescription>
-        Active Nodes Wallets : These wallets belong to the nodes which have successully minded at least once within the
+        Active Nodes Wallets : These wallets belong to the nodes which have successully mined at least once within the
         last seven-day period.
         {/* Active Nodes : The number of mining nodes on the Worldland network. */}
       </DetailDescription>
