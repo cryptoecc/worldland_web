@@ -204,9 +204,9 @@ const HamburgerBtn = () => {
           {menuState.aidex && (
             <Dropdown>
               <div className="user-menu">
-                <Link className="user" to="/bridge" onClick={() => toggleHamburgerMenu()}>
+                {/* <Link className="user" to="/bridge" onClick={() => toggleHamburgerMenu()}>
                   Bridge
-                </Link>
+                </Link> */}
                 <Link className="user" to="/swap" onClick={() => toggleHamburgerMenu()}>
                   Swap
                 </Link>
