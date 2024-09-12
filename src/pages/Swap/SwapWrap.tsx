@@ -313,7 +313,7 @@ const SwapWrap = () => {
       // metamask is not connected
       setDisabled(false);
       setBtnState(4);
-    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND_TESTNET]) {
+    } else if (chain?.id !== chainIds[CHAINDS.WORLDLAND]) {
       // wrong network
       setDisabled(false);
       setBtnState(7);
