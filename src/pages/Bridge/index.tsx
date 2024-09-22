@@ -61,6 +61,20 @@ const Bridge = () => {
         },
     });
 
+    const { data: bridgeFee } = useContractRead({
+        address: networkType,
+        abi: MAP_STR_ABI[ABI.BRIDGEBASE_ABI],
+        functionName: QUERY.GETBRIDGEFEE,
+        args: [parseEther(input)],
+        watch: true,
+        onSuccess(data: any) {
+            console.log({ bridgeFee: data });
+        },
+        onError(data: any) {
+            console.log({ error: data });
+        },
+    });
+
     const { data: approvalTx, write: sendApprove } = useContractWrite({
         address: inputSelect.address,
         abi: MAP_STR_ABI[ABI.ERC20_ABI],
@@ -154,6 +168,8 @@ const Bridge = () => {
 
     async function handleFunctionSelector() {
         try {
+            console.log({ functionTYPE: inputSelect.funcType })
+            const bridgeFeeCalc = (parseFloat(bridgeFee) + parseFloat(input)).toString();
             if (!isConnected) {
                 // metamask is not connected
                 open();
@@ -172,9 +188,10 @@ const Bridge = () => {
                     sendBridge({
                         args: [
                             address,
-                            inputSelect.address
+                            inputSelect.address,
+                            bridgeFee,
                         ],
-                        value: parseEther(input)
+                        value: parseEther(bridgeFeeCalc)
                     })
                 }
             } else if (inputSelect.funcType === FUNCTION.BURNWETH) {
@@ -188,7 +205,9 @@ const Bridge = () => {
                 } else {
                     sendBridge({
                         args: [
-                            to_wei(input),
+                            address,
+                            bridgeFee,
+                            parseEther(bridgeFeeCalc),
                             inputSelect.address
                         ]
                     })
@@ -205,9 +224,9 @@ const Bridge = () => {
                     sendBridge({
                         args: [
                             address,
-                            to_wei(input),
-                            inputSelect.token,
-                            inputSelect.address
+                            bridgeFee,
+                            inputSelect.address,
+                            parseEther(bridgeFeeCalc),
                         ],
                     })
                 }
@@ -223,9 +242,9 @@ const Bridge = () => {
                     sendBridge({
                         args: [
                             address,
-                            to_wei(input),
+                            bridgeFee,
+                            parseEther(bridgeFeeCalc),
                             inputSelect.address,
-                            inputSelect.token
                         ]
                     })
                 }

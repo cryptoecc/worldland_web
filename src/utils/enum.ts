@@ -88,6 +88,7 @@ export enum QUERY {
   ISFINALISED = 'allIncomingDepositsFinalised',
   OWNER = 'owner',
   BALANCES = 'balances',
+  GETBRIDGEFEE = 'getBridgeFee',
 }
 
 export enum CHAINDS {

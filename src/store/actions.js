@@ -27,10 +27,8 @@ export const fetchData = (payload) => {
         methodname: FUNCTION.GETAMOUNTOUT,
         f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], amountIn, tokenA, tokenB],
       };
-      console.log({ txParams });
       if (amountIn) {
         let resp = (await chain_query(txParams)).toString();
-        console.log({ respPrice: resp });
         dispatch(fetchAmountOutSuccess(resp));
       } else {
         dispatch(fetchAmountOutSuccess(''));

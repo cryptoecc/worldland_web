@@ -29,6 +29,7 @@ import { useToasts } from 'react-toast-notifications';
 import { parseEther } from 'viem';
 import { initialSwapSelect0 } from 'constants/select';
 import { ListItemType } from 'types/select';
+import { chain_query } from 'configs/contract_calls';
 
 const SwapWrap = () => {
   const { address, isConnected } = useAccount();
@@ -75,6 +76,28 @@ const SwapWrap = () => {
       setLoader(false);
     },
   });
+
+  async function test() {
+    try {
+      let txParams = {
+        chain: 2,
+        contract_address: MAPNETTOADDRESS[CONTRACT_ADDRESSES.ROUTER],
+        abikind: ABI.LVSWAPV2_ROUTER,
+        methodname: FUNCTION.GETAMOUNTOUT,
+        f_args: [MAPNETTOADDRESS[CONTRACT_ADDRESSES.FACTORY], to_wei('0.001'), input?.address, output?.address],
+      };
+      console.log({ txParams })
+      let resp = (await chain_query(txParams)).toString();
+      console.log({ resp })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    test();
+  }, [])
+
 
   const handleDebouncedAmountOut = useCallback(
     debounce((value: string) => {
