@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Twitter, Youtube, Menu, X } from 'lucide-react';
 
@@ -24,11 +25,10 @@ const navItems = [
       { label: 'Connect Worldland', href: 'https://docs.worldland.foundation/user/wallet', external: true },
       { label: 'Run Node', href: 'https://docs.worldland.foundation/miner/install-and-run-geth', external: true },
       { label: 'Add Network', href: '#', action: 'addNetwork' },
+
       { type: 'divider' },
-      { label: 'Timelock Contracts', submenu: [
-        { label: 'Award Distributer', href: '/timelock-contracts/award' },
-        { label: 'Token Sale', href: '/timelock-contracts/sale' },
-      ]},
+      { label: 'Bridge', href: '#', external: true },
+      { label: 'Faucet', href: '#', external: true },
       { type: 'divider' },
       { label: 'Scan', href: 'https://scan.worldland.foundation/', external: true },
     ],
@@ -159,16 +159,25 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-lg border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-24 relative"> {/* h-16 -> h-24, relative 추가 */}
           {/* Logo */}
-          <Link href="/" className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>
-            World<span className="text-[#E53935]">Land</span>
+          <Link href="/" className="flex items-center gap-2 z-10"> {/* gap-1 -> gap-2로 조금 여유 줌 */}
+            <div className="w-9 h-9 relative flex items-center justify-center overflow-hidden">
+              <img 
+                src="/images/logo.png" 
+                alt="Worldland Logo" 
+                className="w-full h-full object-contain scale-[1]"
+              />
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">
+              Worldland
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center">
+          {/* Desktop Navigation - Absolute Center */}
+          <nav className="hidden lg:flex items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
             {navItems.map((item) => (
               <NavItem
                 key={item.label}
