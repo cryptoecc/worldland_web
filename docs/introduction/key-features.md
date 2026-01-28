@@ -1,52 +1,10 @@
 # Key Features
 
-WorldLand combines blockchain technology with distributed GPU infrastructure to create a verifiable, decentralized compute marketplace.
-
-## Verifiable Computation
-
-Traditional cloud providers require you to trust that your computation was actually performed. WorldLand eliminates this trust requirement through cryptographic verification.
-
-When you submit a GPU workload to the network, WorldLand's **Verification Layer** ensures honest execution through a commit-challenge-response protocol:
-
-1. **Commit** — The provider cryptographically commits evidence of execution to the blockchain
-2. **Challenge** — Random audits are issued using public, unpredictable randomness
-3. **Respond** — The provider must reveal proof fragments that match their commitment
-4. **Verify** — The protocol deterministically verifies responses and issues verdicts
-
-This makes cheating economically irrational. The expected cost of getting caught exceeds any savings from skipping work.
-
-## ECCVCC Consensus
-
-WorldLand runs on **ECCVCC (Error Correction Code Verifiable Computation Consensus)**, a novel Proof-of-Work consensus mechanism designed for the GPU era.
-
-- **ASIC-resistant** — ECC-based puzzles resist hardware specialization
-- **Efficient verification** — Hard to solve, easy to verify
-- **Tunable difficulty** — Maintains stable 10-second block times
-- **VCT randomness** — Verifiable Coin Toss prevents precomputation
-
-ECCVCC integrates verified computation directly into consensus, so GPU contributions to the network translate into consensus weight and rewards.
-
-## Dual-Mode GPU Operation
-
-GPU providers in WorldLand operate in two modes, maximizing utilization and earnings:
-
-**Mining Mode (Default)**
-
-- GPUs contribute to network security by solving ECCVCC puzzles
-- Earn block rewards (20 WL per block, 80% to miner)
-- Active when no rental jobs are assigned
-
-**Service Mode (On-Demand)**
-
-- GPUs serve customer workloads when a job is matched
-- Earn service fees (90% of customer payment)
-- Dynamically switches based on demand
-
-This dual-mode design ensures zero-idle efficiency—GPU resources are always generating value.
+WorldLand combines blockchain technology with distributed GPU infrastructure to create a generic GPU compute marketplace.
 
 ## Instant GPU Access
 
-WorldLand Cloud provides on-demand GPU containers with:
+WorldLand Cloud provides on-demand GPU containers designed for AI researchers and developers:
 
 - **Full SSH access** as root user
 - **Pre-installed CUDA** and NVIDIA drivers
@@ -54,66 +12,54 @@ WorldLand Cloud provides on-demand GPU containers with:
 - **Public connectivity** — Access your container from anywhere
 - **Pay-as-you-go** — Hourly billing with no long-term commitments
 
-Start training your AI models within minutes, not days.
+Users can start training AI models or running inference nodes **within minutes** at a fraction of the cost of centralized clouds.
 
-## Verified Compute Credits (VCC)
+## Dual-Mode GPU Operation
 
-VCC is an on-chain accounting system that tracks verified GPU contributions:
+GPU providers in WorldLand maximize utilization and earnings by operating in two distinct modes:
 
-- **Gated by verification** — Only successfully verified work earns VCC
-- **Durable record** — Permanent on-chain history of contributions
-- **Influences rewards** — Higher VCC improves future reward allocation
-- **Reputation system** — Demonstrates provider reliability
+### Service Mode (On-Demand)
 
-VCC aligns short-term market incentives with long-term protocol health.
+- **Primary Function**: Renting out GPU computing power to customers.
+- **Role**: AI Training, Inference, Rendering, etc.
+- **Earnings**: High-yield service fees paid by users.
 
-## Economic Security
+### Mining Mode (Idle)
 
-WorldLand's security is fundamentally economic. The protocol doesn't make cheating impossible—it makes cheating irrational.
+- **Fallback Function**: Participating in network consensus when no rental jobs are assigned.
+- **Role**: Securing the blockchain network.
+- **Earnings**: Block rewards in WL.
 
-- **Collateral requirements** — Providers stake assets at risk
-- **Slashing penalties** — Failed verification results in penalties
-- **Delayed finality** — Settlement waits for challenge windows
-- **Clawback mechanisms** — Dishonest earnings can be recovered
+This dual-mode design ensures **zero-idle efficiency**—GPU resources are always generating value.
 
-The expected value of honest execution always exceeds the expected value of cheating.
+## Web3-Native & Permissionless
 
-## Diverse Operator Support
+As a DePIN (Decentralized Physical Infrastructure Network), WorldLand removes barriers to entry:
 
-WorldLand supports the full spectrum of GPU operators:
-
-| Operator Type             | Examples                          |
-| ------------------------- | --------------------------------- |
-| **Individuals**           | Gaming rigs, home workstations    |
-| **Enterprises**           | Data centers, cloud providers     |
-| **Mining operations**     | Crypto miners transitioning to AI |
-| **Research institutions** | Universities, labs                |
-
-Consumer-grade GPUs and enterprise clusters integrate into a single verification fabric.
-
-## Web3-Native Design
-
-As a DePIN (Decentralized Physical Infrastructure Network), WorldLand leverages Web3 primitives:
-
-- **Wallet-based authentication** — No passwords, sign with your wallet
-- **On-chain settlement** — Transparent, immutable payment records
-- **Token incentives** — WL aligns all network participants
-- **Decentralized governance** — Community-driven protocol evolution
-
-## Open and Permissionless
-
-Anyone can participate in WorldLand:
-
-- **Permissionless providing** — Register your GPU and start earning
-- **Permissionless consumption** — Access GPU resources with WL tokens
-- **Transparent pricing** — Providers set their own rates
-- **Global access** — No geographic restrictions
+- **Wallet-based Login** — No complex sign-up, just sign with your wallet.
+- **Global Access** — Register a GPU or rent one from anywhere in the world.
+- **Transparent Pricing** — A decentralized market where supply and demand determine rates.
+- **Diverse Support** — From individual gaming rigs to enterprise data centers, all can participate.
 
 ---
 
-::: tip Next Steps
+## Technical Roadmap: Verifiable Compute
 
-- Learn about [WorldLand Core](/network/core) technology
-- Explore [Tokenomics](/tokenomics/overview)
-- Get started with [WorldLand Cloud](/cloud/overview)
-  :::
+> **Under Research & Development**
+>
+> The following features are part of WorldLand's long-term technical vision to bring trustless verification to off-chain computation.
+
+### Proof-of-Compute (Verification Layer)
+
+WorldLand is developing a cryptographic verification layer to ensure that off-chain GPU work is executed honestly without requiring trust in the provider.
+The proposed commit-challenge-response protocol aims to:
+
+- Randomly audit execution results.
+- Penalize dishonest providers via slashing.
+- Create a "Trustless" compute market.
+
+### ECCVCC Consensus
+
+To support this verification, WorldLand proposes **ECCVCC (Error Correction Code Verifiable Computation Consensus)**, a novel Proof-of-Work mechanism designed to integrate useful compute work into blockchain consensus.
+
+_Note: These verification technologies are currently under active research and will be rolled out in future phases._
