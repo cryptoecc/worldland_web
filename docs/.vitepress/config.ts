@@ -22,7 +22,7 @@ export default defineConfig({
     
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Documentation', link: '/executive-summary' },
+      { text: 'Documentation', link: '/' },
       { text: 'Whitepaper', link: '/whitepaper/' },
       { 
         text: 'Links',
@@ -38,7 +38,7 @@ export default defineConfig({
     sidebar: [
       {
         text: 'Executive Summary',
-        link: '/executive-summary',
+        link: '/',
       },
       {
         text: 'WorldLand Introduction',
