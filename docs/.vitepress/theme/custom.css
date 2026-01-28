@@ -1,0 +1,73 @@
+:root {
+  /* Brand Colors - WorldLand Red */
+  --vp-c-brand-1: #E53935;
+  --vp-c-brand-2: #D32F2F;
+  --vp-c-brand-3: #C62828;
+  --vp-c-brand-soft: rgba(229, 57, 53, 0.14);
+  
+  /* Radii - Sharp & Solid */
+  --vp-radius-default: 0px;
+  --vp-radius-small: 0px;
+  --vp-radius-medium: 0px;
+  --vp-radius-large: 0px;
+  --vp-radius-full: 0px; 
+  
+  --vp-nav-height: 64px;
+}
+
+/* Force No Radius on Everything */
+* {
+  border-radius: 0px !important;
+}
+
+/* Inputs & Search */
+.VPNavBarSearch .DocSearch-Button {
+  border-radius: 0px !important;
+}
+
+/* Buttons */
+.VPButton {
+  border-radius: 0px !important;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.action-button {
+  border-radius: 0px !important;
+}
+
+/* Code Blocks */
+.vp-doc pre, .vp-doc code {
+  border-radius: 0px !important;
+}
+
+/* Custom Blocks (Tips, Warnings) */
+.custom-block {
+  border-radius: 0px !important;
+  border: 1px solid var(--vp-c-border);
+}
+
+/* Home Hero */
+.VPHomeHero .image-bg {
+  border-radius: 0px !important;
+  filter: blur(40px);
+}
+
+/* Sidebar */
+.VPSidebar {
+  border-right: 1px solid var(--vp-c-border);
+}
+
+/* Image styling */
+img {
+  border-radius: 0px !important;
+}
+
+/* Dark Mode Overrides */
+.dark {
+  --vp-c-bg: #000000;
+  --vp-c-bg-alt: #111111;
+  --vp-c-bg-elv: #111111;
+  --vp-c-bg-soft: #1a1a1a;
+}

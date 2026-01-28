@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
 /* ============================================
-   WorldLand Landing Page
+   WorldLand Landing Page - Sharp & Solid Theme
    Fonts: Clash Display + Satoshi + Chivo Mono
    Theme: Red + Black (DePIN GPU Infrastructure)
    ============================================ */
 
 :root {
-  /* WorldLand Red */
+  /* WorldLand Red Identity */
   --wld-red: #E53935;
-  --wld-red-rgb: 229, 57, 53;
-
-  /* Background */
+  
+  /* Minimalist Theme */
   --background: #000000;
   --foreground: #ffffff;
 
-  /* Neutral */
-  --muted: #71717A;
+  /* No Rounding */
+  --radius: 0px;
+  
+  /* UI Colors */
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
   --border: #27272A;
-  --card: #18181B;
-
+  --card: #111111;
+  
   /* Fonts */
   --font-display: 'Clash Display', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
@@ -33,9 +36,17 @@
   --color-dark-800: #27272A;
   --color-dark-900: #18181B;
   --color-dark-950: #09090B;
+  
+  /* Shared with Cloud */
+  --color-primary: #E53935;
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
 }
 
+/* Force No Radius Globally */
 * {
+  border-radius: 0 !important;
   border-color: var(--border);
 }
 
@@ -60,7 +71,7 @@ h1, h2, h3, h4, h5, h6 {
   color: white;
 }
 
-/* Scrollbar */
+/* Sharp Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -69,7 +80,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 ::-webkit-scrollbar-thumb {
   background: #3F3F46;
-  border-radius: 4px;
+  border-radius: 0px; /* Sharp */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E53935; /* Red Accent Highlight */
 }
 
 /* Utilities */
@@ -85,8 +99,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .glass {
-  background: rgba(24, 24, 27, 0.8);
+  background: rgba(17, 17, 17, 0.9); /* More Opaque for Solid look */
   backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hero-text {
@@ -95,8 +110,9 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.01em;
-  text-shadow: 0 0 80px rgba(229, 57, 53, 0.2);
-  padding-bottom: 0.1em; /* Descender 잘림 방지 */
+  /* Remove soft shadow, add sharp outline logic if needed or keep clean */
+  text-shadow: 0 0 80px rgba(229, 57, 53, 0.2); 
+  padding-bottom: 0.1em;
 }
 
 .display-text {
@@ -107,25 +123,5 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* Animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.reverse {
-  animation-direction: reverse;
-}
-
-.font-mono {
-  font-family: var(--font-mono);
-}
-
-.font-display {
-  font-family: var(--font-display);
-}
+.font-mono { font-family: var(--font-mono); }
+.font-display { font-family: var(--font-display); }
