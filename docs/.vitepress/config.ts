@@ -1,4 +1,3 @@
-```
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
@@ -14,11 +13,17 @@ export default defineConfig({
   appearance: 'dark',
 
   head: [
+    ['link', { rel: 'icon', href: '/logo.png' }],
+    // Add Inter Font
+    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
+    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
+    ['link', { href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', rel: 'stylesheet' }],
     ['meta', { property: 'og:description', content: 'Decentralized GPU Infrastructure Network - DePIN for AI Era' }],
   ],
   
   themeConfig: {
-    logo: '/logo.svg',
+    // Logo Configuration
+    logo: { src: '/logo.png', width: 32, height: 32 },
     siteTitle: 'WorldLand',
     
     nav: [
@@ -151,9 +156,9 @@ export default defineConfig({
     ],
     
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/worldland' },
-      { icon: 'twitter', link: '#' },
-      { icon: 'discord', link: '#' },
+      { icon: 'github', link: 'https://github.com/cryptoecc/WorldLand' },
+      { icon: 'twitter', link: 'https://twitter.com/Worldland_space' },
+      { icon: 'discord', link: 'https://discord.gg/yJERYVnE6a' },
     ],
     
     search: {
@@ -161,13 +166,13 @@ export default defineConfig({
     },
     
     editLink: {
-      pattern: 'https://github.com/worldland/docs/edit/main/:path',
+      pattern: 'https://github.com/cryptoecc/WorldLand/edit/master/docs/:path',
       text: 'Edit this page on GitHub'
     },
     
     footer: {
       message: 'Decentralized GPU Infrastructure for the AI Era',
-      copyright: 'Copyright © 2024 WorldLand'
+      copyright: 'Copyright © 2026 WorldLand'
     },
     
     lastUpdated: {
