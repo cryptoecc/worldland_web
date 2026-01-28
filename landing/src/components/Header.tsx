@@ -95,7 +95,7 @@ function NavItem({ item, isOpen, onClick }: NavItemProps) {
           href={(item as any).href || '#'}
           className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
         >
-          {item.label}
+          {(item as any).label}
         </Link>
       )}
 
@@ -247,7 +247,7 @@ export default function Header() {
                     </div>
                   ) : (
                     <Link href={(item as any).href} className="block text-white font-medium">
-                      {item.label}
+                      {(item as any).label}
                     </Link>
                   )}
                 </div>
