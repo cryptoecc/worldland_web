@@ -1,29 +1,22 @@
 # Whitepaper
 
-WorldLand의 비전, 기술 아키텍처, 토크노믹스에 대한 상세한 내용은 백서를 참조하세요.
+## Introduction
 
-## 📄 Download Whitepaper
+WorldLand is building the first decentralized computing infrastructure that cryptographically verifies AI execution. By combining a purpose-built blockchain with **Proof-of-Compute**, we enable a trustless market for GPU resources.
 
-<a href="/Worldland_whitepaper2026.pdf" target="_blank" class="whitepaper-btn">
-  📥 WorldLand Whitepaper 2026 (PDF)
-</a>
+## Content Overview
 
-<iframe src="/Worldland_whitepaper2026.pdf" width="100%" height="800px" style="border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 20px;"></iframe>
+The technical whitepaper covers the following core areas:
 
-<style>
-.whitepaper-btn {
-  display: inline-block;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
-  color: white !important;
-  text-decoration: none !important;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+- **Vision**: Democratizing Access to AI Compute
+- **Architecture**: WorldLand Mainnet, Verification Layer, and GPU Nodes
+- **Proof-of-Compute**: The consensus mechanism for verifying off-chain compute
+- **Tokenomics**: Economic model design and simulation
+- **Governance**: Decentralized decision-making processes
 
-.whitepaper-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-}
-</style>
+## Status
+
+> **Coming Soon**
+>
+> The full whitepaper ("Phase 1.30") is currently under revision and will be released shortly.
+> Please stay tuned on our [Official Channels](/introduction/links) for updates.

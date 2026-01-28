@@ -2,7 +2,7 @@
 
 Here is a curated list of official WorldLand resources and channels.
 
-## 🌐 Official Channels
+## Official Channels
 
 | Channel              | Link                                                           | Description                                     |
 | :------------------- | :------------------------------------------------------------- | :---------------------------------------------- |
@@ -10,7 +10,7 @@ Here is a curated list of official WorldLand resources and channels.
 | **Documentation**    | [docs.worldland.foundation](https://docs.worldland.foundation) | Technical documentation, guides, and whitepaper |
 | **Whitepaper**       | [Whitepaper Link](/whitepaper/)                                | Comprehensive technical and economic paper      |
 
-## ☁️ Products & Services
+## Products & Services
 
 | Service             | Link                                                             | Description                                |
 | :------------------ | :--------------------------------------------------------------- | :----------------------------------------- |
@@ -18,7 +18,7 @@ Here is a curated list of official WorldLand resources and channels.
 | **Block Explorer**  | [scan.worldland.foundation](https://scan.worldland.foundation)   | Real-time network and transaction explorer |
 | **DAO Governance**  | [dao.worldland.foundation](https://dao.worldland.foundation)     | Proposal and voting platform               |
 
-## 👥 Community & Socials
+## Community & Socials
 
 | Platform        | Link                                                          | Description                                       |
 | :-------------- | :------------------------------------------------------------ | :------------------------------------------------ |
@@ -27,7 +27,7 @@ Here is a curated list of official WorldLand resources and channels.
 | **Medium**      | [WorldLand Blog](https://medium.com/@worldland-official)      | In-depth articles and updates                     |
 | **YouTube**     | [WorldLand Official](https://www.youtube.com/@Worldland-2023) | Video tutorials and AMAs                          |
 
-## 💻 Development
+## Development
 
 | Resource   | Link                                                          | Description                   |
 | :--------- | :------------------------------------------------------------ | :---------------------------- |
