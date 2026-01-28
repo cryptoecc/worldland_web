@@ -31,7 +31,7 @@ git push origin main
 - **Branch**: `main`
 - **Monorepo settings**: [체크 ✅]
 - **Monorepo root directory**: `landing`
-- **Build settings (중요 ⚠️)**: `amplify.yml`을 아래와 같이 설정해야 합니다.
+- **Build settings (중요 ⚠️)**: `amplify.yml`을 아래와 같이 설정해야 합니다. (Static Export 사용)
   ```yaml
   version: 1
   applications:
@@ -44,7 +44,7 @@ git push origin main
             commands:
               - npm run build
         artifacts:
-          baseDirectory: .next
+          baseDirectory: out
           files:
             - '**/*'
         cache:
