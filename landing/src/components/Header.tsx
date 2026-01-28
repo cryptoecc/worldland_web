@@ -27,8 +27,8 @@ const navItems = [
       { label: 'Add Network', href: '#', action: 'addNetwork' },
 
       { type: 'divider' },
-      { label: 'Bridge', href: '#', external: true },
-      { label: 'Faucet', href: '#', external: true },
+      { label: 'Bridge', href: '/bridge' },
+      { label: 'Faucet', href: '/faucet' },
       { type: 'divider' },
       { label: 'Scan', href: 'https://scan.worldland.foundation/', external: true },
     ],
