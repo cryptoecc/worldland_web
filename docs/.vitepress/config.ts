@@ -32,9 +32,8 @@ export default defineConfig({
         items: [
           { text: 'Executive Summary', link: '/' },
           { text: 'Key Features', link: '/introduction/key-features' },
-          { text: 'WLC Token', link: '/introduction/token' },
+          { text: 'WL ($WLC)', link: '/introduction/token' },
           { text: 'Whitepaper', link: '/whitepaper/' },
-          { text: 'Roadmap', link: '/roadmap/' },
         ]
       },
       {
@@ -85,7 +84,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Key Features', link: '/introduction/key-features' },
-          { text: 'WLC Token ($WLC)', link: '/introduction/token' },
+          { text: 'WL ($WLC)', link: '/introduction/token' },
           { text: 'Important Links', link: '/introduction/links' },
           { text: 'FAQ', link: '/introduction/faq' },
         ]
@@ -101,7 +100,7 @@ export default defineConfig({
         ]
       },
       {
-        text: 'WLC Tokenomics',
+        text: 'WL Tokenomics',
         collapsed: false,
         items: [
           { text: 'Token Overview', link: '/tokenomics/overview' },
@@ -111,7 +110,6 @@ export default defineConfig({
           { text: 'Provider Rewards', link: '/tokenomics/provider-rewards' },
           { text: 'Reward Emissions', link: '/tokenomics/emissions' },
           { text: 'Circulating Supply', link: '/tokenomics/circulating-supply' },
-          { text: 'KYC Verification', link: '/tokenomics/kyc' },
         ]
       },
       {
@@ -138,16 +136,8 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Partnership',
-        link: '/partnership/',
-      },
-      {
         text: 'Community',
         link: '/community/',
-      },
-      {
-        text: 'Roadmap',
-        link: '/roadmap/',
       },
       {
         text: 'Whitepaper',
