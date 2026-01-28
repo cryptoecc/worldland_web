@@ -17,27 +17,24 @@ const DiscordIcon = () => (
 const navItems = [
   {
     label: 'Learn',
-    href: '/learn',
-  },
-  {
-    label: 'User',
     items: [
-      { label: 'Connect Worldland', href: 'https://docs.worldland.foundation/user/wallet', external: true },
-      { label: 'Run Node', href: 'https://docs.worldland.foundation/miner/install-and-run-geth', external: true },
-      { label: 'Add Network', href: '#', action: 'addNetwork' },
-
+      { label: 'Executive Summary', href: 'https://docs.worldland.foundation/executive-summary', external: true },
+      { label: 'Key Features', href: 'https://docs.worldland.foundation/introduction/key-features', external: true },
+      { label: 'WLC Token', href: 'https://docs.worldland.foundation/introduction/token', external: true },
       { type: 'divider' },
-      { label: 'Bridge', href: '/bridge' },
-      { label: 'Faucet', href: '/faucet' },
-      { type: 'divider' },
-      { label: 'Scan', href: 'https://scan.worldland.foundation/', external: true },
+      { label: 'Whitepaper', href: 'https://docs.worldland.foundation/whitepaper/', external: true },
+      { label: 'Roadmap', href: 'https://docs.worldland.foundation/roadmap/', external: true },
     ],
   },
   {
-    label: 'Developer',
+    label: 'Network',
     items: [
-      { label: 'Docs', href: 'https://docs.worldland.foundation/', external: true },
-      { label: 'GitHub', href: 'https://github.com/cryptoecc/WorldLand', external: true },
+      { label: 'WorldLand Core', href: 'https://docs.worldland.foundation/network/core', external: true },
+      { label: 'The Provider', href: 'https://docs.worldland.foundation/network/provider', external: true },
+      { label: 'The Broker', href: 'https://docs.worldland.foundation/network/broker', external: true },
+      { type: 'divider' },
+      { label: 'Add Network', href: '#', action: 'addNetwork' },
+      { label: 'Block Explorer', href: 'https://scan.worldland.foundation/', external: true },
     ],
   },
   {
@@ -45,22 +42,30 @@ const navItems = [
     items: [
       { label: 'GPU Console', href: 'https://cloud.worldland.foundation', external: true },
       { label: 'Pricing', href: 'https://cloud.worldland.foundation/pricing', external: true },
-      { label: 'Provider SDK', href: 'https://docs.worldland.foundation/cloud/provider-sdk', external: true },
+      { type: 'divider' },
+      { label: 'How to Provide', href: 'https://docs.worldland.foundation/cloud/provider/how-to-provide', external: true },
+      { label: 'How to Use', href: 'https://docs.worldland.foundation/cloud/customer/how-to-use', external: true },
+    ],
+  },
+  {
+    label: 'Developer',
+    items: [
+      { label: 'Documentation', href: 'https://docs.worldland.foundation/', external: true },
+      { label: 'GitHub', href: 'https://github.com/cryptoecc/WorldLand', external: true },
+      { type: 'divider' },
+      { label: 'FAQ', href: 'https://docs.worldland.foundation/introduction/faq', external: true },
     ],
   },
   {
     label: 'Community',
     items: [
-      { label: 'DAO Vote', href: 'https://dao.worldland.foundation', external: true },
-      { label: 'Medium', href: 'https://medium.com/@worldland-official', external: true },
-      { label: 'YouTube', href: 'https://www.youtube.com/@Worldland-2023', external: true, icon: Youtube },
-      { label: 'Twitter', href: 'https://twitter.com/Worldland_space', external: true, icon: Twitter },
       { label: 'Discord', href: 'https://discord.gg/yJERYVnE6a', external: true, customIcon: DiscordIcon },
+      { label: 'Twitter', href: 'https://twitter.com/Worldland_space', external: true, icon: Twitter },
+      { label: 'YouTube', href: 'https://www.youtube.com/@Worldland-2023', external: true, icon: Youtube },
+      { type: 'divider' },
+      { label: 'Medium', href: 'https://medium.com/@worldland-official', external: true },
+      { label: 'DAO Vote', href: 'https://dao.worldland.foundation', external: true },
     ],
-  },
-  {
-    label: 'Contact',
-    href: '/contact',
   },
 ];
 
@@ -102,7 +107,7 @@ function NavItem({ item, isOpen, onClick }: NavItemProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 mt-2 min-w-[200px] py-2 bg-white rounded-xl shadow-xl border border-gray-100 z-50"
+            className="absolute top-full left-0 mt-2 min-w-[200px] py-2 bg-white shadow-xl border border-gray-200 z-50"
           >
             {(item as any).items.map((subItem: any, i: number) => {
               if (subItem.type === 'divider') {
@@ -190,7 +195,7 @@ export default function Header() {
 
           {/* Connect Button */}
           <div className="hidden lg:block">
-            <button className="px-5 py-2 border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white rounded-lg text-sm font-medium transition-all">
+            <button className="px-5 py-2 border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white text-sm font-medium transition-all">
               Connect
             </button>
           </div>
@@ -247,7 +252,7 @@ export default function Header() {
                   )}
                 </div>
               ))}
-              <button className="w-full mt-4 px-5 py-3 bg-[#E53935] text-white rounded-lg font-medium">
+              <button className="w-full mt-4 px-5 py-3 bg-[#E53935] text-white font-medium">
                 Connect
               </button>
             </div>
