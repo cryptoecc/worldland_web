@@ -38,7 +38,7 @@
 
   /* Layout */
   --vp-sidebar-width: 270px;
-  --vp-nav-height: 64px;
+  --vp-nav-height: 96px; /* Match Landing h-24 */
 }
 
 /* Force Dark Mode Styles Globally */
@@ -56,12 +56,24 @@ body {
    COMPONENT STYLING
    ========================================================== */
 
-/* Navbar - Solid Black with Bottom Border */
+/* Navbar - Matches Landing Page (Transparent Black + Blur) */
 .VPNavBar {
-  background-color: rgba(6, 6, 6, 0.85) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--vp-c-border) !important;
+  background-color: rgba(0, 0, 0, 0.4) !important; /* Minimal opacity */
+  backdrop-filter: blur(16px); /* Strong blur */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
+
+/* Navbar Items */
+.VPNavBarMenuLink {
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  padding: 0 16px !important;
+}
+
+.VPNavBarMenuLink.active {
+  color: var(--vp-c-brand-1) !important;
+}
+
 
 /* Hide Light/Dark Toggle (We are Dark Only) */
 .VPSwitchAppearance {

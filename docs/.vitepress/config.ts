@@ -22,16 +22,50 @@ export default defineConfig({
     siteTitle: 'WorldLand',
     
     nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Documentation', link: '/' },
-      { text: 'Whitepaper', link: '/whitepaper/' },
-      { 
-        text: 'Links',
+      {
+        text: 'Learn',
         items: [
-          { text: 'Website', link: 'https://worldland.io' },
-          { text: 'GitHub', link: 'https://github.com/worldland' },
-          { text: 'Discord', link: '#' },
-          { text: 'Twitter', link: '#' },
+          { text: 'Executive Summary', link: '/' },
+          { text: 'Key Features', link: '/introduction/key-features' },
+          { text: 'WLC Token', link: '/introduction/token' },
+          { text: 'Whitepaper', link: '/whitepaper/' },
+          { text: 'Roadmap', link: '/roadmap/' },
+        ]
+      },
+      {
+        text: 'Network',
+        items: [
+          { text: 'WorldLand Core', link: '/network/core' },
+          { text: 'The Provider', link: '/network/provider' },
+          { text: 'The Broker', link: '/network/broker' },
+          { text: 'Add Network', link: '/introduction/links' }, // Fallback
+          { text: 'Block Explorer', link: 'https://scan.worldland.foundation/' },
+        ]
+      },
+      {
+        text: 'Cloud',
+        items: [
+          { text: 'GPU Console', link: 'https://cloud.worldland.foundation' },
+          { text: 'Pricing', link: 'https://cloud.worldland.foundation/pricing' },
+          { text: 'How to Provide', link: '/cloud/provider/how-to-provide' },
+          { text: 'How to Use', link: '/cloud/customer/how-to-use' },
+        ]
+      },
+      {
+        text: 'Developer',
+        items: [
+          { text: 'Documentation', link: '/' },
+          { text: 'GitHub', link: 'https://github.com/cryptoecc/WorldLand' },
+          { text: 'FAQ', link: '/introduction/faq' },
+        ]
+      },
+      {
+        text: 'Community',
+        items: [
+          { text: 'Discord', link: 'https://discord.gg/yJERYVnE6a' },
+          { text: 'Twitter', link: 'https://twitter.com/Worldland_space' },
+          { text: 'Medium', link: 'https://medium.com/@worldland-official' },
+          { text: 'DAO Vote', link: 'https://dao.worldland.foundation' },
         ]
       }
     ],
