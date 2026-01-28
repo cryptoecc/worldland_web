@@ -31,9 +31,27 @@ git push origin main
 - **Branch**: `main`
 - **Monorepo settings**: [체크 ✅]
 - **Monorepo root directory**: `landing`
-- **Build settings**: (자동 감지됨 - Next.js)
-  - Build command: `npm run build`
-  - Output directory: `.next`
+- **Build settings (중요 ⚠️)**: `amplify.yml`을 아래와 같이 설정해야 합니다.
+  ```yaml
+  version: 1
+  applications:
+    - frontend:
+        phases:
+          preBuild:
+            commands:
+              - npm ci
+          build:
+            commands:
+              - npm run build
+        artifacts:
+          baseDirectory: .next
+          files:
+            - '**/*'
+        cache:
+          paths:
+            - node_modules/**/*
+      appRoot: landing
+  ```
 - **배포 후 도메인 연결**: `worldland.foundation` (www 포함)
 
 ### B. Cloud Console
@@ -41,7 +59,7 @@ git push origin main
 - **Repository**: WorldLand 리포지토리 선택 (위와 동일)
 - **Branch**: `main`
 - **Monorepo settings**: [체크 ✅]
-- **Monorepo root directory**: `cloud-console`
+- **Monorepo root directory**: `cloud`
 - **Build settings**: (자동 감지됨 - Next.js)
 - **Environment Variables**:
   - Amplify Console > App settings > Environment variables 메뉴에서 `.env.local`에 있던 내용을 추가해야 합니다.
