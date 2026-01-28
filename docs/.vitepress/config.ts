@@ -32,7 +32,7 @@ export default defineConfig({
         items: [
           { text: 'Executive Summary', link: '/' },
           { text: 'Key Features', link: '/introduction/key-features' },
-          { text: 'WL ($WLC)', link: '/introduction/token' },
+          { text: 'WorldLand Token ($WL)', link: '/introduction/token' },
           { text: 'Whitepaper', link: '/whitepaper/' },
         ]
       },
@@ -84,7 +84,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: 'Key Features', link: '/introduction/key-features' },
-          { text: 'WL ($WLC)', link: '/introduction/token' },
+          { text: 'WorldLand Token ($WL)', link: '/introduction/token' },
           { text: 'Important Links', link: '/introduction/links' },
           { text: 'FAQ', link: '/introduction/faq' },
         ]
@@ -100,7 +100,7 @@ export default defineConfig({
         ]
       },
       {
-        text: 'WL Tokenomics',
+        text: 'WorldLand Tokenomics',
         collapsed: false,
         items: [
           { text: 'Token Overview', link: '/tokenomics/overview' },

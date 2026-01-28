@@ -1,4 +1,4 @@
-# WL ($WLC)
+# WorldLand Token ($WL)
 
 **WL** is the native utility coin of the WorldLand ecosystem, designed to power the decentralized AI compute economy.
 
