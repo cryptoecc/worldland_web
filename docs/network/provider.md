@@ -1,6 +1,6 @@
 # The Provider
 
-Providers are the backbone of the WorldLand network, contributing GPU compute resources and earning WLC tokens in return.
+Providers are the backbone of the WorldLand network, contributing GPU compute resources and earning WL tokens in return.
 
 ## What is a Provider?
 

@@ -78,7 +78,7 @@ Block Production (Every 10 seconds)
 2. Mining (PoW)
    ┌────────────────────────────────────────────┐
    │ Miners solve ECC-hard puzzle              │
-   │ Block reward: 20 WLC per block            │
+   │ Block reward: 20 WL per block            │
    └────────────────────────────────────────────┘
 
 3. Verification
@@ -251,7 +251,7 @@ VCC is the accounting system for verified GPU contributions.
 │                              │                                   │
 │  5. Settlement Layer                                             │
 │  ───────────────────                                             │
-│  PASS → Payment released to Provider (WLC)                       │
+│  PASS → Payment released to Provider (WL)                       │
 │  FAIL → Penalty applied, dispute resolution                      │
 │                              │                                   │
 │  6. VCC Update                                                   │
@@ -322,4 +322,4 @@ Together, these components enable the WorldLand Cloud to offer reliable GPU serv
 
 - [The Provider](/network/provider) - How providers participate
 - [The Broker](/network/broker) - Orchestration layer
-- [Token Utility](/tokenomics/utility) - How WLC flows through the system
+- [Token Utility](/tokenomics/utility) - How WL flows through the system

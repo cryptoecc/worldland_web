@@ -5,7 +5,7 @@ This guide explains how to rent GPU resources on WorldLand Cloud as a customer.
 ## Prerequisites
 
 - Wallet (MetaMask or compatible Web3 wallet)
-- WLC tokens for payment
+- WL tokens for payment
 
 ## Step 1: Connect Wallet
 
@@ -27,9 +27,9 @@ Available Providers:
 ┌────────────────────────────────────────────────────────────────┐
 │ Provider ID    │ GPU Model      │ Available │ Price/Hour      │
 ├────────────────┼────────────────┼───────────┼─────────────────┤
-│ provider-001   │ RTX 4090       │ 2/4       │ 0.50 WLC        │
-│ provider-002   │ RTX 3090       │ 1/2       │ 0.35 WLC        │
-│ provider-003   │ Tesla T4       │ 4/4       │ 0.25 WLC        │
+│ provider-001   │ RTX 4090       │ 2/4       │ 0.50 WL        │
+│ provider-002   │ RTX 3090       │ 1/2       │ 0.35 WL        │
+│ provider-003   │ Tesla T4       │ 4/4       │ 0.25 WL        │
 └────────────────────────────────────────────────────────────────┘
 ```
 

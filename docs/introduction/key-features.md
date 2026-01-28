@@ -33,7 +33,7 @@ GPU providers in WorldLand operate in two modes, maximizing utilization and earn
 **Mining Mode (Default)**
 
 - GPUs contribute to network security by solving ECCVCC puzzles
-- Earn block rewards (20 WLC per block, 80% to miner)
+- Earn block rewards (20 WL per block, 80% to miner)
 - Active when no rental jobs are assigned
 
 **Service Mode (On-Demand)**
@@ -97,7 +97,7 @@ As a DePIN (Decentralized Physical Infrastructure Network), WorldLand leverages 
 
 - **Wallet-based authentication** — No passwords, sign with your wallet
 - **On-chain settlement** — Transparent, immutable payment records
-- **Token incentives** — WLC aligns all network participants
+- **Token incentives** — WL aligns all network participants
 - **Decentralized governance** — Community-driven protocol evolution
 
 ## Open and Permissionless
@@ -105,7 +105,7 @@ As a DePIN (Decentralized Physical Infrastructure Network), WorldLand leverages 
 Anyone can participate in WorldLand:
 
 - **Permissionless providing** — Register your GPU and start earning
-- **Permissionless consumption** — Access GPU resources with WLC tokens
+- **Permissionless consumption** — Access GPU resources with WL tokens
 - **Transparent pricing** — Providers set their own rates
 - **Global access** — No geographic restrictions
 

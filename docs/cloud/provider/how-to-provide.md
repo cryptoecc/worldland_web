@@ -1,6 +1,6 @@
 # How to Provide GPU Resources
 
-This guide explains how to become a GPU provider on WorldLand Cloud and earn WLC tokens.
+This guide explains how to become a GPU provider on WorldLand Cloud and earn WL tokens.
 
 ## Prerequisites
 
@@ -86,7 +86,7 @@ provider:
   public_ip: "123.45.67.89"
 
 resources:
-  gpu_price_per_hour: 0.5 # WLC per hour
+  gpu_price_per_hour: 0.5 # WL per hour
   cpu_cores: 8
   memory_gb: 32
   storage_gb: 200
@@ -176,7 +176,7 @@ Storage: [████░░░░░░░░] 80/200 GB used
 
 ### How You Earn
 
-- **Per-hour billing** - Customers pay WLC per hour of GPU usage
+- **Per-hour billing** - Customers pay WL per hour of GPU usage
 - **90% to provider** - You receive 90% of the service fee
 - **10% to protocol** - Network maintenance fee
 
@@ -184,9 +184,9 @@ Storage: [████░░░░░░░░] 80/200 GB used
 
 | GPU      | Price/Hour | Daily (100% util) | Monthly |
 | -------- | ---------- | ----------------- | ------- |
-| RTX 4090 | 0.50 WLC   | 12 WLC            | 360 WLC |
-| RTX 3090 | 0.35 WLC   | 8.4 WLC           | 252 WLC |
-| A100     | 1.00 WLC   | 24 WLC            | 720 WLC |
+| RTX 4090 | 0.50 WL   | 12 WL            | 360 WL |
+| RTX 3090 | 0.35 WL   | 8.4 WL           | 252 WL |
+| A100     | 1.00 WL   | 24 WL            | 720 WL |
 
 ## Monitoring
 

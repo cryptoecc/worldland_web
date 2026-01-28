@@ -66,7 +66,7 @@ Downtime includes:
 
 You have full control over your pricing:
 
-| GPU Model | Market Range (WLC/hour) | Recommended |
+| GPU Model | Market Range (WL/hour) | Recommended |
 | --------- | ----------------------- | ----------- |
 | RTX 4090  | 0.40 - 0.70             | 0.50        |
 | RTX 3090  | 0.30 - 0.50             | 0.35        |

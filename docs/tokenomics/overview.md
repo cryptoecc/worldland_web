@@ -1,18 +1,18 @@
 # Token Overview
 
-Complete information about the WorldLand native token (WLC).
+Complete information about the WorldLand native token (WL).
 
 ## Basic Information
 
 | Property                       | Value                  |
 | ------------------------------ | ---------------------- |
 | **Token Name**                 | WorldLand Native Token |
-| **Symbol**                     | WLC                    |
+| **Symbol**                     | WL                    |
 | **Network**                    | WorldLand Mainnet      |
-| **Total Supply**               | 1,000,000,000 WLC      |
+| **Total Supply**               | 1,000,000,000 WL      |
 | **Initial Circulating Supply** | 0 at genesis           |
 | **Block Time**                 | 10 seconds             |
-| **Block Reward**               | 20 WLC per block       |
+| **Block Reward**               | 20 WL per block       |
 
 ::: info Note
 WorldLand operates on its own mainnet, unlike some other DePIN projects that rely on existing chains like Ethereum or Arbitrum.
@@ -20,7 +20,7 @@ WorldLand operates on its own mainnet, unlike some other DePIN projects that rel
 
 ## Token Contract
 
-The WLC token is the native asset of the WorldLand mainnet. Contract addresses will be published upon mainnet launch.
+The WL token is the native asset of the WorldLand mainnet. Contract addresses will be published upon mainnet launch.
 
 ## Consensus Mechanism
 
@@ -34,7 +34,7 @@ WorldLand uses **ECCVCC (Error Correction Code Verifiable Computation Consensus)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    WLC Token Features                           │
+│                    WL Token Features                           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  🔒 Native Asset      - Built into WorldLand mainnet            │

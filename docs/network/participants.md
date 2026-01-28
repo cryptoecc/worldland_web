@@ -14,7 +14,7 @@ WorldLand is a decentralized network with multiple participant roles working tog
 │   │  (Renter)   │    │             │    │             │        │
 │   │             │    │             │    │             │        │
 │   │ Uses GPU    │    │ Secures     │    │ Provides    │        │
-│   │ Pays WLC    │    │ Chain       │    │ GPU         │        │
+│   │ Pays WL    │    │ Chain       │    │ GPU         │        │
 │   └──────┬──────┘    └──────┬──────┘    └──────┬──────┘        │
 │          │                  │                  │                │
 │          │                  │                  │                │
@@ -48,9 +48,9 @@ Customers are users who rent GPU resources for compute workloads.
 | ---------------- | ----------------------------------------- |
 | **Role**         | Consume GPU compute resources             |
 | **Actions**      | Create jobs, run workloads, pay for usage |
-| **Requirements** | Wallet with WLC tokens                    |
+| **Requirements** | Wallet with WL tokens                    |
 | **Earns**        | N/A (consumes resources)                  |
-| **Pays**         | WLC per hour of GPU usage                 |
+| **Pays**         | WL per hour of GPU usage                 |
 
 **Typical Use Cases:**
 
@@ -79,7 +79,7 @@ Providers contribute GPU hardware to the network.
 | **Role**         | Supply GPU compute resources               |
 | **Actions**      | Register node, maintain uptime, serve jobs |
 | **Requirements** | GPU hardware, stable internet, public IP   |
-| **Earns**        | 90% of rental fees in WLC                  |
+| **Earns**        | 90% of rental fees in WL                  |
 | **Pays**         | Electricity, maintenance costs             |
 
 **Provider Types:**
@@ -105,14 +105,14 @@ Miners secure the WorldLand blockchain through Proof-of-Work.
 | **Role**         | Secure the blockchain consensus      |
 | **Actions**      | Solve ECCVCC puzzles, produce blocks |
 | **Requirements** | Computational resources              |
-| **Earns**        | Block rewards (80% of 20 WLC/block)  |
+| **Earns**        | Block rewards (80% of 20 WL/block)  |
 | **Pays**         | Electricity, hardware costs          |
 
 **Key Points:**
 
 - Uses ECCVCC (Error Correction Code Verifiable Computation Consensus)
 - Block time: 10 seconds
-- Block reward: 20 WLC (16 to miner, 4 to treasury)
+- Block reward: 20 WL (16 to miner, 4 to treasury)
 
 **Dual Role:**
 Providers can also be miners! When GPU is not rented, it can mine:
@@ -148,7 +148,7 @@ The central coordination layer operated by WorldLand.
 ### Token Flow
 
 ```
-                        WLC Flow
+                        WL Flow
                            │
      ┌─────────────────────┼─────────────────────┐
      │                     │                     │
@@ -172,12 +172,12 @@ The central coordination layer operated by WorldLand.
 Mining Rewards:
 ┌─────────┐              ┌─────────┐
 │  Miner  │◀─── 80% ────│  Block  │
-│  +16WLC │              │ Reward  │
-└─────────┘              │  20WLC  │
+│  +16WL │              │ Reward  │
+└─────────┘              │  20WL  │
                          └────┬────┘
 ┌─────────┐                   │
 │Treasury │◀─── 20% ──────────┘
-│  +4WLC  │
+│  +4WL  │
 └─────────┘
 ```
 
@@ -194,7 +194,7 @@ Provider                Broker              Customer
    │                         │   Compute Workload     │
    │◀────────────────────────────────────────────────│
    │                         │                        │
-   │  WLC Payment            │   WLC Payment          │
+   │  WL Payment            │   WL Payment          │
    │◀────────────────────────│◀───────────────────── │
 ```
 
@@ -209,7 +209,7 @@ Provider                Broker              Customer
 ### For Providers
 
 - Monetize idle GPU capacity
-- Earn WLC tokens
+- Earn WL tokens
 - Flexible availability
 
 ### For Miners
@@ -230,7 +230,7 @@ Provider                Broker              Customer
 
 | Role         | Hardware        | Software            | Financial       |
 | ------------ | --------------- | ------------------- | --------------- |
-| **Customer** | Any device      | Wallet              | WLC for payment |
+| **Customer** | Any device      | Wallet              | WL for payment |
 | **Provider** | GPU (GTX 1080+) | Ubuntu, Docker, K8s | None (earns)    |
 | **Miner**    | CPU/GPU         | Mining software     | None (earns)    |
 
@@ -250,11 +250,11 @@ After mainnet launch, real-time network statistics will be available:
 - Total providers online
 - Total GPU capacity
 - Jobs completed
-- WLC distributed
+- WL distributed
   :::
 
 ## Next Steps
 
 - [The Provider](/network/provider) - Detailed provider guide
 - [The Broker](/network/broker) - Technical architecture
-- [Token Utility](/tokenomics/utility) - How WLC is used
+- [Token Utility](/tokenomics/utility) - How WL is used

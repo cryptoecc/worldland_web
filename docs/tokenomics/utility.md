@@ -1,12 +1,12 @@
 # Token Utility & Purpose
 
-WLC is the native asset of the WorldLand mainnet and serves multiple critical functions within the ecosystem.
+WL is the native asset of the WorldLand mainnet and serves multiple critical functions within the ecosystem.
 
 ## Four Pillars of Utility
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     WLC Token Utility                           │
+│                     WL Token Utility                           │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │   ⛏️ Mining Rewards      💨 Gas Fees                            │
@@ -20,20 +20,20 @@ WLC is the native asset of the WorldLand mainnet and serves multiple critical fu
 
 ## 1. PoW Mining Rewards
 
-WLC is issued as rewards for Proof-of-Work mining, securing the WorldLand network.
+WL is issued as rewards for Proof-of-Work mining, securing the WorldLand network.
 
 | Parameter            | Value            |
 | -------------------- | ---------------- |
-| **Block Reward**     | 20 WLC per block |
+| **Block Reward**     | 20 WL per block |
 | **Block Time**       | 10 seconds       |
-| **Daily Issuance**   | ~172,800 WLC     |
-| **Monthly Issuance** | ~5,184,000 WLC   |
+| **Daily Issuance**   | ~172,800 WL     |
+| **Monthly Issuance** | ~5,184,000 WL   |
 
 ```
 Block Reward Distribution:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Miner:    80% (16 WLC)
-Treasury: 20% (4 WLC)
+Miner:    80% (16 WL)
+Treasury: 20% (4 WL)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -43,7 +43,7 @@ A fixed 20% of each block reward flows to the Ecosystem Treasury, creating direc
 
 ## 2. Transaction Fees (Gas)
 
-WLC is used to pay gas fees for all on-chain transactions.
+WL is used to pay gas fees for all on-chain transactions.
 
 ### Fee-Required Actions
 
@@ -61,7 +61,7 @@ WLC is used to pay gas fees for all on-chain transactions.
 
 ## 3. Protocol Service Fees
 
-WLC is the settlement currency for all protocol services.
+WL is the settlement currency for all protocol services.
 
 ### Supported Services
 
@@ -78,7 +78,7 @@ WLC is the settlement currency for all protocol services.
 ```
 Customer                    Protocol                    Provider
     │                          │                           │
-    │   1. Pay WLC for job     │                           │
+    │   1. Pay WL for job     │                           │
     │ ────────────────────────▶│                           │
     │                          │   2. Allocate resources   │
     │                          │──────────────────────────▶│
@@ -91,7 +91,7 @@ Customer                    Protocol                    Provider
 
 ## 4. Governance
 
-WLC holders participate in protocol governance.
+WL holders participate in protocol governance.
 
 ### Governance Scope
 
@@ -126,7 +126,7 @@ Proposal → Review → Vote → Timelocked Activation
 ## Economic Model
 
 ```
-                         WLC Economy
+                         WL Economy
                               │
          ┌────────────────────┼────────────────────┐
          │                    │                    │

@@ -20,7 +20,7 @@ WorldLand implements staged vesting schedules to ensure long-term alignment betw
 Mining Emission Schedule:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 │ Continuous emission through PoW mining                │
-│ ~5,184,000 WLC minted every 30 days                   │
+│ ~5,184,000 WL minted every 30 days                   │
 │ Until 504.6M allocation is exhausted                  │
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -105,5 +105,5 @@ Beyond the 10% allocation, the treasury also receives **20% of ongoing block rew
 
 ## Next Steps
 
-- [Token Utility](/tokenomics/utility) - How WLC is used
+- [Token Utility](/tokenomics/utility) - How WL is used
 - [Provider Rewards](/tokenomics/provider-rewards) - Earning through contribution

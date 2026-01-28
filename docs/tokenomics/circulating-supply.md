@@ -1,6 +1,6 @@
 # Circulating Supply
 
-Track the circulating supply of WLC tokens over time.
+Track the circulating supply of WL tokens over time.
 
 ## Current Status
 
@@ -10,9 +10,9 @@ WorldLand mainnet is currently in development. These projections are based on th
 
 | Metric                  | Value                                   |
 | ----------------------- | --------------------------------------- |
-| **Total Supply**        | 1,000,000,000 WLC                       |
-| **Initial Circulating** | 0 WLC (at genesis)                      |
-| **TGE Unlock**          | 145,400,000 WLC (Community & Liquidity) |
+| **Total Supply**        | 1,000,000,000 WL                       |
+| **Initial Circulating** | 0 WL (at genesis)                      |
+| **TGE Unlock**          | 145,400,000 WL (Community & Liquidity) |
 
 ## Circulating Supply Projection
 
@@ -20,8 +20,8 @@ WorldLand mainnet is currently in development. These projections are based on th
 
 | Category              | Amount              | % of Total |
 | --------------------- | ------------------- | ---------- |
-| Community & Liquidity | 145,400,000 WLC     | 14.54%     |
-| **Total Circulating** | **145,400,000 WLC** | **14.54%** |
+| Community & Liquidity | 145,400,000 WL     | 14.54%     |
+| **Total Circulating** | **145,400,000 WL** | **14.54%** |
 
 ### Year 1 Projection
 
@@ -29,7 +29,7 @@ WorldLand mainnet is currently in development. These projections are based on th
 | ---------------- | ----------- | ------------- |
 | TGE Unlock       | 145,400,000 | 145,400,000   |
 | Mining Rewards   | 50,457,600  | 195,857,600   |
-| **Year 1 Total** | -           | **~196M WLC** |
+| **Year 1 Total** | -           | **~196M WL** |
 
 ::: info Note
 Core Builders, Investors, and Ecosystem Treasury have 12-18 month cliffs, so no additional unlocks from these categories in Year 1.
@@ -46,7 +46,7 @@ Additional unlocks begin after cliff periods end:
 | Core Builders (starts Month 21) | ~15M          |
 | Investors (starts Month 14)     | ~30M          |
 | Ecosystem (starts Month 21)     | ~10M          |
-| **Year 2 Total**                | **~300M WLC** |
+| **Year 2 Total**                | **~300M WL** |
 
 ## Supply Curve Visualization
 

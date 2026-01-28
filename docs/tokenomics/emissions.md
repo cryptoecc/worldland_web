@@ -6,9 +6,9 @@ WorldLand's emission schedule is designed to align token issuance with sustained
 
 | Parameter                  | Value                    |
 | -------------------------- | ------------------------ |
-| **Total Supply**           | 1,000,000,000 WLC        |
-| **Compute Resources Pool** | 504,600,000 WLC (50.46%) |
-| **Block Reward**           | 20 WLC                   |
+| **Total Supply**           | 1,000,000,000 WL        |
+| **Compute Resources Pool** | 504,600,000 WL (50.46%) |
+| **Block Reward**           | 20 WL                   |
 | **Block Time**             | 10 seconds               |
 
 ## Block Reward Structure
@@ -16,11 +16,11 @@ WorldLand's emission schedule is designed to align token issuance with sustained
 Every block (10 seconds):
 
 ```
-Block Reward: 20 WLC
+Block Reward: 20 WL
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 │                                         │
-│  Miner Reward:    16 WLC (80%)         │
-│  Treasury:         4 WLC (20%)         │
+│  Miner Reward:    16 WL (80%)         │
+│  Treasury:         4 WL (20%)         │
 │                                         │
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
@@ -31,37 +31,37 @@ Block Reward: 20 WLC
 
 ```
 Blocks per day = 86,400 seconds ÷ 10 seconds = 8,640 blocks
-Daily emission = 8,640 × 20 WLC = 172,800 WLC
+Daily emission = 8,640 × 20 WL = 172,800 WL
 ```
 
 ### Monthly Emission
 
 ```
 Monthly blocks = 8,640 × 30 = 259,200 blocks
-Monthly emission = 259,200 × 20 WLC ≈ 5,184,000 WLC
+Monthly emission = 259,200 × 20 WL ≈ 5,184,000 WL
 ```
 
 ### Yearly Emission
 
 ```
 Yearly blocks = 8,640 × 365 = 3,153,600 blocks
-Yearly emission = 3,153,600 × 20 WLC ≈ 63,072,000 WLC
+Yearly emission = 3,153,600 × 20 WL ≈ 63,072,000 WL
 ```
 
 ## Emission Distribution
 
 | Recipient    | Share | Daily       | Monthly       | Yearly         |
 | ------------ | ----- | ----------- | ------------- | -------------- |
-| **Miners**   | 80%   | 138,240 WLC | 4,147,200 WLC | 50,457,600 WLC |
-| **Treasury** | 20%   | 34,560 WLC  | 1,036,800 WLC | 12,614,400 WLC |
-| **Total**    | 100%  | 172,800 WLC | 5,184,000 WLC | 63,072,000 WLC |
+| **Miners**   | 80%   | 138,240 WL | 4,147,200 WL | 50,457,600 WL |
+| **Treasury** | 20%   | 34,560 WL  | 1,036,800 WL | 12,614,400 WL |
+| **Total**    | 100%  | 172,800 WL | 5,184,000 WL | 63,072,000 WL |
 
 ## Compute Pool Exhaustion
 
 ```
 Time to exhaust Compute Resources pool:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-504,600,000 WLC ÷ 63,072,000 WLC/year ≈ 8 years
+504,600,000 WL ÷ 63,072,000 WL/year ≈ 8 years
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
@@ -85,23 +85,23 @@ Pool:  ████████████████████████�
 
 The treasury receives continuous funding through:
 
-1. **Initial Allocation**: 10% (100,000,000 WLC)
-2. **Block Rewards**: 20% of each block (4 WLC/block)
+1. **Initial Allocation**: 10% (100,000,000 WL)
+2. **Block Rewards**: 20% of each block (4 WL/block)
 
 ### Projected Treasury Balance
 
 | Year | Block Reward Inflow | Cumulative (Rewards only) |
 | ---- | ------------------- | ------------------------- |
-| 1    | 12,614,400 WLC      | 12,614,400 WLC            |
-| 2    | 12,614,400 WLC      | 25,228,800 WLC            |
-| 3    | 12,614,400 WLC      | 37,843,200 WLC            |
-| 5    | 12,614,400 WLC      | 63,072,000 WLC            |
+| 1    | 12,614,400 WL      | 12,614,400 WL            |
+| 2    | 12,614,400 WL      | 25,228,800 WL            |
+| 3    | 12,614,400 WL      | 37,843,200 WL            |
+| 5    | 12,614,400 WL      | 63,072,000 WL            |
 
 ## Comparison with Other Projects
 
 | Project            | Block Time | Initial Block Reward | Halving       |
 | ------------------ | ---------- | -------------------- | ------------- |
-| **WorldLand**      | 10s        | 20 WLC               | TBD           |
+| **WorldLand**      | 10s        | 20 WL               | TBD           |
 | Bitcoin            | 10min      | 50 BTC → 3.125 BTC   | Every 4 years |
 | Ethereum (PoW era) | ~13s       | Variable             | N/A           |
 

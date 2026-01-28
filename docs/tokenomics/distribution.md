@@ -6,8 +6,8 @@ WorldLand's allocation is designed so that the majority of supply is delivered t
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                 WLC Token Distribution                          │
-│                 Total: 1,000,000,000 WLC                        │
+│                 WL Token Distribution                          │
+│                 Total: 1,000,000,000 WL                        │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
 │  Compute Resources    ████████████████████████████░░  50.46%    │
@@ -21,7 +21,7 @@ WorldLand's allocation is designed so that the majority of supply is delivered t
 
 ## Detailed Breakdown
 
-| Category                  | Allocation | Amount (WLC) | Description                               |
+| Category                  | Allocation | Amount (WL) | Description                               |
 | ------------------------- | ---------- | ------------ | ----------------------------------------- |
 | **Compute Resources**     | 50.46%     | 504,600,000  | Mining and compute resource participation |
 | **Core Builders**         | 15.00%     | 150,000,000  | Development team and contributors         |
@@ -41,7 +41,7 @@ The largest allocation is distributed through:
 
 - **PoW Mining** - Block rewards for securing the network
 - **Compute Participation** - Rewards for providing GPU resources
-- **Emission Rate** - Approximately 5,184,000 WLC every 30 days
+- **Emission Rate** - Approximately 5,184,000 WL every 30 days
 
 ### Community & Liquidity (14.54%)
 
@@ -90,4 +90,4 @@ This creates a recurring funding stream for long-term ecosystem sustainability.
 ## Next Steps
 
 - [Token Vesting](/tokenomics/vesting) - Detailed unlock schedules
-- [Token Utility](/tokenomics/utility) - How WLC is used
+- [Token Utility](/tokenomics/utility) - How WL is used

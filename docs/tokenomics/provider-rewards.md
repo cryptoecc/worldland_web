@@ -1,6 +1,6 @@
 # Provider Rewards
 
-GPU providers earn WLC tokens by contributing compute resources to the WorldLand network.
+GPU providers earn WL tokens by contributing compute resources to the WorldLand network.
 
 ## Reward Sources
 
@@ -20,7 +20,7 @@ Providers can earn through multiple channels:
 1. Provider registers GPU resources
 2. System assigns jobs based on requirements
 3. Provider executes compute workload
-4. Customer pays in WLC
+4. Customer pays in WL
 5. Provider receives payment after settlement
 ```
 
@@ -53,8 +53,8 @@ From the total token supply:
 
 | Metric                  | Value                    |
 | ----------------------- | ------------------------ |
-| **Total Allocation**    | 50.46% (504,600,000 WLC) |
-| **Monthly Emission**    | ~5,184,000 WLC           |
+| **Total Allocation**    | 50.46% (504,600,000 WL) |
+| **Monthly Emission**    | ~5,184,000 WL           |
 | **Distribution Method** | Mining + Participation   |
 
 ## Earning Calculator

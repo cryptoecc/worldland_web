@@ -26,7 +26,7 @@ Developers can rent GPUs through the **[WorldLand Cloud Console](https://cloud.w
 
 ## Tokenomics
 
-### What is WL ($WLC)?
+### What is WL ($WL)?
 
 **WL** is the native utility coin of the WorldLand network. It is used for:
 

@@ -12,7 +12,7 @@ WorldLand Cloud is a **decentralized GPU cloud service** that connects GPU provi
 │   Customer                                Provider              │
 │   ────────                                ────────              │
 │   • Browse available GPUs                 • Register GPU nodes  │
-│   • Create GPU containers                 • Earn WLC tokens     │
+│   • Create GPU containers                 • Earn WL tokens     │
 │   • SSH access to containers              • Set pricing         │
 │   • Pay-as-you-go billing                 • Monitor usage       │
 │                                                                 │
