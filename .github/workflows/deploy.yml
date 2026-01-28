@@ -1,0 +1,61 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-landing:
+    name: Deploy Landing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Landing Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 13.125.84.120
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/worldland_web
+            git pull origin master
+            cd landing
+            npm install
+            npm run build
+            pm2 restart landing
+
+  deploy-cloud:
+    name: Deploy Cloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Cloud Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 13.209.254.124
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/worldland_web
+            git pull origin master
+            cd cloud
+            npm install
+            npm run build
+            pm2 restart cloud
+
+  deploy-docs:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Docs Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 3.37.126.10
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/worldland_web
+            git pull origin master
+            cd docs
+            npm install
+            npm run build
+            sudo cp -r .vitepress/dist/* /var/www/html/
