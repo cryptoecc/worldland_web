@@ -1,18 +1,19 @@
+```
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'WorldLand',
-  description: 'Decentralized GPU Infrastructure Network',
+  title: "WorldLand Docs",
+  description: "Official Documentation for WorldLand - Decentralized GPU Infrastructure",
   
   lang: 'en-US',
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: true,
   
+  // Force Dark Mode preferred
+  appearance: 'dark',
+
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['meta', { name: 'theme-color', content: '#6366f1' }],
-    ['meta', { property: 'og:title', content: 'WorldLand Documentation' }],
     ['meta', { property: 'og:description', content: 'Decentralized GPU Infrastructure Network - DePIN for AI Era' }],
   ],
   
