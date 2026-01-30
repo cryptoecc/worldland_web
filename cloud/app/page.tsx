@@ -46,9 +46,9 @@ export default function Home() {
             <div className="max-w-3xl pointer-events-auto">
               {/* Main heading with Serif font */}
               <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light leading-[1.1] mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                <span className="text-white">Decentralized</span>
+                <span className="text-white">Verifiable GPU</span>
                 <br />
-                <span className="text-white">GPU Cloud for AI</span>
+                <span className="text-white">Compute Network</span>
               </h1>
 
               {/* Description */}
