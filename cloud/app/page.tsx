@@ -53,10 +53,10 @@ export default function Home() {
 
               {/* Description */}
               <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-2xl mb-6">
-                WorldLand is a native AI cloud mainnet built on <span className="text-red-500">ECCVCC</span> with post-quantum security, where node selection and block validation leverage energy contribution measured via <span className="text-red-500">Proof-of-Compute</span>—a system that captures execution traces and challenges to enable on-chain verification of GPU workloads.
+                WorldLand is a <span className="text-red-500">decentralized GPU cloud</span> connecting providers with customers who need compute resources for AI/ML workloads. Deploy GPU containers with full SSH access and pre-installed CUDA in seconds.
               </p>
               <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mb-12">
-                Merkle Tree Trace Verification • CUPTI Hardware Evidence • Random Challenge Protocol
+                Instant GPU Access • Pay-as-you-go • Wallet-based Login
               </p>
 
               {/* CTA Buttons */}
@@ -83,20 +83,20 @@ export default function Home() {
           <div className="max-w-[1600px] mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
               <div>
-                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>10K+</div>
-                <div className="text-sm text-gray-500">Active GPUs</div>
-              </div>
-              <div>
-                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>99.9%</div>
-                <div className="text-sm text-gray-500">Uptime Guarantee</div>
-              </div>
-              <div>
                 <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>&lt;30s</div>
-                <div className="text-sm text-gray-500">Deploy Time</div>
+                <div className="text-sm text-gray-500">Instant Deployment</div>
               </div>
               <div>
-                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>24/7</div>
-                <div className="text-sm text-gray-500">Support</div>
+                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>90%</div>
+                <div className="text-sm text-gray-500">Provider Revenue Share</div>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>SSH</div>
+                <div className="text-sm text-gray-500">Full Root Access</div>
+              </div>
+              <div>
+                <div className="text-4xl md:text-5xl font-light text-white mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>CUDA</div>
+                <div className="text-sm text-gray-500">Pre-installed Environment</div>
               </div>
             </div>
           </div>
@@ -116,8 +116,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">Lightning Fast</h3>
-                <p className="text-gray-500 leading-relaxed">Deploy GPU instances in seconds with our optimized infrastructure.</p>
+                <h3 className="text-xl font-semibold text-white mb-3">Instant GPU Access</h3>
+                <p className="text-gray-500 leading-relaxed">Deploy SSH-enabled GPU containers in seconds. Root access, pre-installed CUDA, and flexible resource options.</p>
               </div>
 
               {/* Feature 2 */}
@@ -127,8 +127,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">Enterprise Security</h3>
-                <p className="text-gray-500 leading-relaxed">Bank-grade encryption and security protocols for your workloads.</p>
+                <h3 className="text-xl font-semibold text-white mb-3">Wallet-Based Login</h3>
+                <p className="text-gray-500 leading-relaxed">No sign-up required. Connect your wallet and start using or providing GPU resources globally.</p>
               </div>
 
               {/* Feature 3 */}
@@ -138,8 +138,8 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">Infinite Scale</h3>
-                <p className="text-gray-500 leading-relaxed">From single GPU to thousands, scale seamlessly as you grow.</p>
+                <h3 className="text-xl font-semibold text-white mb-3">Dual-Mode Operation</h3>
+                <p className="text-gray-500 leading-relaxed">Providers earn from rentals (Service Mode) or mining rewards (Mining Mode) — zero idle time.</p>
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function Home() {
         <footer className="px-8 md:px-16 lg:px-24 py-12 border-t border-white/10 pointer-events-auto">
           <div className="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-gray-500 text-sm">
-              © 2024 Worldland. All rights reserved.
+              © 2026 WorldLand. All rights reserved.
             </div>
             <div className="flex gap-8">
               <Link href="#" className="text-gray-500 hover:text-white text-sm transition-colors">Privacy</Link>
