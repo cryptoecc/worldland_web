@@ -74,9 +74,10 @@ interface NavItemProps {
   item: typeof navItems[0];
   isOpen: boolean;
   onClick: () => void;
+  onAction?: (subItem: any) => void;
 }
 
-function NavItem({ item, isOpen, onClick }: NavItemProps) {
+function NavItem({ item, isOpen, onClick, onAction }: NavItemProps) {
   const hasDropdown = 'items' in item && item.items;
 
   return (
@@ -136,6 +137,19 @@ function NavItem({ item, isOpen, onClick }: NavItemProps) {
 
               const IconComponent = subItem.icon || subItem.customIcon;
 
+              if (subItem.action) {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => onAction?.(subItem)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:text-[#E53935] hover:bg-gray-50 transition-colors w-full text-left"
+                  >
+                    {IconComponent && <IconComponent className="w-4 h-4" />}
+                    {subItem.label}
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={i}
@@ -156,6 +170,45 @@ function NavItem({ item, isOpen, onClick }: NavItemProps) {
   );
 }
 
+// WorldLand Seoul Mainnet config
+const WORLDLAND_CHAIN = {
+  chainId: '0x67', // 103 in hex
+  chainName: 'Seoul Mainnet',
+  nativeCurrency: { name: 'WorldLand', symbol: 'WL', decimals: 18 },
+  rpcUrls: ['https://seoul.worldland.foundation/'],
+  blockExplorerUrls: ['https://scan.worldland.foundation'],
+};
+
+async function connectToWorldLand() {
+  const ethereum = (window as any).ethereum;
+  if (!ethereum) {
+    window.open('https://metamask.io/download/', '_blank');
+    return;
+  }
+
+  try {
+    // Request accounts first
+    await ethereum.request({ method: 'eth_requestAccounts' });
+    // Try switching to the chain
+    await ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: WORLDLAND_CHAIN.chainId }],
+    });
+  } catch (switchError: any) {
+    // 4902 = chain not added yet
+    if (switchError.code === 4902) {
+      try {
+        await ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [WORLDLAND_CHAIN],
+        });
+      } catch (addError) {
+        console.error('Failed to add WorldLand network:', addError);
+      }
+    }
+  }
+}
+
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -164,12 +217,18 @@ export default function Header() {
     setOpenMenu(openMenu === label ? null : label);
   };
 
+  const handleNavAction = (subItem: any) => {
+    if (subItem.action === 'addNetwork') {
+      connectToWorldLand();
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-lg border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-24 relative"> {/* h-16 -> h-24, relative 추가 */}
+        <div className="flex items-center justify-between h-24 relative">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 z-10"> {/* gap-1 -> gap-2로 조금 여유 줌 */}
+          <Link href="/" className="flex items-center gap-2 z-10">
             <div className="w-9 h-9 relative flex items-center justify-center overflow-hidden">
               <img 
                 src="/images/logo.png" 
@@ -190,13 +249,17 @@ export default function Header() {
                 item={item}
                 isOpen={openMenu === item.label}
                 onClick={() => handleMenuClick(item.label)}
+                onAction={handleNavAction}
               />
             ))}
           </nav>
 
           {/* Connect Button */}
           <div className="hidden lg:block">
-            <button className="px-5 py-2 border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white text-sm font-medium transition-all">
+            <button
+              onClick={connectToWorldLand}
+              className="px-5 py-2 border border-[#E53935] text-[#E53935] hover:bg-[#E53935] hover:text-white text-sm font-medium transition-all"
+            >
               Connect
             </button>
           </div>
@@ -235,13 +298,23 @@ export default function Header() {
                       {openMenu === item.label && (
                         <div className="mt-2 pl-4 space-y-2">
                           {(item as any).items.filter((i: any) => i.type !== 'divider').map((subItem: any, i: number) => (
-                            <Link
-                              key={i}
-                              href={subItem.href || '#'}
-                              className="block py-1 text-gray-400 hover:text-white text-sm"
-                            >
-                              {subItem.label}
-                            </Link>
+                            subItem.action === 'addNetwork' ? (
+                              <button
+                                key={i}
+                                onClick={connectToWorldLand}
+                                className="block py-1 text-gray-400 hover:text-white text-sm text-left"
+                              >
+                                {subItem.label}
+                              </button>
+                            ) : (
+                              <Link
+                                key={i}
+                                href={subItem.href || '#'}
+                                className="block py-1 text-gray-400 hover:text-white text-sm"
+                              >
+                                {subItem.label}
+                              </Link>
+                            )
                           ))}
                         </div>
                       )}
@@ -253,7 +326,10 @@ export default function Header() {
                   )}
                 </div>
               ))}
-              <button className="w-full mt-4 px-5 py-3 bg-[#E53935] text-white font-medium">
+              <button
+                onClick={connectToWorldLand}
+                className="w-full mt-4 px-5 py-3 bg-[#E53935] text-white font-medium"
+              >
                 Connect
               </button>
             </div>
