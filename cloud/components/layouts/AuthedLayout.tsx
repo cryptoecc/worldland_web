@@ -1,42 +1,18 @@
 'use client';
 
-import { useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import { ReactNode } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/hooks/useAuth';
 
 interface AuthedLayoutProps {
     children: ReactNode;
 }
 
 /**
- * Shared layout wrapper for authenticated pages (dashboard, jobs, account, api-console).
- * Provides a consistent header with logo, Dashboard link, and user info.
- * Redirects to /auth/login if user is not authenticated.
+ * Shared layout wrapper for authenticated pages.
+ * In beta mode, all pages are accessible without login.
  */
 export default function AuthedLayout({ children }: AuthedLayoutProps) {
-    const router = useRouter();
-    const { user, isAuthenticated, isLoading, logout } = useAuth();
-
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            router.push('/auth/login');
-        }
-    }, [isAuthenticated, isLoading, router]);
-
-    if (isLoading) {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-900/30 border-t-red-500"></div>
-            </div>
-        );
-    }
-
-    if (!user) {
-        return null;
-    }
-
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-white">
             {/* Header */}
@@ -57,13 +33,9 @@ export default function AuthedLayout({ children }: AuthedLayoutProps) {
                         <Link href="/deploy" className="text-sm text-gray-400 hover:text-white transition-colors">
                             GPUs
                         </Link>
-                        <span className="text-sm text-gray-500">{user.email || user.name}</span>
-                        <button
-                            onClick={logout}
-                            className="text-sm text-gray-400 hover:text-white transition-colors"
-                        >
-                            Logout
-                        </button>
+                        <span className="text-xs px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/30 rounded-full font-medium">
+                            Beta
+                        </span>
                     </div>
                 </div>
             </header>

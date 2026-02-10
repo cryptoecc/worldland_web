@@ -1,111 +1,44 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { apiClient, User } from '@/lib/api-client';
+import { createContext, useContext, ReactNode } from 'react';
 
-interface AuthState {
-  user: User | null;
-  token: string | null;
+interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+interface AuthContextType {
+  user: User;
+  token: string;
   isAuthenticated: boolean;
   isLoading: boolean;
-}
-
-interface AuthContextType extends AuthState {
   loginWithGoogle: (idToken: string) => Promise<void>;
-  devLogin: () => void;  // Development-only login
+  devLogin: () => void;
   logout: () => void;
 }
+
+const BETA_USER: User = {
+  id: 'beta-user',
+  email: 'beta@worldland.foundation',
+  name: 'Beta User',
+};
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
-    user: null,
-    token: null,
-    isAuthenticated: false,
-    isLoading: true,
-  });
-
-  // Check if user is logged in (from localStorage)
-  useEffect(() => {
-    const storedUser = localStorage.getItem('auth_user');
-    const storedToken = localStorage.getItem('auth_token');
-
-    if (storedUser && storedToken) {
-      try {
-        const user = JSON.parse(storedUser);
-        apiClient.setToken(storedToken);
-        setState({
-          user,
-          token: storedToken,
-          isAuthenticated: true,
-          isLoading: false,
-        });
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('auth_user');
-        localStorage.removeItem('auth_token');
-        setState({ user: null, token: null, isAuthenticated: false, isLoading: false });
-      }
-    } else {
-      setState({ user: null, token: null, isAuthenticated: false, isLoading: false });
-    }
-  }, []);
-
-  const loginWithGoogle = useCallback(async (idToken: string) => {
-    const response = await apiClient.loginWithGoogle(idToken);
-    
-    localStorage.setItem('auth_user', JSON.stringify(response.user));
-    localStorage.setItem('auth_token', response.token);
-    apiClient.setToken(response.token);
-    
-    setState({
-      user: response.user,
-      token: response.token,
-      isAuthenticated: true,
-      isLoading: false,
-    });
-  }, []);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem('auth_user');
-    localStorage.removeItem('auth_token');
-    apiClient.setToken(null);
-    setState({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      isLoading: false,
-    });
-  }, []);
-
-  // Development-only login (testing without OAuth)
-  const devLogin = useCallback(() => {
-    if (process.env.NODE_ENV !== 'development') {
-      console.warn('devLogin is only available in development mode');
-      return;
-    }
-    const devUser = {
-      id: 'dev-user-001',
-      email: 'dev@test.com',
-      name: 'Dev Tester',
-    };
-    const devToken = 'dev-token-for-testing';
-    
-    localStorage.setItem('auth_user', JSON.stringify(devUser));
-    localStorage.setItem('auth_token', devToken);
-    apiClient.setToken(devToken);
-    
-    setState({
-      user: devUser,
-      token: devToken,
-      isAuthenticated: true,
-      isLoading: false,
-    });
-  }, []);
+  const value: AuthContextType = {
+    user: BETA_USER,
+    token: 'beta-access',
+    isAuthenticated: true,
+    isLoading: false,
+    loginWithGoogle: async () => {},
+    devLogin: () => {},
+    logout: () => {},
+  };
 
   return (
-    <AuthContext.Provider value={{ ...state, loginWithGoogle, devLogin, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

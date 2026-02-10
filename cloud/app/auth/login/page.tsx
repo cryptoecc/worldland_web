@@ -1,92 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faRocket, faGem, faTerminal, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import PublicLayout from '@/components/layouts/PublicLayout';
-
-// Google OAuth Client ID
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { loginWithGoogle, devLogin, isAuthenticated, isLoading } = useAuth();
-  const [error, setError] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
 
-  // Redirect if already authenticated
+  // Auto-redirect to dashboard after a short delay (beta mode)
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    const timer = setTimeout(() => {
       router.push('/dashboard');
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  // Initialize Google Sign-In
-  useEffect(() => {
-    if (typeof window === 'undefined' || !GOOGLE_CLIENT_ID) return;
-
-    // Load Google Identity Services script
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleCallback,
-        });
-
-        window.google.accounts.id.renderButton(
-          document.getElementById('google-signin-button'),
-          {
-            theme: 'filled_black',
-            size: 'large',
-            shape: 'pill',
-            text: 'continue_with',
-            width: 280,
-          }
-        );
-      }
-    };
-
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const handleGoogleCallback = async (response: { credential?: string }) => {
-    if (!response.credential) {
-      setError('Failed to get Google credential');
-      return;
-    }
-
-    setIsSigningIn(true);
-    setError('');
-
-    try {
-      await loginWithGoogle(response.credential);
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
-    } finally {
-      setIsSigningIn(false);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent"></div>
-      </div>
-    );
-  }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [router]);
 
   return (
     <PublicLayout>
@@ -99,64 +30,38 @@ export default function LoginPage() {
           <p className="text-gray-500 text-sm">Decentralized GPU Cloud Platform</p>
         </div>
 
-        {/* Login Card */}
+        {/* Welcome Card */}
         <div className="bg-[#111] border border-[#333] rounded-md p-8">
-          <h2 className="text-2xl font-semibold mb-2 text-center">Welcome</h2>
-          <p className="text-gray-500 text-sm mb-8 text-center">Sign in to access your GPU jobs</p>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <h2 className="text-2xl font-semibold text-center">Welcome to Beta</h2>
+            <span className="text-xs px-2 py-0.5 bg-red-500/10 text-red-400 border border-red-500/30 rounded-full font-medium">
+              Beta
+            </span>
+          </div>
+          <p className="text-gray-500 text-sm mb-8 text-center">No login required — explore the GPU cloud platform</p>
 
           {/* Features */}
           <div className="space-y-3 mb-8">
             {[
-              { icon: '🚀', text: 'Deploy GPU containers instantly' },
-              { icon: '💎', text: 'Pay-as-you-go pricing' },
-              { icon: '🔐', text: 'SSH access to your containers' },
+              { icon: faRocket, text: 'Deploy GPU containers instantly' },
+              { icon: faGem, text: 'Pay-as-you-go pricing' },
+              { icon: faTerminal, text: 'SSH access to your containers' },
             ].map((feature, idx) => (
               <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-[#0a0a0a]">
-                <span className="text-xl">{feature.icon}</span>
+                <FontAwesomeIcon icon={feature.icon} className="text-red-400 w-5 h-5" />
                 <span className="text-sm text-gray-300">{feature.text}</span>
               </div>
             ))}
           </div>
 
-          {/* Error */}
-          {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* Google Sign-In Button */}
-          <div className="flex justify-center">
-            {isSigningIn ? (
-              <div className="flex items-center gap-2 text-gray-400">
-                <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-                <span>Signing in...</span>
-              </div>
-            ) : GOOGLE_CLIENT_ID ? (
-              <div id="google-signin-button"></div>
-            ) : (
-              <div className="text-center">
-                <p className="text-yellow-400 text-sm mb-2">⚠️ Google OAuth not configured</p>
-                <p className="text-gray-500 text-xs">Set NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local</p>
-              </div>
-            )}
-          </div>
-
-          {/* Dev Login Button - development only */}
-          {process.env.NODE_ENV === 'development' && (
-          <div className="mt-4 pt-4 border-t border-[#222]">
-            <button
-              onClick={() => {
-                devLogin();
-                router.push('/dashboard');
-              }}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded font-medium text-sm transition-all flex items-center justify-center gap-2"
-            >
-              🧪 Dev Login (Test)
-            </button>
-            <p className="text-xs text-gray-500 text-center mt-2">Test pod deployment without OAuth</p>
-          </div>
-          )}
+          {/* Enter Dashboard */}
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="w-full py-3 bg-red-500 hover:bg-red-600 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2 hover:scale-[1.02]"
+          >
+            Enter Dashboard
+            <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
+          </button>
 
           {/* Terms */}
           <p className="mt-6 text-center text-xs text-gray-500">
@@ -178,19 +83,4 @@ export default function LoginPage() {
       </div>
     </PublicLayout>
   );
-}
-
-// Extend Window for Google Identity Services
-declare global {
-  interface Window {
-    google?: {
-      accounts: {
-        id: {
-          initialize: (config: any) => void;
-          renderButton: (element: HTMLElement | null, config: any) => void;
-          prompt: () => void;
-        };
-      };
-    };
-  }
 }
