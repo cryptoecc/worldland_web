@@ -1,91 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const { user, isAuthenticated, isLoading, logout } = useAuth();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login');
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-900/30 border-t-red-500"></div>
-          <p className="mt-4 text-gray-400 font-medium">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
+  const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Dither animated background */}
-      <div className="fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/70 z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      {/* Main content */}
-      <div className="relative z-20 pointer-events-none">
-        {/* Header */}
-        <header className="relative z-50 px-8 md:px-16 lg:px-24 py-6 pointer-events-auto">
-          <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/dashboard" className="flex items-center">
-              <Image
-                src="/worldland-logo.png"
-                alt="Worldland"
-                width={140}
-                height={40}
-              />
-            </Link>
-
-            {/* Center Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              <Link href="/dashboard" className="text-white transition-colors text-sm font-medium">
-                Dashboard
-              </Link>
-              <Link href="/deploy" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">
-                Browse GPUs
-              </Link>
-              <Link href="/jobs" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">
-                Jobs
-              </Link>
-              <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors text-sm font-medium">
-                Pricing
-              </Link>
-            </nav>
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-400">{user.email || user.name}</span>
-              <button
-                onClick={logout}
-                className="text-sm px-5 py-2.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-full transition-all hover:scale-105"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </header>
-
-        {/* Hero Section */}
-        <section className="px-8 md:px-16 lg:px-24 py-24 text-center pointer-events-auto">
+    <AuthedLayout>
+      {/* Hero Section */}
+      <section className="px-8 md:px-16 lg:px-24 py-24 text-center">
           <div className="max-w-[900px] mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-light leading-[1.2] mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Powering AI Without Limits.
@@ -265,7 +190,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </section>
-      </div>
-    </div>
+    </AuthedLayout>
   );
 }

@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheckCircle,
@@ -17,7 +15,7 @@ import {
     faBolt,
     faLayerGroup,
 } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import PublicLayout from '@/components/layouts/PublicLayout';
 
 interface MerkleBlock {
     seq: number;
@@ -38,7 +36,7 @@ interface MerkleBlock {
 
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
-    return date.toLocaleString('ko-KR', {
+    return date.toLocaleString('en-US', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -136,35 +134,9 @@ export default function GPUVerificationPage() {
     const latestBlock = visibleBlocks[0];
 
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Background */}
-            <div className="fixed inset-0">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-                <BackgroundTerminal />
-            </div>
-
-            <div className="relative z-20">
-                {/* Header */}
-                <header className="px-8 py-4 border-b border-[#111]">
-                    <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-                        <div className="flex items-center gap-8">
-                            <Link href="/"><Image src="/worldland-logo.png" alt="Worldland" width={120} height={32} /></Link>
-                            <nav className="hidden md:flex items-center gap-6 text-sm">
-                                <Link href="/get-started" className="text-gray-500 hover:text-white">Get Started</Link>
-                                <Link href="/gpu-verification" className="text-white">GPU Verify</Link>
-                                <Link href="/da-verification" className="text-gray-500 hover:text-white">DA Verify</Link>
-                                <Link href="/usecases" className="text-gray-500 hover:text-white">Usecases</Link>
-                                <Link href="/docs" className="text-gray-500 hover:text-white">Docs</Link>
-                                <Link href="/pricing" className="text-gray-500 hover:text-white">Pricing</Link>
-                            </nav>
-                        </div>
-                        <Link href="/auth/signup" className="text-xs px-4 py-2 bg-red-500 hover:bg-red-600 rounded-full font-medium">Sign Up</Link>
-                    </div>
-                </header>
-
-                {/* Main */}
-                <main className="px-8 py-8">
-                    <div className="max-w-[1200px] mx-auto">
+        <PublicLayout>
+            <main className="px-8 py-8">
+                <div className="max-w-[1200px] mx-auto">
                         {/* Title */}
                         <div className="mb-8">
                             <h1 className="text-3xl font-medium mb-2" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -302,7 +274,6 @@ export default function GPUVerificationPage() {
                         </div>
                     </div>
                 </main>
-            </div>
 
             {/* Detail Modal */}
             {selectedBlock && (
@@ -457,6 +428,6 @@ export default function GPUVerificationPage() {
                     </div>
                 </div>
             )}
-        </div>
+        </PublicLayout>
     );
 }

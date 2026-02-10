@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import PublicLayout from '@/components/layouts/PublicLayout';
 
 // Google OAuth Client ID
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
@@ -89,15 +89,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-6">
-      {/* Background */}
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      <div className="relative z-20 w-full max-w-md">
-        {/* Logo */}
+    <PublicLayout>
+      <div className="flex items-center justify-center p-6 min-h-[80vh]">
+        <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
             <Image src="/worldland-logo.png" alt="Worldland" width={180} height={50} />
@@ -148,7 +142,8 @@ export default function LoginPage() {
             )}
           </div>
 
-          {/* Dev Login Button - 개발 테스트용 */}
+          {/* Dev Login Button - development only */}
+          {process.env.NODE_ENV === 'development' && (
           <div className="mt-4 pt-4 border-t border-[#222]">
             <button
               onClick={() => {
@@ -157,10 +152,11 @@ export default function LoginPage() {
               }}
               className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded font-medium text-sm transition-all flex items-center justify-center gap-2"
             >
-              🧪 Dev Login (테스트용)
+              🧪 Dev Login (Test)
             </button>
-            <p className="text-xs text-gray-500 text-center mt-2">OAuth 없이 Pod 배포 테스트</p>
+            <p className="text-xs text-gray-500 text-center mt-2">Test pod deployment without OAuth</p>
           </div>
+          )}
 
           {/* Terms */}
           <p className="mt-6 text-center text-xs text-gray-500">
@@ -178,8 +174,9 @@ export default function LoginPage() {
             <span>Back to Home</span>
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </PublicLayout>
   );
 }
 

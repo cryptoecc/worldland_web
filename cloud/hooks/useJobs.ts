@@ -111,7 +111,7 @@ export function useJobs() {
   };
 }
 
-// Provider 조회 hook
+// Provider query hook
 export function useProviders() {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [gpuAvailability, setGpuAvailability] = useState<GPUAvailability[]>([]);
@@ -133,7 +133,7 @@ export function useProviders() {
     }
   }, []);
 
-  // 실시간 GPU 가용성 조회
+  // Real-time GPU availability query
   const fetchGPUAvailability = useCallback(async () => {
     try {
       const data = await apiClient.getGPUAvailability();
@@ -141,7 +141,7 @@ export function useProviders() {
       setTotalAvailable(data.total_available || 0);
     } catch (err: any) {
       console.error('Error fetching GPU availability:', err);
-      // 에러 시 fallback - provider의 캐시 데이터 사용
+      // On error fallback - use provider cached data
     }
   }, []);
 
@@ -151,7 +151,7 @@ export function useProviders() {
     fetchGPUAvailability();
   }, [fetchProviders, fetchGPUAvailability]);
 
-  // 3초마다 GPU 가용성 폴링
+  // Poll GPU availability every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       fetchGPUAvailability();
@@ -160,19 +160,19 @@ export function useProviders() {
     return () => clearInterval(interval);
   }, [fetchGPUAvailability]);
 
-  // GPU 타입 목록 추출
+  // Extract GPU type list
   const gpuTypes = [...new Set(
     providers
       .flatMap(p => p.Spec?.gpus?.map(g => g.name) || [])
       .filter(Boolean)
   )];
 
-  // 특정 GPU 타입의 가용성 조회
+  // Get availability by GPU type
   const getAvailabilityByType = useCallback((gpuType: string) => {
     return gpuAvailability.find(a => a.gpu_type === gpuType);
   }, [gpuAvailability]);
 
-  // 특정 GPU 타입이 생성 가능한지 확인
+  // Check if a job can be created for a specific GPU type
   const canCreateJob = useCallback((gpuType: string, gpuCount: number = 1): boolean => {
     const availability = gpuAvailability.find(a => a.gpu_type === gpuType);
     if (!availability) return false;

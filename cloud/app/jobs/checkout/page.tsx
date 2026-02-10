@@ -3,13 +3,12 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowLeft, faWallet, faCheck, faSpinner, faExternalLink,
   faShieldHalved, faCircleCheck, faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useWallet } from '@/hooks/useWallet';
 import { useJobs } from '@/hooks/useJobs';
@@ -19,7 +18,7 @@ type CheckoutStep = 'connect' | 'review' | 'payment' | 'processing' | 'success' 
 function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { user } = useAuth();
   const { createJob, loading: jobLoading } = useJobs();
   const wallet = useWallet();
 
@@ -48,12 +47,7 @@ function CheckoutContent() {
   // Mock USDT balance
   const mockUsdtBalance = 150.00;
 
-  // Auth check
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/auth/login');
-    }
-  }, [isAuthenticated, authLoading, router]);
+
 
   // Auto-advance when wallet connects
   useEffect(() => {
@@ -126,48 +120,10 @@ function CheckoutContent() {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent" />
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/95 via-black/90 to-black/95 z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      <div className="relative z-20">
-        {/* Header */}
-        <header className="px-8 py-4 border-b border-[#111]">
-          <div className="max-w-[900px] mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/"><Image src="/worldland-logo.png" alt="Worldland" width={120} height={32} /></Link>
-              <Link href="/jobs/create" className="text-gray-500 hover:text-white text-sm flex items-center gap-2">
-                <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Back
-              </Link>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              {wallet.isConnected && (
-                <span className="text-green-400 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  {shortenAddress(wallet.address!)}
-                </span>
-              )}
-              <span className="text-gray-500">{user.email || user.name}</span>
-              <button onClick={logout} className="text-gray-500 hover:text-white">Logout</button>
-            </div>
-          </div>
-        </header>
-
-        <main className="px-8 py-8">
-          <div className="max-w-[700px] mx-auto">
+    <AuthedLayout>
+      <main className="px-8 py-8">
+        <div className="max-w-[700px] mx-auto">
             {/* Progress Steps */}
             <div className="flex items-center justify-center gap-2 mb-8">
               {['connect', 'review', 'payment'].map((s, i) => (
@@ -202,7 +158,7 @@ function CheckoutContent() {
                     onClick={() => window.open('https://metamask.io/download/', '_blank')}
                     className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-lg font-medium flex items-center justify-center gap-3"
                   >
-                    <Image src="/metamask-fox.svg" alt="MetaMask" width={24} height={24} onError={(e) => e.currentTarget.style.display = 'none'} />
+                    <img src="/metamask-fox.svg" alt="MetaMask" width={24} height={24} className="w-6 h-6" />
                     Install MetaMask
                     <FontAwesomeIcon icon={faExternalLink} />
                   </button>
@@ -465,10 +421,9 @@ function CheckoutContent() {
                 </div>
               </div>
             )}
-          </div>
-        </main>
-      </div>
-    </div>
+        </div>
+      </main>
+    </AuthedLayout>
   );
 }
 

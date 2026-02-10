@@ -3,16 +3,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMicrochip, faArrowRight, faArrowLeft, faCheck,
 } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useJobs, useProviders } from '@/hooks/useJobs';
 
-// Docker 이미지 템플릿
+// Docker image templates
 const templates = [
   { id: 'pytorch', name: 'PyTorch', description: 'Deep learning', image: 'pytorch/pytorch:latest' },
   { id: 'tensorflow', name: 'TensorFlow', description: 'ML platform', image: 'tensorflow/tensorflow:latest-gpu' },
@@ -22,7 +21,7 @@ const templates = [
 
 export default function CreateJobPage() {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { user } = useAuth();
   const { createJob, loading: jobLoading } = useJobs();
   const { providers, gpuTypes, gpuAvailability, canCreateJob, getAvailabilityByType, loading: providerLoading } = useProviders();
 
@@ -37,28 +36,21 @@ export default function CreateJobPage() {
   const [selectedTemplate, setSelectedTemplate] = useState('pytorch');
   const [error, setError] = useState('');
 
-  // 선택된 GPU 타입의 Provider 찾기
+  // Find Provider for selected GPU type
   const selectedProvider = providers.find(p =>
     p.Spec?.gpus?.some(g => g.name === selectedGpuType)
   );
 
-  // 선택된 GPU의 가용성 정보
+  // Availability for selected GPU
   const selectedGpuAvailability = getAvailabilityByType(selectedGpuType);
   const isGpuAvailable = canCreateJob(selectedGpuType, gpuCount);
 
-  // 예상 가격 계산
+  // Estimate price
   const estimatedPrice = selectedProvider
     ? (selectedProvider.Capacity.gpu_price_per_hour * gpuCount * durationHours)
     : 0;
 
-  // 인증 체크
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/auth/login');
-    }
-  }, [isAuthenticated, authLoading, router]);
-
-  // 첫 번째 GPU 타입 자동 선택
+  // Auto-select first GPU type
   useEffect(() => {
     if (gpuTypes.length > 0 && !selectedGpuType) {
       setSelectedGpuType(gpuTypes[0]);
@@ -70,12 +62,12 @@ export default function CreateJobPage() {
     setError('');
 
     if (!selectedGpuType) {
-      setError('GPU 타입을 선택해주세요');
+      setError('Please select a GPU type');
       return;
     }
 
     if (!sshPassword || sshPassword.length < 6) {
-      setError('SSH 비밀번호는 6자 이상이어야 합니다');
+      setError('SSH password must be at least 6 characters');
       return;
     }
 
@@ -95,43 +87,11 @@ export default function CreateJobPage() {
     router.push(`/jobs/checkout?${params.toString()}`);
   };
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent"></div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
   const loading = jobLoading || providerLoading;
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      <div className="relative z-20">
-        {/* Header */}
-        <header className="px-8 py-4 border-b border-[#111]">
-          <div className="max-w-[1000px] mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/"><Image src="/worldland-logo.png" alt="Worldland" width={120} height={32} /></Link>
-              <Link href="/jobs" className="text-gray-500 hover:text-white text-sm flex items-center gap-2">
-                <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Back to Jobs
-              </Link>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              <span className="text-gray-500">{user.email || user.name}</span>
-              <button onClick={logout} className="text-gray-500 hover:text-white">Logout</button>
-            </div>
-          </div>
-        </header>
-
-        <main className="px-8 py-8">
+    <AuthedLayout>
+      <main className="px-8 py-8">
           <div className="max-w-[800px] mx-auto">
             {/* Title */}
             <div className="mb-8">
@@ -389,10 +349,9 @@ export default function CreateJobPage() {
                   )}
                 </button>
               </div>
-            </form>
-          </div>
-        </main>
-      </div>
-    </div>
+          </form>
+        </div>
+      </main>
+    </AuthedLayout>
   );
 }

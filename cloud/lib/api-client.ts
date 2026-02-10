@@ -1,11 +1,11 @@
 /**
  * API Client for k8s-proxy-server
- * 백엔드 API에 맞게 조정됨
+ * Configured to match backend API
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-// User 타입
+// User type
 export interface User {
   id: string;
   email: string;
@@ -13,16 +13,16 @@ export interface User {
   picture?: string;
 }
 
-// 로그인 응답
+// Login response
 export interface LoginResponse {
   token: string;
   user: User;
 }
 
-// Job 상태 타입
+// Job status type
 export type JobStatus = 'creating' | 'Pending' | 'Running' | 'Succeeded' | 'Failed' | 'Unknown';
 
-// 리소스 제안
+// Resource suggestion
 export interface ResourceSuggestion {
   action: string;
   recommended_memory?: string;
@@ -30,37 +30,37 @@ export interface ResourceSuggestion {
   message: string;
 }
 
-// Job 타입 (백엔드 GPUJobResponse와 일치)
+// Job type (matches backend GPUJobResponse)
 export interface Job {
   job_id: string;
   provider_id?: string;
   status: JobStatus;
   
-  // 할당된 리소스
+  // Allocated resources
   gpu_count?: number;
   gpu_model?: string;
   cpu_cores?: string;
   memory_gb?: string;
   storage_gb?: string;
   
-  // SSH 접속 정보
+  // SSH connection info
   ssh_host: string;
   ssh_port: number;
   ssh_user: string;
   ssh_password?: string;
   
-  // 가격 및 만료
+  // Pricing and expiration
   price_per_hour?: number;
   expires_at?: string;
   message?: string;
   
-  // 실패 정보
+  // Failure info
   failure_reason?: string;
   failure_message?: string;
   suggestion?: ResourceSuggestion;
 }
 
-// Job 생성 요청
+// Job creation request
 export interface CreateJobRequest {
   provider_id?: string;
   gpu_type?: string;
@@ -74,13 +74,13 @@ export interface CreateJobRequest {
   image?: string;
 }
 
-// Job 목록 응답
+// Job list response
 export interface JobListResponse {
   jobs: Job[];
   count: number;
 }
 
-// Provider 타입
+// Provider type
 export interface GPUInfo {
   index: number;
   name: string;
@@ -125,7 +125,7 @@ export interface ProviderListResponse {
   count: number;
 }
 
-// GPU 가용성 정보
+// GPU availability info
 export interface GPUAvailability {
   provider_id: string;
   gpu_type: string;
@@ -161,7 +161,7 @@ class ApiClient {
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
-    // 브라우저 환경에서 토큰 로드
+    // Load token from browser environment
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('auth_token');
     }
@@ -203,7 +203,7 @@ class ApiClient {
       throw new Error(`API Error: ${response.status} - ${error}`);
     }
 
-    // 204 No Content 처리
+    // Handle 204 No Content
     if (response.status === 204) {
       return {} as T;
     }
@@ -284,7 +284,7 @@ class ApiClient {
     return this.request(`/api/v1/providers/search?${params.toString()}`);
   }
 
-  // 실시간 GPU 가용성 조회
+  // Real-time GPU availability query
   async getGPUAvailability(gpuType?: string): Promise<GPUAvailabilityResponse> {
     const params = gpuType ? `?gpu_type=${encodeURIComponent(gpuType)}` : '';
     return this.request(`/api/v1/providers/gpu-availability${params}`);

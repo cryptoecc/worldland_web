@@ -1,47 +1,13 @@
 'use client';
 
 import Link from "next/link";
-import Image from "next/image";
-import BackgroundTerminal from "@/components/BackgroundTerminal";
-import HeaderNav from "@/components/HeaderNav";
-import AuthHeader from "@/components/AuthHeader";
+import PublicLayout from "@/components/layouts/PublicLayout";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Animated background - positioned on right side */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* Dark gradient overlay for left side readability - pointer-events-none to allow mouse interaction with background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      {/* Main content - pointer-events-none allows background interaction, child elements with pointer-events-auto remain clickable */}
-      <div className="relative z-20 pointer-events-none">
-        {/* Header */}
-        <header className="relative z-50 px-8 md:px-16 lg:px-24 py-6 pointer-events-auto">
-          <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center">
-              <Image
-                src="/worldland-logo.png"
-                alt="Worldland"
-                width={140}
-                height={40}
-                className="relative z-10"
-              />
-            </Link>
-
-            {/* Center Navigation with Dropdowns */}
-            <HeaderNav />
-
-            {/* Right Actions */}
-            <AuthHeader />
-          </div>
-        </header>
-
-        {/* Hero Section - Aethir Style */}
-        <main className="min-h-[90vh] flex items-center px-8 md:px-16 lg:px-24">
+    <PublicLayout>
+      {/* Hero Section - Aethir Style */}
+      <main className="min-h-[90vh] flex items-center px-8 md:px-16 lg:px-24">
           <div className="max-w-[1600px] mx-auto w-full">
             <div className="max-w-3xl pointer-events-auto">
               {/* Main heading with Serif font */}
@@ -231,7 +197,6 @@ export default function Home() {
             </div>
           </div>
         </footer>
-      </div>
-    </div>
+    </PublicLayout>
   );
 }

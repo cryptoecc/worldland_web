@@ -85,6 +85,7 @@ export default defineConfig({
         items: [
           { text: 'Key Features', link: '/introduction/key-features' },
           { text: 'WorldLand Token ($WL)', link: '/introduction/token' },
+          { text: 'Design System', link: '/introduction/design-system' },
           { text: 'Important Links', link: '/introduction/links' },
           { text: 'FAQ', link: '/introduction/faq' },
         ]

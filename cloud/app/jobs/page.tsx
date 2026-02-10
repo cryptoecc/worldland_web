@@ -1,14 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faServer, faPlus, faTrash, faEye, faArrowLeft, faTerminal } from '@fortawesome/free-solid-svg-icons';
+import { faServer, faPlus, faTrash, faEye, faTerminal } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useJobs } from '@/hooks/useJobs';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 import type { Job, JobStatus } from '@/lib/api-client';
 
 const statusColors: Record<JobStatus, string> = {
@@ -21,23 +18,8 @@ const statusColors: Record<JobStatus, string> = {
 };
 
 export default function JobsPage() {
-  const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
+  const { user } = useAuth();
   const { jobs, loading, error, deleteJob } = useJobs();
-
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) router.push('/auth/login');
-  }, [isAuthenticated, authLoading, router]);
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-red-500 border-t-transparent"></div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
 
   const handleDelete = async (jobId: string) => {
     if (!confirm('Delete this job?')) return;
@@ -49,30 +31,8 @@ export default function JobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-        <BackgroundTerminal />
-      </div>
-
-      <div className="relative z-20">
-        {/* Header */}
-        <header className="px-8 py-4 border-b border-[#111]">
-          <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-6">
-              <Link href="/"><Image src="/worldland-logo.png" alt="Worldland" width={120} height={32} /></Link>
-              <Link href="/" className="text-gray-500 hover:text-white text-sm flex items-center gap-2">
-                <FontAwesomeIcon icon={faArrowLeft} className="text-xs" /> Home
-              </Link>
-            </div>
-            <div className="flex items-center gap-4 text-sm">
-              <span className="text-gray-500">{user.email || user.name}</span>
-              <button onClick={logout} className="text-gray-500 hover:text-white">Logout</button>
-            </div>
-          </div>
-        </header>
-
-        <main className="px-8 py-8">
+    <AuthedLayout>
+      <main className="px-8 py-8">
           <div className="max-w-[1200px] mx-auto">
             {/* Title */}
             <div className="flex items-center justify-between mb-8">
@@ -216,7 +176,6 @@ export default function JobsPage() {
             )}
           </div>
         </main>
-      </div>
-    </div>
+    </AuthedLayout>
   );
 }

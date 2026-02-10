@@ -1,22 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 
 export default function ApiConsolePage() {
-  const router = useRouter();
-  const { user, token, isAuthenticated, isLoading } = useAuth();
+  const { user, token } = useAuth();
   const [copiedToken, setCopiedToken] = useState(false);
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login');
-    }
-  }, [isAuthenticated, isLoading, router]);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -28,48 +18,8 @@ export default function ApiConsolePage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
-          <p className="mt-4 text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
-      {/* Header */}
-      <header className="border-b border-gray-800 px-8 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <Image
-                src="/worldland-logo.png"
-                alt="Worldland"
-                width={140}
-                height={40}
-              />
-            </Link>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Dashboard
-            </Link>
-            <span className="text-sm text-gray-400">
-              <span className="text-white font-semibold">{user.email || user.name}</span>
-            </span>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
+    <AuthedLayout>
       <main className="px-8 py-12 max-w-7xl mx-auto">
         {/* Page Title */}
         <div className="mb-8">
@@ -236,6 +186,6 @@ export default function ApiConsolePage() {
           </div>
         </div>
       </main>
-    </div>
+    </AuthedLayout>
   );
 }

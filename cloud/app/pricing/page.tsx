@@ -1,15 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCheck,
     faArrowRight,
     faStar,
 } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
-import AuthHeader from '@/components/AuthHeader';
+import PublicLayout from '@/components/layouts/PublicLayout';
 
 const pricingPlans = [
     {
@@ -88,36 +86,9 @@ const gpuPricing = [
 
 export default function PricingPage() {
     return (
-        <div className="min-h-screen bg-black text-white overflow-hidden">
-            {/* Background */}
-            <div className="fixed inset-0 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-                <BackgroundTerminal />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-20 pointer-events-none">
-                {/* Header */}
-                <header className="relative z-50 px-8 md:px-16 lg:px-24 py-6 pointer-events-auto">
-                    <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-                        <Link href="/" className="flex items-center">
-                            <Image src="/worldland-logo.png" alt="Worldland" width={140} height={40} />
-                        </Link>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <Link href="/get-started" className="text-gray-400 hover:text-white text-sm font-medium">Get Started</Link>
-                            <Link href="/gpu-verification" className="text-gray-400 hover:text-white text-sm font-medium">GPU Verify</Link>
-                            <Link href="/da-verification" className="text-gray-400 hover:text-white text-sm font-medium">DA Verify</Link>
-                            <Link href="/usecases" className="text-gray-400 hover:text-white text-sm font-medium">Usecases</Link>
-                            <Link href="/docs" className="text-gray-400 hover:text-white text-sm font-medium">Docs</Link>
-                            <Link href="/pricing" className="text-white text-sm font-medium">Pricing</Link>
-                        </nav>
-                        <AuthHeader />
-                    </div>
-                </header>
-
-                {/* Main Content */}
-                <main className="px-8 md:px-16 lg:px-24 py-12 pointer-events-auto">
-                    <div className="max-w-[1400px] mx-auto">
+        <PublicLayout>
+            <main className="px-8 md:px-16 lg:px-24 py-12">
+                <div className="max-w-[1400px] mx-auto">
                         {/* Page Title */}
                         <div className="text-center mb-16">
                             <h1 className="text-4xl md:text-5xl font-light mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
@@ -206,9 +177,8 @@ export default function PricingPage() {
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </main>
-            </div>
-        </div>
+                </div>
+            </main>
+        </PublicLayout>
     );
 }

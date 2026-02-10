@@ -7,8 +7,10 @@
    ============================================ */
 
 :root {
-  /* WorldLand Red Identity */
-  --wld-red: #E53935;
+  /* WorldLand Red Identity (Logo Match) */
+  --wld-red: #D32F2F;
+  --wld-red-light: #E53935;
+  --wld-red-dark: #B71C1C;
   
   /* Minimalist Theme */
   --background: #000000;
@@ -32,13 +34,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-wld: #E53935;
+  --color-wld: #D32F2F;
+  --color-wld-light: #E53935;
+  --color-wld-dark: #B71C1C;
   --color-dark-800: #27272A;
   --color-dark-900: #18181B;
   --color-dark-950: #09090B;
   
   /* Shared with Cloud */
-  --color-primary: #E53935;
+  --color-primary: #D32F2F;
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-card: var(--card);

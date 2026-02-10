@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 export default function AuthHeader() {
     const { user, isLoading, logout } = useAuth();
 
-    // 로딩 중일 때는 빈 상태 표시 (깜빡임 방지)
+    // Show empty state while loading (prevent flash)
     if (isLoading) {
         return (
             <div className="flex items-center gap-4">
@@ -15,7 +15,7 @@ export default function AuthHeader() {
         );
     }
 
-    // 로그인된 경우
+    // Logged in state
     if (user) {
         return (
             <div className="flex items-center gap-4">
@@ -36,7 +36,7 @@ export default function AuthHeader() {
         );
     }
 
-    // 로그인되지 않은 경우
+    // Not logged in state
     return (
         <div className="flex items-center gap-4">
             <Link

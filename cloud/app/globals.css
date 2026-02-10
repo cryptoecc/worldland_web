@@ -13,8 +13,8 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   
-  /* Primary: WorldLand Red (#E53935) -> OKLCH approx 0.6 0.22 25 */
-  --primary: oklch(0.6 0.22 25); 
+  /* Primary: WorldLand Red (#D32F2F) -> OKLCH approx 0.55 0.20 25 */
+  --primary: oklch(0.55 0.20 25); 
   --primary-foreground: oklch(0.985 0 0);
   
   --card: oklch(1 0 0);
@@ -64,7 +64,7 @@
   --popover: oklch(0.12 0 0);
   --popover-foreground: oklch(0.985 0 0);
   
-  --primary: oklch(0.6 0.22 25); /* WorldLand Red */
+  --primary: oklch(0.55 0.20 25); /* WorldLand Red #D32F2F */
   --primary-foreground: oklch(0.985 0 0);
   
   --secondary: oklch(0.2 0 0);

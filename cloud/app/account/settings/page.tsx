@@ -1,9 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -12,58 +8,14 @@ import {
     faKey,
     faSave,
 } from '@fortawesome/free-solid-svg-icons';
-import BackgroundTerminal from '@/components/BackgroundTerminal';
+import AuthedLayout from '@/components/layouts/AuthedLayout';
 
 export default function SettingsPage() {
-    const router = useRouter();
-    const { user, isAuthenticated, isLoading } = useAuth();
-
-    useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
-            router.push('/auth/login');
-        }
-    }, [isAuthenticated, isLoading, router]);
-
-    if (isLoading || !user) {
-        return (
-            <div className="min-h-screen bg-black flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-900/30 border-t-red-500"></div>
-            </div>
-        );
-    }
+    const { user } = useAuth();
 
     return (
-        <div className="min-h-screen bg-black text-white overflow-hidden">
-            {/* Background */}
-            <div className="fixed inset-0 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/85 to-black/90 z-10 pointer-events-none" />
-                <BackgroundTerminal />
-            </div>
-
-            {/* Content */}
-            <div className="relative z-20 pointer-events-none">
-                {/* Header */}
-                <header className="relative z-50 px-8 md:px-16 lg:px-24 py-6 pointer-events-auto">
-                    <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-                        <Link href="/" className="flex items-center">
-                            <Image src="/worldland-logo.png" alt="Worldland" width={140} height={40} />
-                        </Link>
-                        <nav className="hidden md:flex items-center gap-6">
-                            <Link href="/get-started" className="text-gray-400 hover:text-white text-sm font-medium">Get Started</Link>
-                            <Link href="/gpu-verification" className="text-gray-400 hover:text-white text-sm font-medium">GPU Verify</Link>
-                            <Link href="/da-verification" className="text-gray-400 hover:text-white text-sm font-medium">DA Verify</Link>
-                            <Link href="/usecases" className="text-gray-400 hover:text-white text-sm font-medium">Usecases</Link>
-                            <Link href="/docs" className="text-gray-400 hover:text-white text-sm font-medium">Docs</Link>
-                            <Link href="/pricing" className="text-gray-400 hover:text-white text-sm font-medium">Pricing</Link>
-                        </nav>
-                        <div className="flex items-center gap-4">
-                            <span className="text-sm text-gray-400">{user.email || user.name}</span>
-                        </div>
-                    </div>
-                </header>
-
-                {/* Main Content */}
-                <main className="px-8 md:px-16 lg:px-24 py-12 pointer-events-auto">
+        <AuthedLayout>
+            <main className="px-8 md:px-16 lg:px-24 py-12">
                     <div className="max-w-[800px] mx-auto">
                         {/* Page Title */}
                         <div className="mb-12">
@@ -84,7 +36,7 @@ export default function SettingsPage() {
                                         <label className="block text-sm text-gray-400 mb-2">Username</label>
                                         <input
                                             type="text"
-                                            defaultValue={user.email || user.name}
+                                            defaultValue={user?.email || user?.name || ''}
                                             className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-sm focus:border-red-500 focus:outline-none"
                                         />
                                     </div>
@@ -139,9 +91,8 @@ export default function SettingsPage() {
                                 Save Changes
                             </button>
                         </div>
-                    </div>
-                </main>
-            </div>
-        </div>
+                </div>
+            </main>
+        </AuthedLayout>
     );
 }

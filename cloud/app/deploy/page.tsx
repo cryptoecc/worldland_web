@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { apiClient, Provider } from '@/lib/api-client';
+import PublicLayout from '@/components/layouts/PublicLayout';
 
-// GPU 디스플레이용 타입
+// GPU display type
 interface GPUDisplay {
   id: string;
   name: string;
@@ -20,7 +21,7 @@ interface GPUDisplay {
   image: string;
 }
 
-// GPU 이미지 매핑 (실제 이미지가 없을 경우 기본 이미지 사용)
+// GPU image mapping (default image if no specific image available)
 const GPU_IMAGES: Record<string, string> = {
   'Tesla T4': 'https://images.unsplash.com/photo-1591489378430-ef2d4c585f41?w=400&h=300&fit=crop',
   'RTX 4090': 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=400&h=300&fit=crop',
@@ -100,57 +101,12 @@ export default function DeployPodPage() {
   }, []);
 
   const handleRentClick = (gpu: GPUDisplay) => {
-    // Job 생성 페이지로 이동하거나 모달 표시
+    // Navigate to job creation page or show modal
     window.location.href = `/jobs/create?provider=${gpu.providerId}&gpu=${encodeURIComponent(gpu.name)}`;
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-      {/* Background gradient - Red theme */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-red-900/5 via-black to-gray-900/5"></div>
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-600/8 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gray-600/8 rounded-full blur-3xl animate-float-delayed"></div>
-        <div className="absolute top-1/2 right-1/3 w-96 h-96 bg-red-600/6 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.01]"></div>
-      </div>
-
-      {/* Header */}
-      <header className="relative z-50 bg-black/20 backdrop-blur-xl border-b border-white/[0.06] px-8 md:px-12 py-6 sticky top-0">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link href="/dashboard" className="flex items-center gap-3">
-              <Image
-                src="/worldland-logo.png"
-                alt="Worldland"
-                width={140}
-                height={40}
-                className="relative z-10"
-              />
-            </Link>
-            <nav className="hidden md:flex items-center gap-1">
-              <Link href="/dashboard" className="text-gray-400 hover:text-white transition-colors font-medium px-4 py-2 rounded-lg hover:bg-white/5">
-                Dashboard
-              </Link>
-              <Link href="/instances" className="text-gray-400 hover:text-white transition-colors font-medium px-4 py-2 rounded-lg hover:bg-white/5">
-                Instances
-              </Link>
-              <Link href="/billing" className="text-gray-400 hover:text-white transition-colors font-medium px-4 py-2 rounded-lg hover:bg-white/5">
-                Billing
-              </Link>
-              <Link href="/deploy" className="text-white font-semibold px-4 py-2 rounded-lg bg-white/10">
-                Deploy
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-400 hidden sm:block">
-              Balance: <span className="text-white font-bold">0.00 ETH</span>
-            </span>
-          </div>
-        </div>
-      </header>
-
+    <PublicLayout noBackground>
       {/* Main Content */}
       <main className="relative z-10 py-12 md:py-16">
         <div className="max-w-[1400px] mx-auto px-16 md:px-24">
@@ -297,6 +253,6 @@ export default function DeployPodPage() {
           )}
         </div>
       </main>
-    </div>
+    </PublicLayout>
   );
 }

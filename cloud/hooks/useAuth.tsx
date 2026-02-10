@@ -12,7 +12,7 @@ interface AuthState {
 
 interface AuthContextType extends AuthState {
   loginWithGoogle: (idToken: string) => Promise<void>;
-  devLogin: () => void;  // 개발용 로그인
+  devLogin: () => void;  // Development-only login
   logout: () => void;
 }
 
@@ -79,8 +79,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  // 개발용 로그인 (OAuth 없이 테스트)
+  // Development-only login (testing without OAuth)
   const devLogin = useCallback(() => {
+    if (process.env.NODE_ENV !== 'development') {
+      console.warn('devLogin is only available in development mode');
+      return;
+    }
     const devUser = {
       id: 'dev-user-001',
       email: 'dev@test.com',
