@@ -35,6 +35,7 @@ const navItems = [
       { type: 'divider' },
       { label: 'Add Network', href: '#', action: 'addNetwork' },
       { label: 'Block Explorer', href: 'https://scan.worldland.foundation/', external: true },
+      { label: 'Claim', href: 'https://claim.worldland.foundation', external: true },
     ],
   },
   {
