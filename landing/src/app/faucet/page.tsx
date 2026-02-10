@@ -42,7 +42,7 @@ export default function FaucetPage() {
               transition={{ delay: 0.3 }}
               className="text-gray-400 text-lg max-w-md mx-auto"
             >
-              The WorldLand Testnet Faucet is under maintenance. Please check back later for WLC tokens.
+              The WorldLand Testnet Faucet is under maintenance. Please check back later for WL tokens.
             </motion.p>
          </div>
       </div>

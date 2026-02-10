@@ -20,7 +20,7 @@ const navItems = [
     items: [
       { label: 'Executive Summary', href: 'https://docs.worldland.foundation/', external: true },
       { label: 'Key Features', href: 'https://docs.worldland.foundation/introduction/key-features', external: true },
-      { label: 'WLC Token', href: 'https://docs.worldland.foundation/introduction/token', external: true },
+      { label: 'WL Token', href: 'https://docs.worldland.foundation/introduction/token', external: true },
       { type: 'divider' },
       { label: 'Whitepaper', href: 'https://docs.worldland.foundation/whitepaper/', external: true },
       { label: 'Roadmap', href: 'https://docs.worldland.foundation/roadmap/', external: true },
