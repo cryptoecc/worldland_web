@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Worldland - GPU Cloud Platform",
   description: "Deploy high-performance GPU instances for AI/ML workloads, rendering, and compute-intensive tasks",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
