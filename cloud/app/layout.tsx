@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   description: "Deploy high-performance GPU instances for AI/ML workloads, rendering, and compute-intensive tasks",
   icons: {
     icon: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 
